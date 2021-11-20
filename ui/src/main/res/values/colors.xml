@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ui_primary">#FF2D55</color>
+    <color name="white">#FFFFFF</color>
+    <color name="dot_white">#80FFFFFF</color>
+    <color name="bold">#000000</color>
+    <color name="ui_gray">#0A121212</color>
+
+
+    // ripple
+    <color name="ripple_primary">#1AFF2D55</color>
+    <color name="ripple_bold">#1AFFFFFF</color>
+    <color name="ripple_gray">#1A000000</color>
+</resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="textCardTitle" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">34sp</item>
+        <item name="fontFamily">@font/myfont</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="textCardDesc" parent="Widget.AppCompat.TextView">
+        <item name="android:textSize">20sp</item>
+        <item name="fontFamily">@font/myfont</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+</resources>

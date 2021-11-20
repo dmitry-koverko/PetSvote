@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="Shape">
+        <attr name="besie_text" format="string"/>
+        <attr name="besie_text_size" format="integer"/>
+        <attr name="besie_text_color" format="color"/>
+        <attr name="besie_background" format="color"/>
+        <attr name="besie_ripple" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="BesieButton">
+        <attr name="button_type" format="enum">
+            <enum name="REGISTER" value="0"/>
+            <enum name="LEGAL" value="1"/>
+            <enum name="LOGIN" value="2"/>
+        </attr>
+        <attr name="button_left_logo" format="integer"/>
+    </declare-styleable>
+
+    <declare-styleable name="DialView">
+        <attr name="fanColor1" format="color" />
+        <attr name="fanColor2" format="color" />
+        <attr name="fanColor3" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="CircleButton">
+        <attr name="icon_src" format="reference"/>
+    </declare-styleable>
+
+    <declare-styleable name="DotIndicator">
+        <attr name="dot_background" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="PageIndicator">
+        <attr name="page_orientation" format="enum">
+            <enum name="hor" value="0"/>
+            <enum name="ver" value="1"/>
+        </attr>
+        <attr name="count_indicators" format="integer"/>
+    </declare-styleable>
+
+</resources>

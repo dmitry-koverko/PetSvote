@@ -1,0 +1,18 @@
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()
+        maven {url 'https://jitpack.io' }
+    }
+}
+rootProject.name = "PetSvote"
+include ':app'
+include ':api'
+include ':soket'
+include ':splash'
+include ':legal'
+include ':ui'
+include ':register'
+include ':vote'

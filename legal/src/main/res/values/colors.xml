@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="selected_item_color">#1AFF2D55</color>
+
+    <color name="colorPrimary">@android:color/transparent</color>
+    <color name="colorPrimaryVariant">@android:color/transparent</color>
+    <color name="colorOnPrimary">@color/white</color>
+    <!-- Secondary brand color. -->
+    <color name="colorSecondary">@android:color/transparent</color>
+    <color name="colorSecondaryVariant">@android:color/transparent</color>
+
+</resources>
