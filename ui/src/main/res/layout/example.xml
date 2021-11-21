@@ -7,7 +7,7 @@
 
     <com.petsvote.ui.parallax.PageIndicator
         app:layout_constraintTop_toTopOf="parent"
-        app:count_indicators="4"
+        app:count_indicators="3"
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>

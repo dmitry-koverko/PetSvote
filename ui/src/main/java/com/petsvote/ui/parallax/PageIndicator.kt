@@ -1,7 +1,9 @@
 package com.petsvote.ui.parallax
 
 import android.content.Context
+import android.graphics.Point
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -20,10 +22,15 @@ class PageIndicator @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : ConstraintLayout(context, attrs) {
 
+    private val TAG = PageIndicator::class.java.name
+
     private var typeOrientation = 0
     private var dotCount = 0
-    private var indicatorSize = 12
-    private var currentPoint = 0
+    private var indicatorSize = 0
+    private var marginSize = 0
+    var currentPoint = 0
+
+    private var dotIndicator: DotIndicator
 
     init{
         context.withStyledAttributes(attrs, R.styleable.PageIndicator){
@@ -37,14 +44,21 @@ class PageIndicator @JvmOverloads constructor(
 
         findViewById<LinearLayoutCompat>(R.id.root).orientation =
             if(typeOrientation == 0) VERTICAL else HORIZONTAL
+
+
+        dotIndicator = findViewById(R.id.dot_animation)
+
+        indicatorSize = (12 * context.resources.displayMetrics.density).toInt()
+        marginSize = (7 * context.resources.displayMetrics.density).toInt()
+
         if(dotCount != 0) setCountIndicators(dotCount)
     }
 
     fun setCountIndicators(count: Int){
+        dotCount = count
         for(i in 1..count){
             var dot = DotIndicator(context)
-            var side = (indicatorSize * context.resources.displayMetrics.density).toInt()
-            var lp = ViewGroup.MarginLayoutParams(side, side)
+            var lp = ViewGroup.MarginLayoutParams(indicatorSize, indicatorSize)
             dot.apply {
                 layoutParams = lp
                 paint.color = ContextCompat.getColor(context, R.color.dot_white)
@@ -53,18 +67,33 @@ class PageIndicator @JvmOverloads constructor(
         }
 
         var lpLinear = LinearLayoutCompat.LayoutParams(
-            (indicatorSize * context.resources.displayMetrics.density).toInt(),
-            (((count * indicatorSize) + (count -1) * 7)
-                    * context.resources.displayMetrics.density).toInt()
+            indicatorSize,
+            (count * indicatorSize) + (count -1) * marginSize
         )
         findViewById<LinearLayoutCompat>(R.id.root).layoutParams = lpLinear
     }
 
     fun setOffsetTo(percentOffset: Int){
+        var distance = (indicatorSize + marginSize) * currentPoint
+        val lp = dotIndicator.layoutParams
         if(typeOrientation == 0){
             if(currentPoint == dotCount) return
+            if(percentOffset <= 50){
+                var length = ((indicatorSize + marginSize) * percentOffset / 50) + indicatorSize
+                lp.height = length
+                dotIndicator.y = distance.toFloat()
+            }else if(percentOffset > 50){
+                var lengthOffset = ((indicatorSize + marginSize) * (percentOffset - 50) / 50)
+                var offset = lengthOffset + distance
+                var length = distance + ((indicatorSize * 2) + marginSize) - offset
+                lp.height = length
+                dotIndicator.y = offset.toFloat()
 
+                Log.d(TAG, "lengthOffser = $lengthOffset " +
+                        "offset = $offset length = $length")
+            }
         }
+        dotIndicator.layoutParams = lp
     }
-   
+
 }
