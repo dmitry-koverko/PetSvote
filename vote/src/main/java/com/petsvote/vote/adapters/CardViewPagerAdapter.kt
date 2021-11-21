@@ -1,16 +1,37 @@
 package com.petsvote.vote.adapters
 
+import android.animation.Animator
+import android.animation.PropertyValuesHolder
+import android.animation.ValueAnimator
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.petsvote.ui.layoutParams
 import com.petsvote.vote.R
 
-class CardViewPagerAdapter(private val context: Context, private val arrayList: List<Int>) :
+class CardViewPagerAdapter(
+    private val context: Context,
+    private val arrayList: List<Int>,
+    private val height: Int) :
     RecyclerView.Adapter<CardViewPagerAdapter.MyViewHolder>() {
+
+    private var scaleX = 1f
+    private var scaleY = 1f
+    private var scaleRate = 1f
+    private var alphaBlack = 0f
+    private var alphaText = 1f
+    private var cafSize = 0.0f
+
+    private var startAnim = false
+    private var animator: ValueAnimator? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.item_card, parent, false)
@@ -18,18 +39,93 @@ class CardViewPagerAdapter(private val context: Context, private val arrayList: 
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        //holder.image.setImageDrawable(ContextCompat.getDrawable(context, arrayList[position]))
+        var lp = holder.card.layoutParams
+
+        if(startAnim) {
+            holder.card.scaleX = scaleX
+            holder.card.scaleY = scaleY
+            holder.view_black.visibility = View.VISIBLE
+            holder.view_black.alpha = alphaBlack
+            holder.title.alpha = alphaText
+            holder.description.alpha = alphaText
+            holder.rate.visibility = View.VISIBLE
+            holder.rate.scaleX = scaleRate
+            holder.rate.scaleY = scaleRate
+
+        }else {
+            lp.height = height
+            holder.card.layoutParams = lp
+            holder.card.scaleX = 1f
+            holder.card.scaleY = 1f
+            holder.view_black.visibility = View.GONE
+            holder.view_black.alpha = 0f
+            holder.title.alpha = 1f
+            holder.description.alpha = 1f
+            holder.rate.visibility = View.GONE
+            holder.rate.scaleX = 1f
+            holder.rate.scaleY = 1f
+        }
     }
 
     override fun getItemCount(): Int {
         return arrayList.size
     }
 
+    fun startAnim(){
+        startAnim = true
+
+        val propertyScaleY: PropertyValuesHolder =
+            PropertyValuesHolder.ofFloat("PROPERTY_SCALE_Y", 1f, 0.97f)
+        val propertyScaleX: PropertyValuesHolder =
+            PropertyValuesHolder.ofFloat("PROPERTY_SCALE_X", 1f, 0.95f)
+        val propertyScaleRate: PropertyValuesHolder =
+            PropertyValuesHolder.ofFloat("PROPERTY_SCALE_RATE", 1f, 0.8f)
+        val propertyAlpha: PropertyValuesHolder =
+            PropertyValuesHolder.ofFloat("PROPERTY_ALPHA", 0f, 0.5f)
+        val propertyAlphaText: PropertyValuesHolder =
+            PropertyValuesHolder.ofFloat("PROPERTY_ALPHA_TEXT", 1f, 0f)
+
+        animator = ValueAnimator()
+        animator!!.setValues(propertyScaleY, propertyScaleX, propertyAlpha,
+            propertyAlphaText, propertyScaleRate)
+        animator!!.setDuration(300)
+        animator!!.addUpdateListener(ValueAnimator.AnimatorUpdateListener { animation ->
+            scaleY = animation.getAnimatedValue("PROPERTY_SCALE_Y") as Float
+            scaleX = animation.getAnimatedValue("PROPERTY_SCALE_X") as Float
+            scaleRate = animation.getAnimatedValue("PROPERTY_SCALE_RATE") as Float
+            alphaBlack = animation.getAnimatedValue("PROPERTY_ALPHA") as Float
+            alphaText = animation.getAnimatedValue("PROPERTY_ALPHA_TEXT") as Float
+            notifyDataSetChanged()
+        })
+        animator!!.addListener(object: Animator.AnimatorListener{
+            override fun onAnimationStart(p0: Animator?) {}
+
+            override fun onAnimationEnd(p0: Animator?) {
+                startAnim = false
+                notifyDataSetChanged()
+            }
+
+            override fun onAnimationCancel(p0: Animator?) {}
+
+            override fun onAnimationRepeat(p0: Animator?) {}
+
+        })
+        animator!!.start()
+    }
+
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        //var image: ImageView
+        var card: CardView
+        var view_black: View
+        var title: TextView
+        var description: TextView
+        var rate: ImageView
 
         init {
-            //image = itemView.findViewById(R.id.image)
+            card = itemView.findViewById(R.id.card)
+            view_black = itemView.findViewById(R.id.view_black)
+            title = itemView.findViewById(R.id.title)
+            description = itemView.findViewById(R.id.description)
+            rate = itemView.findViewById(R.id.rate)
         }
     }
 

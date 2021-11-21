@@ -37,7 +37,7 @@
         <entry key="vote/src/main/res/font/myfont.xml" value="0.33487179487179486" />
         <entry key="vote/src/main/res/layout/fragment_rating.xml" value="0.29583333333333334" />
         <entry key="vote/src/main/res/layout/fragment_vote.xml" value="0.22" />
-        <entry key="vote/src/main/res/layout/item_card.xml" value="0.16" />
+        <entry key="vote/src/main/res/layout/item_card.xml" value="0.33" />
       </map>
     </option>
   </component>

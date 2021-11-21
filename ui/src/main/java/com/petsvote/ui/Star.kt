@@ -135,7 +135,7 @@ class Star @JvmOverloads constructor(
 
         animator = ValueAnimator()
         animator!!.setValues(propertyXLeft)
-        animator!!.setDuration(200)
+        animator!!.setDuration(300)
         animator!!.addUpdateListener(ValueAnimator.AnimatorUpdateListener { animation ->
             starActiveSize = (animation.getAnimatedValue("PROPERTY_SIZE") as Float).roundToInt()
             invalidate()

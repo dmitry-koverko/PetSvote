@@ -1,10 +1,12 @@
 package com.petsvote.vote
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.petsvote.ui.Star
 import com.petsvote.vote.adapters.CardViewPagerAdapter
@@ -29,10 +31,13 @@ class VoteFragment : Fragment(R.layout.fragment_vote), View.OnClickListener {
 
         stars = listOf(binding.star1, binding.star2, binding.star3, binding.star4, binding.star5)
 
-        adapter = CardViewPagerAdapter(requireContext(), listOf(R.drawable.cat2, R.drawable.cat3))
+        adapter = CardViewPagerAdapter(
+            requireContext(), listOf(R.drawable.cat2, R.drawable.cat3, R.drawable.cat4,
+                R.drawable.cat2, R.drawable.cat3, R.drawable.cat4),
+            1400)
         viewPager = binding.viewPager
         viewPager?.adapter = adapter
-        viewPager?.isUserInputEnabled = false
+        //viewPager?.isUserInputEnabled = false
     }
 
     override fun onClick(p0: View) {
@@ -49,6 +54,15 @@ class VoteFragment : Fragment(R.layout.fragment_vote), View.OnClickListener {
         for(starIndex in 0..rate){
             (stars?.get(starIndex) as Star).animRipple()
         }
-        viewPager?.currentItem?.plus(1)?.let { viewPager?.setCurrentItem(it) }
+        adapter?.startAnim()
+        val timer = object: CountDownTimer(200, 200) {
+            override fun onTick(millisUntilFinished: Long) {}
+
+            override fun onFinish() {
+                viewPager?.currentItem?.plus(1)?.let { viewPager?.setCurrentItem(it, true) }
+            }
+        }
+
+        timer.start()
     }
 }
