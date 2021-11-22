@@ -23,6 +23,8 @@
         <entry key="splash/src/main/res/layout/splash_fragment.xml" value="0.11614583333333334" />
         <entry key="ui/src/main/res/drawable/ic_icon_star.xml" value="0.128125" />
         <entry key="ui/src/main/res/drawable/ic_star.xml" value="0.128125" />
+        <entry key="ui/src/main/res/drawable/ic_star_3.xml" value="0.27037037037037037" />
+        <entry key="ui/src/main/res/drawable/ic_star_5.xml" value="0.27037037037037037" />
         <entry key="ui/src/main/res/drawable/tab_selector.xml" value="0.22870370370370371" />
         <entry key="ui/src/main/res/font/myfont.xml" value="0.2962962962962963" />
         <entry key="ui/src/main/res/layout/button.xml" value="0.22" />

@@ -20,7 +20,7 @@ class Star @JvmOverloads constructor(
 
     private val TAG = Star::class.java.name
 
-    private var typeImage = 1
+    private var typeStar = 0
     private var canvas: Canvas? = null
 
     private var widthView: Int = 0;
@@ -36,8 +36,10 @@ class Star @JvmOverloads constructor(
     private var mOnClickListener: OnClickListener? = null
 
     init {
-        iconBg = R.drawable.ic_icon_star
         iconActive = R.drawable.ic_star
+        context.withStyledAttributes(attrs, R.styleable.Star){
+            typeStar = getInt(R.styleable.Star_type_star, 0)
+        }
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -83,6 +85,14 @@ class Star @JvmOverloads constructor(
 
 
     private fun drawIcon() {
+        iconBg = when(typeStar){
+            0 -> R.drawable.ic_star_1
+            1 -> R.drawable.ic_star_2
+            2 -> R.drawable.ic_star_3
+            3 -> R.drawable.ic_star_4
+            4 -> R.drawable.ic_star_5
+            else -> R.drawable.ic_star_1
+        }
         var bitmap = getVectorBitmap(iconBg)
         canvas!!.drawBitmap(
             bitmap,
@@ -92,6 +102,14 @@ class Star @JvmOverloads constructor(
     }
 
     private fun drawIconActive() {
+        iconActive = when(typeStar){
+            0 -> R.drawable.ic_star1
+            1 -> R.drawable.ic_star2
+            2 -> R.drawable.ic_star3
+            3 -> R.drawable.ic_star4
+            4 -> R.drawable.ic_star5
+            else -> R.drawable.ic_star1
+        }
         var bitmap = getVectorBackground(iconActive)
         canvas!!.drawBitmap(
             bitmap,

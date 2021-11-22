@@ -88,7 +88,7 @@ class CardViewPagerAdapter(
         animator = ValueAnimator()
         animator!!.setValues(propertyScaleY, propertyScaleX, propertyAlpha,
             propertyAlphaText, propertyScaleRate)
-        animator!!.setDuration(300)
+        animator!!.setDuration(400)
         animator!!.addUpdateListener(ValueAnimator.AnimatorUpdateListener { animation ->
             scaleY = animation.getAnimatedValue("PROPERTY_SCALE_Y") as Float
             scaleX = animation.getAnimatedValue("PROPERTY_SCALE_X") as Float

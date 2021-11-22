@@ -39,5 +39,13 @@
         </attr>
         <attr name="count_indicators" format="integer"/>
     </declare-styleable>
-
+    <declare-styleable name="Star">
+        <attr name="type_star" format="enum">
+            <enum name="MINI" value="0"/>
+            <enum name="MINI2" value="1"/>
+            <enum name="MIDDLE" value="2"/>
+            <enum name="MAX" value="3"/>
+            <enum name="MAX2" value="4"/>
+        </attr>
+    </declare-styleable>
 </resources>

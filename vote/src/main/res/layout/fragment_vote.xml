@@ -34,6 +34,7 @@
         android:layout_height="56dp">
 
         <com.petsvote.ui.Star
+            app:type_star="MINI"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             android:id="@+id/star1"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -44,6 +45,7 @@
             android:layout_height="26dp"/>
 
         <com.petsvote.ui.Star
+            app:type_star="MINI2"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             android:id="@+id/star2"
             app:layout_constraintLeft_toRightOf="@id/star1"
@@ -54,6 +56,7 @@
             android:layout_height="31dp"/>
 
         <com.petsvote.ui.Star
+            app:type_star="MIDDLE"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             android:id="@+id/star3"
             app:layout_constraintLeft_toRightOf="@id/star2"
@@ -64,6 +67,7 @@
             android:layout_height="36dp"/>
 
         <com.petsvote.ui.Star
+            app:type_star="MAX"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintLeft_toRightOf="@id/star3"
             app:layout_constraintRight_toLeftOf="@id/star5"
@@ -74,6 +78,7 @@
             android:layout_height="42dp"/>
 
         <com.petsvote.ui.Star
+            app:type_star="MAX2"
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintLeft_toRightOf="@id/star4"
             android:id="@+id/star5"
