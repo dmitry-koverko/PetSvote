@@ -26,10 +26,13 @@
 
     <declare-styleable name="CircleButton">
         <attr name="icon_src" format="reference"/>
+        <attr name="cb_ripple_color" format="color"/>
+        <attr name="cb_color" format="color"/>
     </declare-styleable>
 
     <declare-styleable name="DotIndicator">
         <attr name="dot_background" format="color"/>
+        <attr name="dot_ripple" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="PageIndicator">
@@ -47,5 +50,33 @@
             <enum name="MAX" value="3"/>
             <enum name="MAX2" value="4"/>
         </attr>
+    </declare-styleable>
+
+    <declare-styleable name="SFTextView">
+        <attr name="android:textSize" format="integer"/>
+        <attr name="android:textColor" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="BesieLayout">
+        <attr name="bl_background" format="color"/>
+        <attr name="bl_ripple" format="boolean"/>
+        <attr name="bl_ripple_color" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="BesieTab">
+        <attr name="bt_text" format="string"></attr>
+        <attr name="bt_type" format="enum">
+            <enum name="DEFAULT" value="0"/>
+            <enum name="ACTIVE" value="1"/>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="BesieTabLayout">
+        <attr name="btl_count_tabs" format="integer"/>
+    </declare-styleable>
+
+    <declare-styleable name="BesieImage">
+        <attr name="bi_ripple_color" format="color"/>
+        <attr name="bi_background_color" format="color"/>
     </declare-styleable>
 </resources>

@@ -24,13 +24,13 @@ class TopBar @JvmOverloads constructor(
     private var widthView = 0
     private var heightView = 0
 
-    private lateinit var ratingContainer: ConstraintLayout
-    private lateinit var starContainer: ConstraintLayout
-    private lateinit var profileContainer: ConstraintLayout
+    private var ratingContainer: ConstraintLayout
+    private var starContainer: ConstraintLayout
+    private var profileContainer: ConstraintLayout
 
-    private lateinit var rating: ImageView
-    private lateinit var star: ImageView
-    private lateinit var profile: ImageView
+    private var rating: ImageView
+    private var star: ImageView
+    private var profile: ImageView
 
     private lateinit var scroll: HorizontalScrollView
 

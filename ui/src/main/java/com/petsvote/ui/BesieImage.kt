@@ -4,27 +4,41 @@ import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
-import android.view.View
-import androidx.annotation.RequiresApi
-import androidx.core.content.withStyledAttributes
-import android.graphics.Rect
 import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.annotation.Nullable
+import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.content.withStyledAttributes
+import androidx.core.graphics.get
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Glide.with
+import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.with
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.with
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.request.transition.Transition
 
-
-open class CircleButton @JvmOverloads constructor(
+open class BesieImage @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : View(context, attrs, defStyleAttr) {
+) : ImageView(context, attrs, defStyleAttr) {
 
-    private val TAG = CircleButton::class.simpleName
+    private val TAG = BesieImage::class.simpleName
 
     private var widthView: Int = 0;
     private var heightView: Int = 0;
 
     private var canvas: Canvas? = null
+    private var path = Path()
+
     private var p =
         Paint().apply {
             isAntiAlias = true
@@ -40,38 +54,43 @@ open class CircleButton @JvmOverloads constructor(
             style = Paint.Style.FILL
         }
 
-    var rippleColor = ContextCompat.getColor(context, R.color.ripple_primary)
+    var rippleColor = ContextCompat.getColor(context, android.R.color.transparent)
         set(value){
             field = value
             pRipple.color = value
             invalidate()
         }
-    var pColor = ContextCompat.getColor(context, R.color.white)
+    var pColor = ContextCompat.getColor(context, R.color.ui_gray)
         set(value){
             field = value
             p.color = value
             invalidate()
         }
 
+    var iconResources = "https://i.natgeofe.com/k/c02b35d2-bfd7-4ed9-aad4-8e25627cd481/komodo-dragon-head-on_2x1.jpg"
+        set(value){
+            field = value
+            getVectorBitmap()
+        }
+    var bitmap: Bitmap? = null
+        set(value) {
+            field = value
+        }
+
     private var animator: ValueAnimator? = null
-
     private var radius = 0f
-    private var iconResources = 0
-
     private var xTouch = 0f;
     private var yTouth = 0f;
     private var rippleRadius = 0f;
     private var isAmim = false
-
     private var mOnClickListener: OnClickListener? = null
 
     init{
-        context.withStyledAttributes(attrs,R.styleable.CircleButton){
-            iconResources = getResourceId(R.styleable.CircleButton_icon_src, -1)
-            pColor = getColor(R.styleable.CircleButton_cb_color,
-                ContextCompat.getColor(context, R.color.white))
-            rippleColor = getColor(R.styleable.CircleButton_cb_ripple_color,
-                ContextCompat.getColor(context, R.color.ripple_primary))
+            context.withStyledAttributes(attrs,R.styleable.BesieImage){
+            pColor = getColor(R.styleable.BesieImage_bi_background_color,
+                ContextCompat.getColor(context, R.color.ui_gray))
+            rippleColor = getColor(R.styleable.BesieImage_bi_ripple_color,
+                ContextCompat.getColor(context, android.R.color.transparent))
         }
     }
 
@@ -107,17 +126,37 @@ open class CircleButton @JvmOverloads constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         try{
             this.canvas = canvas
-            drawCircle()
-            if(iconResources != -1) drawIcon()
+            drawBesie()
+            //if(iconResources.isNotEmpty()) getVectorBitmap()
             if(isAmim){
                 drawRipple()
             }
         }catch (e: Exception){
             Log.d(TAG, e.toString())
         }
+    }
+
+    private fun drawBesie() {
+        Log.d("DOTINDICATOR", "heightView =$heightView | radius = $radius")
+        path.reset()
+        path.moveTo(radius, 0f)
+        path.quadTo(radius /16, radius /16, 0f, radius)
+        path.lineTo(0f, heightView - radius)
+        path.quadTo((radius /16).toFloat(), heightView -  (radius /16).toFloat(),
+            radius, heightView.toFloat())
+        path.lineTo(widthView - radius, heightView.toFloat());
+        path.quadTo(widthView - radius/16, heightView - radius/16,
+            widthView.toFloat(), heightView - radius)
+        path.lineTo(widthView.toFloat(), radius)
+        path.quadTo(widthView - radius/16, radius/16,
+            widthView - radius, 0f);
+        path.lineTo(radius, 0f)
+
+        canvas!!.clipPath(path)
+        canvas!!.drawPath(path, p);
     }
 
     private fun drawRipple(){
@@ -127,36 +166,29 @@ open class CircleButton @JvmOverloads constructor(
             invalidate()
         }
     }
-
-    private fun drawCircle() {
-        canvas!!.drawCircle(radius, radius, radius, p!!)
-        val circularPath = Path()
-        circularPath.addCircle(radius, radius, radius, Path.Direction.CCW)
-        canvas!!.clipPath(circularPath)
+    private fun drawIcon(bm: Bitmap?){
+       try {
+           bm?.let {
+               canvas!!.drawBitmap(
+                   it,
+                   widthView.toFloat(),
+                   widthView.toFloat(), Paint())
+           }
+       }catch (e: Exception){
+           Log.d(TAG, "${e.message}")
+       }
     }
 
-    private fun drawIcon(){
-        //var heightBitmap = 20 * resources.displayMetrics.density
-        var bitmap = getVectorBitmap()
-        val source = Rect(0, 0, bitmap.height, bitmap.height)
-        val bitmapRect = Rect(0, 0, bitmap.height, bitmap.height    )
-        canvas!!.drawBitmap(bitmap,
-            ((widthView - bitmap.width) / 2).toFloat(),
-            ((widthView - bitmap.width) / 2).toFloat(), Paint())
+    private fun getVectorBitmap(){
+//        with(context).asBitmap().load(iconResources).into(object : CustomTarget<Bitmap?>(width, height) {
+//            @RequiresApi(Build.VERSION_CODES.S)
+//            override fun onResourceReady(resource: Bitmap, @Nullable transition: Transition<in Bitmap?>?) {
+//                drawIcon(resource)
+//            }
+//            override fun onLoadCleared(@Nullable placeholder: Drawable?) {}
+//        })
+
     }
-
-   private fun getVectorBitmap(): Bitmap{
-
-       var drawable = ContextCompat.getDrawable(context, iconResources)
-       val bitmap = Bitmap.createBitmap(
-           drawable!!.intrinsicWidth,
-           drawable!!.intrinsicHeight, Bitmap.Config.ARGB_8888
-       )
-       val canvas = Canvas(bitmap)
-       drawable.setBounds(0, 0, canvas.width, canvas.height)
-       drawable.draw(canvas)
-       return bitmap
-   }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         xTouch = event!!.x
