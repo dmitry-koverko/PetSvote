@@ -3,7 +3,6 @@ package com.petsvote.ui
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.ViewTreeObserver
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.withStyledAttributes
@@ -38,6 +37,20 @@ open class BesieLayout @JvmOverloads constructor(
                 ContextCompat.getColor(context, android.R.color.transparent))
         }
 
+    }
+
+    fun setLp(w: Int, h: Int){
+        findViewById<DotIndicator>(R.id.dot).apply {
+            widthView = w
+            heightView = h
+        }
+    }
+
+    fun animRipple(){
+        findViewById<DotIndicator>(R.id.dot).apply {
+            isAmim = true
+            animRipple()
+        }
     }
 
     private fun dotColor(){

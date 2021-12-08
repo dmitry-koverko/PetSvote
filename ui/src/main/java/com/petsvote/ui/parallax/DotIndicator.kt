@@ -25,8 +25,16 @@ class DotIndicator @JvmOverloads constructor(
     private val TAG = DotIndicator::class.simpleName
 
     private var mOnClickListener: OnClickListener? = null
-    private var widthView: Int = 0;
-    private var heightView: Int = 0;
+    var widthView: Int = 0
+        set(value){
+            field = value
+            invalidate()
+        }
+    var heightView: Int = 0
+        set(value) {
+            field = value
+            invalidate()
+        }
     private var canvas: Canvas? = null
 
     private var path = Path()
@@ -34,7 +42,7 @@ class DotIndicator @JvmOverloads constructor(
     private var radius = 0f
     private var animator: ValueAnimator? = null
     private var rippleRadius = 0f;
-    private var isAmim = false
+    var isAmim = false
 
     private var xTouch = 0f;
     private var yTouth = 0f;
@@ -158,6 +166,9 @@ class DotIndicator @JvmOverloads constructor(
         widthView = width;
         heightView = height;
         radius = kotlin.math.min(widthView, heightView).toFloat() /2
+
+        xTouch = width / 2f
+        yTouth = height / 2f
 
         setMeasuredDimension(width, height)
     }

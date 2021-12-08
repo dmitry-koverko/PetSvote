@@ -17,8 +17,10 @@
         <entry key="legal/src/main/res/layout/fragment_info_terms.xml" value="0.29583333333333334" />
         <entry key="legal/src/main/res/layout/fragment_legal.xml" value="0.2" />
         <entry key="legal/src/main/res/layout/fragment_terms.xml" value="0.3098958333333333" />
-        <entry key="profile/src/main/res/layout/fragment_crop_image.xml" value="0.25" />
+        <entry key="profile/src/main/res/layout/crop_layout.xml" value="0.3098958333333333" />
+        <entry key="profile/src/main/res/layout/fragment_crop_image.xml" value="0.16" />
         <entry key="profile/src/main/res/layout/fragment_user_profile.xml" value="0.18" />
+        <entry key="profile/src/main/res/layout/op.xml" value="0.24895833333333334" />
         <entry key="rating/src/main/res/drawable/ic_filter.xml" value="0.22037037037037038" />
         <entry key="rating/src/main/res/layout/fragment_rating.xml" value="0.21669980119284293" />
         <entry key="rating/src/main/res/layout/item_my_pet.xml" value="0.8015267175572519" />

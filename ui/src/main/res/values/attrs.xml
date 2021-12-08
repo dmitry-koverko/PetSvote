@@ -79,4 +79,14 @@
         <attr name="bi_ripple_color" format="color"/>
         <attr name="bi_background_color" format="color"/>
     </declare-styleable>
+
+    <declare-styleable name="MyCropLayout">
+        <attr name="cropme_frame_width_percent"/>
+        <attr name="cropme_frame_height_percent"/>
+        <attr name="cropme_max_scale"/>
+        <attr name="cropme_overlay_shape"/>
+        <attr name="cropme_with_border"/>
+        <attr name="cropme_background_alpha"/>
+        <attr name="cropme_custom_shape_layout"/>
+    </declare-styleable>
 </resources>

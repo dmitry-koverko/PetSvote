@@ -92,6 +92,8 @@ public class MainActivity: AppCompatActivity() {
                     id
                 )
                 Log.d("TAG", "${contentUri.encodedPath}")
+
+
             }
         }
 
