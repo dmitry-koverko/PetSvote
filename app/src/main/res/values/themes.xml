@@ -3,12 +3,12 @@
     <style name="Theme.PetSvote" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">#FF2D55</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimaryVariant">#FF2D55</item>
         <item name="colorOnPrimary">@color/ripple_primary</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">#FF2D55</item>
         <item name="colorSecondaryVariant">#FF2D55</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnSecondary">#FF2D55</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorOnPrimary</item>
         <!-- Customize your theme here. -->

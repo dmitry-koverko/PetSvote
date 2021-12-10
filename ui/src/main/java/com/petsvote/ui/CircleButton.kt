@@ -62,6 +62,7 @@ open class CircleButton @JvmOverloads constructor(
     private var yTouth = 0f;
     private var rippleRadius = 0f;
     private var isAmim = false
+    private var iconSize = 0
 
     private var mOnClickListener: OnClickListener? = null
 
@@ -72,6 +73,7 @@ open class CircleButton @JvmOverloads constructor(
                 ContextCompat.getColor(context, R.color.white))
             rippleColor = getColor(R.styleable.CircleButton_cb_ripple_color,
                 ContextCompat.getColor(context, R.color.ripple_primary))
+            iconSize = getInt(R.styleable.CircleButton_cb_icon_size, 0)
         }
     }
 
@@ -136,10 +138,7 @@ open class CircleButton @JvmOverloads constructor(
     }
 
     private fun drawIcon(){
-        //var heightBitmap = 20 * resources.displayMetrics.density
         var bitmap = getVectorBitmap()
-        val source = Rect(0, 0, bitmap.height, bitmap.height)
-        val bitmapRect = Rect(0, 0, bitmap.height, bitmap.height    )
         canvas!!.drawBitmap(bitmap,
             ((widthView - bitmap.width) / 2).toFloat(),
             ((widthView - bitmap.width) / 2).toFloat(), Paint())
@@ -148,13 +147,13 @@ open class CircleButton @JvmOverloads constructor(
    private fun getVectorBitmap(): Bitmap{
 
        var drawable = ContextCompat.getDrawable(context, iconResources)
+       var size = if(iconSize == 0) drawable!!.intrinsicWidth else iconSize
        val bitmap = Bitmap.createBitmap(
-           drawable!!.intrinsicWidth,
-           drawable!!.intrinsicHeight, Bitmap.Config.ARGB_8888
+           size, size, Bitmap.Config.ARGB_8888
        )
        val canvas = Canvas(bitmap)
-       drawable.setBounds(0, 0, canvas.width, canvas.height)
-       drawable.draw(canvas)
+       drawable!!.setBounds(0, 0, canvas.width, canvas.height)
+       drawable!!.draw(canvas)
        return bitmap
    }
 

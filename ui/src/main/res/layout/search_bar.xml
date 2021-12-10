@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="36dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <EditText
+        android:textSize="16sp"
+        android:textCursorDrawable="@drawable/cursor"
+        android:paddingLeft="36dp"
+        android:background="@drawable/shape_et"
+        android:fontFamily="@font/myfont"
+        android:layout_width="match_parent"
+        android:layout_height="36dp"/>
+
+    <com.petsvote.ui.BesieLayout
+        app:bl_ripple="true"
+        app:bl_background="@android:color/transparent"
+        app:bl_ripple_color="@color/ui_gray"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_width="42dp"
+        android:layout_height="36dp">
+
+        <ImageView
+            android:layout_marginLeft="13dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_search_m"
+            android:layout_width="14dp"
+            android:layout_height="14dp"/>
+
+    </com.petsvote.ui.BesieLayout>
+
+    <com.petsvote.ui.BesieLayout
+        app:bl_ripple="true"
+        app:bl_background="@android:color/transparent"
+        app:bl_ripple_color="@color/ui_gray"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="42dp"
+        android:layout_height="36dp">
+
+        <ImageView
+            app:layout_constraintRight_toRightOf="parent"
+            android:src="@drawable/ic_close"
+            android:layout_marginRight="13dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="14dp"
+            android:layout_height="14dp"/>
+
+    </com.petsvote.ui.BesieLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

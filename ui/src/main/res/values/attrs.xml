@@ -28,6 +28,7 @@
         <attr name="icon_src" format="reference"/>
         <attr name="cb_ripple_color" format="color"/>
         <attr name="cb_color" format="color"/>
+        <attr name="cb_icon_size" format="integer"/>
     </declare-styleable>
 
     <declare-styleable name="DotIndicator">

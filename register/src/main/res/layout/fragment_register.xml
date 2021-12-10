@@ -7,7 +7,7 @@
     tools:context=".RegisterFragment">
 
     <com.petsvote.ui.CircleButton
-        app:icon_src="@drawable/ic_back"
+        app:icon_src="@drawable/ic_back_m"
         android:layout_width="48dp"
         android:layout_height="48dp"/>
 
