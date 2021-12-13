@@ -38,8 +38,8 @@
 
     <declare-styleable name="PageIndicator">
         <attr name="page_orientation" format="enum">
-            <enum name="hor" value="0"/>
-            <enum name="ver" value="1"/>
+            <enum name="ver" value="0"/>
+            <enum name="hor" value="1"/>
         </attr>
         <attr name="count_indicators" format="integer"/>
     </declare-styleable>
@@ -89,5 +89,12 @@
         <attr name="cropme_with_border"/>
         <attr name="cropme_background_alpha"/>
         <attr name="cropme_custom_shape_layout"/>
+    </declare-styleable>
+
+    <declare-styleable name="ParallaxView">
+        <attr name="pv_orientation" format="enum">
+            <enum value="0" name="VERTICAL"/>
+            <enum value="1" name="HORIZONTAL"/>
+        </attr>
     </declare-styleable>
 </resources>

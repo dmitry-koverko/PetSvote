@@ -22,6 +22,7 @@ import com.google.android.material.snackbar.Snackbar
 
 import com.iqeon.profile.CropImageFragment;
 import com.petsvote.filter.SelectCountryFragment
+import com.petsvote.pet.PetInfoFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.FileDescriptor
@@ -43,7 +44,7 @@ public class MainActivity: AppCompatActivity() {
         setContentView(R.layout.main_activity);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, SelectCountryFragment())
+                .replace(R.id.container, PetInfoFragment())
                 .commitNow();
         }
         check()

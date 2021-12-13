@@ -177,6 +177,7 @@ class DotIndicator @JvmOverloads constructor(
         val margins: ViewGroup.MarginLayoutParams = ViewGroup.MarginLayoutParams::class.java.cast(layoutParams)
         val margin: Int = (7 * context.resources.displayMetrics.density).toInt()
         margins.bottomMargin = margin
+        margins.rightMargin = margin
         layoutParams = margins
     }
 

@@ -24,7 +24,7 @@ class PageIndicator @JvmOverloads constructor(
 
     private val TAG = PageIndicator::class.java.name
 
-    private var typeOrientation = 0
+    var typeOrientation = 0
     private var dotCount = 0
     private var indicatorSize = 0
     private var marginSize = 0
@@ -56,9 +56,11 @@ class PageIndicator @JvmOverloads constructor(
 
     fun setCountIndicators(count: Int){
         dotCount = count
+        findViewById<LinearLayoutCompat>(R.id.root).removeAllViews()
         for(i in 1..count){
             var dot = DotIndicator(context)
             var lp = ViewGroup.MarginLayoutParams(indicatorSize, indicatorSize)
+            if(typeOrientation == 1) lp.setMargins(marginSize, 0, 0 ,0)
             dot.apply {
                 layoutParams = lp
                 paint.color = ContextCompat.getColor(context, R.color.dot_white)
@@ -66,11 +68,16 @@ class PageIndicator @JvmOverloads constructor(
             findViewById<LinearLayoutCompat>(R.id.root).addView(dot)
         }
 
-        var lpLinear = LinearLayoutCompat.LayoutParams(
+        var lpLinearVertical = LinearLayoutCompat.LayoutParams(
             indicatorSize,
             (count * indicatorSize) + (count -1) * marginSize
         )
-        findViewById<LinearLayoutCompat>(R.id.root).layoutParams = lpLinear
+
+        var lpLinearHorizontal = LinearLayoutCompat.LayoutParams(
+            (count * indicatorSize) + (count -1) * marginSize,
+            indicatorSize
+        )
+        findViewById<LinearLayoutCompat>(R.id.root).layoutParams = if(typeOrientation == 0) lpLinearVertical else lpLinearHorizontal
     }
 
     fun setOffsetTo(percentOffset: Int){
@@ -91,6 +98,19 @@ class PageIndicator @JvmOverloads constructor(
 
                 Log.d(TAG, "lengthOffser = $lengthOffset " +
                         "offset = $offset length = $length")
+            }
+        }else {
+            if(currentPoint == dotCount) return
+            if(percentOffset <= 50){
+                var width = ((indicatorSize + marginSize) * percentOffset / 50) + indicatorSize
+                lp.width = width
+                dotIndicator.x = distance.toFloat()
+            }else {
+                var lengthOffset = ((indicatorSize + marginSize) * (percentOffset - 50) / 50)
+                var offset = lengthOffset + distance
+                var width = distance + ((indicatorSize * 2) + marginSize) - offset
+                lp.width = width
+                dotIndicator.x = offset.toFloat()
             }
         }
         dotIndicator.layoutParams = lp

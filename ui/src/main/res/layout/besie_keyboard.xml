@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:weightSum="3"
+        android:layout_marginBottom="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="47dp">
+
+        <com.petsvote.ui.BesieLayout
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            app:bl_background="@color/ui_gray"
+            app:bl_ripple_color="@color/ripple_gray"
+            app:bl_ripple="true"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.petsvote.ui.SFTextView
+                android:textSize="25sp"
+                android:textColor="@color/title_color"
+                android:text="1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.petsvote.ui.BesieLayout>
+
+        <com.petsvote.ui.BesieLayout
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            app:bl_background="@color/ui_gray"
+            app:bl_ripple_color="@color/ripple_gray"
+            app:bl_ripple="true"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.petsvote.ui.SFTextView
+                android:textSize="25sp"
+                android:textColor="@color/title_color"
+                android:text="2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.petsvote.ui.BesieLayout>
+
+        <com.petsvote.ui.BesieLayout
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            app:bl_background="@color/ui_gray"
+            app:bl_ripple_color="@color/ripple_gray"
+            app:bl_ripple="true"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.petsvote.ui.SFTextView
+                android:textSize="25sp"
+                android:textColor="@color/title_color"
+                android:text="3"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.petsvote.ui.BesieLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:weightSum="3"
+        android:layout_marginBottom="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="47dp">
+
+        <com.petsvote.ui.BesieLayout
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            app:bl_background="@color/ui_gray"
+            app:bl_ripple_color="@color/ripple_gray"
+            app:bl_ripple="true"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.petsvote.ui.SFTextView
+                android:textSize="25sp"
+                android:textColor="@color/title_color"
+                android:text="4"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.petsvote.ui.BesieLayout>
+
+        <com.petsvote.ui.BesieLayout
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            app:bl_background="@color/ui_gray"
+            app:bl_ripple_color="@color/ripple_gray"
+            app:bl_ripple="true"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.petsvote.ui.SFTextView
+                android:textSize="25sp"
+                android:textColor="@color/title_color"
+                android:text="5"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.petsvote.ui.BesieLayout>
+
+        <com.petsvote.ui.BesieLayout
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            app:bl_background="@color/ui_gray"
+            app:bl_ripple_color="@color/ripple_gray"
+            app:bl_ripple="true"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.petsvote.ui.SFTextView
+                android:textSize="25sp"
+                android:textColor="@color/title_color"
+                android:text="6"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.petsvote.ui.BesieLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:weightSum="3"
+        android:layout_marginBottom="12dp"
+        android:layout_width="match_parent"
+        android:layout_height="47dp">
+
+        <com.petsvote.ui.BesieLayout
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            app:bl_background="@color/ui_gray"
+            app:bl_ripple_color="@color/ripple_gray"
+            app:bl_ripple="true"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.petsvote.ui.SFTextView
+                android:textSize="25sp"
+                android:textColor="@color/title_color"
+                android:text="7"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.petsvote.ui.BesieLayout>
+
+        <com.petsvote.ui.BesieLayout
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            app:bl_background="@color/ui_gray"
+            app:bl_ripple_color="@color/ripple_gray"
+            app:bl_ripple="true"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.petsvote.ui.SFTextView
+                android:textSize="25sp"
+                android:textColor="@color/title_color"
+                android:text="8"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.petsvote.ui.BesieLayout>
+
+        <com.petsvote.ui.BesieLayout
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            app:bl_background="@color/ui_gray"
+            app:bl_ripple_color="@color/ripple_gray"
+            app:bl_ripple="true"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.petsvote.ui.SFTextView
+                android:textSize="25sp"
+                android:textColor="@color/title_color"
+                android:text="9"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.petsvote.ui.BesieLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:weightSum="3"
+        android:layout_width="match_parent"
+        android:layout_height="47dp">
+
+        <View
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <com.petsvote.ui.BesieLayout
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            app:bl_background="@color/ui_gray"
+            app:bl_ripple_color="@color/ripple_gray"
+            app:bl_ripple="true"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.petsvote.ui.SFTextView
+                android:textSize="25sp"
+                android:textColor="@color/title_color"
+                android:text="0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.petsvote.ui.BesieLayout>
+
+        <com.petsvote.ui.BesieLayout
+            android:layout_marginLeft="7dp"
+            android:layout_marginRight="7dp"
+            app:bl_background="@android:color/transparent"
+            app:bl_ripple_color="@color/ripple_gray"
+            app:bl_ripple="true"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:src="@drawable/ic_keyboard_clear"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.petsvote.ui.BesieLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

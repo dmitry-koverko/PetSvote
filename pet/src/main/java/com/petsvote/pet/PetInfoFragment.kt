@@ -1,4 +1,4 @@
-package com.petsvote.filter
+package com.petsvote.pet
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,6 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 
-class SelectCountryFragment : Fragment(R.layout.fragment_search_pet) {
+class PetInfoFragment : Fragment(R.layout.fragment_pet_info) {
 
 }

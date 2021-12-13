@@ -19,6 +19,7 @@
        android:layout_marginRight="32dp"
        app:count_indicators="3"
        app:layout_constraintRight_toRightOf="parent"
+       app:page_orientation="hor"
        android:orientation="vertical"
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"/>
