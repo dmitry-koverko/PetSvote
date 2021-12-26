@@ -8,12 +8,24 @@
 
 
     <ImageView
+        android:id="@+id/icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:src="@drawable/ic_search_m"
-        android:layout_width="75dp"
-        android:layout_height="75dp"/>
+        android:src="@drawable/icon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/progressBar"
+        android:backgroundTint="@color/ui_primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

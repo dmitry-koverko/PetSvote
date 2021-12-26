@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/bold"
+    tools:context=".PetPhotoFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+
+        <com.petsvote.ui.BesieLayout
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:bl_ripple_color="@color/ripple_gray"
+            app:bl_ripple="true"
+            android:layout_width="40dp"
+            android:layout_height="40dp">
+
+            <ImageView
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:src="@drawable/ic_close_white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.petsvote.ui.BesieLayout>
+
+        <com.petsvote.ui.BesieLayout
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginRight="8dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:bl_ripple_color="@color/ripple_gray"
+            app:bl_ripple="true"
+            android:layout_width="40dp"
+            android:layout_height="40dp">
+
+            <ImageView
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:src="@drawable/ic_baseline_more_vert_24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </com.petsvote.ui.BesieLayout>
+
+        <com.petsvote.ui.SFTextView
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:text="1 из 6"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:layout_marginTop="92dp"
+        android:layout_marginBottom="92dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/view_pager"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <com.petsvote.ui.BesieLayout
+        app:bl_ripple_color="@color/ripple_gray"
+        app:bl_ripple="true"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp">
+
+        <ImageView
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:src="@drawable/ic_icon_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </com.petsvote.ui.BesieLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

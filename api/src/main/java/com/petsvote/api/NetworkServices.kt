@@ -1,6 +1,7 @@
 package com.petsvote.api
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.petsvote.api.adapter.NetworkResponseAdapterFactory
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -11,10 +12,7 @@ import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLSession
 import javax.net.ssl.HttpsURLConnection
 
-
-
-
-class NetworkService {
+class NetworkService() {
 
     fun createService(): Api{
         return create(Api::class.java)
@@ -35,6 +33,7 @@ class NetworkService {
         return Retrofit.Builder().run {
             baseUrl(SettingsApi.BASE_URL)
             client(httpClient)
+            addCallAdapterFactory(NetworkResponseAdapterFactory())
             addConverterFactory(Json.asConverterFactory(contentType))
             build()
         }

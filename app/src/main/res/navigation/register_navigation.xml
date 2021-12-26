@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/register_navigation"
+    app:startDestination="@id/registerFragment">
+
+    <fragment
+        tools:layout="@layout/fragment_register"
+        android:id="@+id/registerFragment"
+        android:name="com.petsvote.register.RegisterFragment"
+        android:label="RegisterFragment" >
+        <action
+            android:id="@+id/action_registerFragment_to_legalFragment"
+            app:destination="@id/legalFragment" />
+    </fragment>
+
+    <fragment
+        tools:layout="@layout/fragment_legal"
+        android:id="@+id/legalFragment"
+        android:name="com.petsvote.legal.LegalFragment"
+        android:label="LegalFragment" >
+        <action
+            android:id="@+id/action_legalFragment_to_infoTermsFragment"
+            app:destination="@id/infoTermsFragment" />
+    </fragment>
+
+    <fragment
+        tools:layout="@layout/fragment_info_terms"
+        android:id="@+id/infoTermsFragment"
+        android:name="com.petsvote.legal.InfoTermsFragment"
+        android:label="InfoTermsFragment" />
+
+
+</navigation>

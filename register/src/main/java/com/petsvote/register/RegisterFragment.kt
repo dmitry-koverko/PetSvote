@@ -1,25 +1,33 @@
 package com.petsvote.register
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.viewModels
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
 import com.petsvote.register.databinding.FragmentRegisterBinding
-import com.petsvote.ui.DialView
-import com.petsvote.ui.Shape
+import com.petsvote.register.di.RegisterComponentViewModel
+import javax.inject.Inject
+import dagger.Lazy
 
 class RegisterFragment : Fragment(R.layout.fragment_register) {
+
+    @Inject
+    internal lateinit var registerViewModelFactory: Lazy<RegisterViewModel.Factory>
+
+    private val registerComponentViewModel: RegisterComponentViewModel by viewModels()
+    private val registerViewModel: RegisterViewModel by viewModels{
+        registerViewModelFactory.get()
+    }
+
 
     lateinit var mGoogleSignInClient: GoogleSignInClient
     val Req_Code:Int= 123
@@ -76,7 +84,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
 
     override fun onStart() {
         super.onStart()
-        if(GoogleSignIn.getLastSignedInAccount(context)!=null){
+        if(context?.let { GoogleSignIn.getLastSignedInAccount(it) } !=null){
         }
     }
 
@@ -87,7 +95,12 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
-        mGoogleSignInClient=GoogleSignIn.getClient(context,gso)
+        mGoogleSignInClient= context?.let { GoogleSignIn.getClient(it,gso) }!!
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        registerComponentViewModel.registerComponent.inject(this)
     }
 
 }

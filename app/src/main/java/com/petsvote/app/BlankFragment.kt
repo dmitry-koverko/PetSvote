@@ -113,7 +113,7 @@ class MyAdapter(private val myContext: Context, fm: FragmentManager, internal va
             }
             2 -> {
                 // val movieFragment = MovieFragment()
-                return SplashFragment()
+                return LegalFragment()
             }
             else -> return RegisterFragment()
         }

@@ -1,9 +1,11 @@
 package com.petsvote.api
 
+import com.petsvote.api.adapter.NetworkResponse
 import com.petsvote.api.entity.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.*
+import kotlin.Error
 
 interface Api {
 
@@ -15,13 +17,11 @@ interface Api {
 
     @GET("get-localization-data")
     suspend fun getLocalization(
-        @Query("lang[]") lang: String,
-    ): List<Localize>
+        @Query("lang[]") lang: String?,
+    ):  NetworkResponse<List<Localize>, com.petsvote.api.entity.Error>
 
     @GET("get-global-config")
-    suspend fun getGlobalConfig(
-        @Query("timezone") timezone: Int,
-    ): GlobalConfig
+    suspend fun getGlobalConfig(): NetworkResponse<GlobalConfig, com.petsvote.api.entity.Error>
 
     @GET("get-pets-list")
     suspend fun getPets(
