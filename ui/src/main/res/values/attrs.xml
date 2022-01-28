@@ -62,6 +62,7 @@
         <attr name="bl_background" format="color"/>
         <attr name="bl_ripple" format="boolean"/>
         <attr name="bl_ripple_color" format="color"/>
+        <attr name="bl_change_layout" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="BesieTab">

@@ -17,18 +17,20 @@
         android:theme="@style/Theme.PetSvote"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".SelectActivity"
+            android:exported="true" />
+        <activity
             android:name=".SplashActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
     </application>
 

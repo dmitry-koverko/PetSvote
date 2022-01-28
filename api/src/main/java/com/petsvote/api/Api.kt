@@ -87,14 +87,14 @@ interface Api {
         @Query("lang") lang: String?,
     ): NetworkResponse<User, com.petsvote.api.entity.Error>
 
-    @Multipart
+    //@Multipart
     @POST("save-user-data")
     suspend fun saveUserData(
-        @PartMap params: Map<String, @JvmSuppressWildcards RequestBody>,
+        //@PartMap params: Map<String, @JvmSuppressWildcards RequestBody>?,
         @Query("first_name") first_name: String?,
         @Query("last_name") last_name: String?,
         @Query("location") location: String?,
-    ): UserData
+    ):  NetworkResponse<UserData, com.petsvote.api.entity.Error>
 
 
     @POST("add-complaint")

@@ -1,5 +1,7 @@
 package com.petsvote.app
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.navigation.NavController
 import com.petsvote.ui.navigation.RegisterNavigation
@@ -19,7 +21,6 @@ class Navigator: RegisterNavigation, TabsNavigation {
             navController?.graph = graph
         }
     }
-
 
     override fun toLegal() {
         navController?.navigate(R.id.action_registerFragment_to_legalFragment)
@@ -53,5 +54,9 @@ class Navigator: RegisterNavigation, TabsNavigation {
         if (graph != null) {
             navController?.graph = graph
         }
+    }
+
+    override fun startSelectActivity(state: Int, currentActivity: Activity) {
+        currentActivity.startActivity(Intent(currentActivity, SelectActivity::class.java))
     }
 }

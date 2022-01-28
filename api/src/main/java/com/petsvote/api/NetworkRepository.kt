@@ -5,6 +5,7 @@ import android.util.Log
 import com.petsvote.api.adapter.NetworkResponse
 import com.petsvote.api.entity.*
 import com.petsvote.data.UserInfo
+import okhttp3.RequestBody
 import kotlin.Error
 
 class NetworkRepository(private val context: Context): NReposirory {
@@ -98,6 +99,8 @@ class NetworkRepository(private val context: Context): NReposirory {
         }
     }
 
+
+
     override suspend fun getPetsList(): List<Pet>? {
         var result = api.getPets(null, null, null, null, null, null,
                                 null, null, null, null)
@@ -105,6 +108,20 @@ class NetworkRepository(private val context: Context): NReposirory {
             is NetworkResponse.Success -> {
                 Log.d(TAG, result.toString())
                 return result.body.pets
+            }
+            else ->{
+                checkError(result as NetworkResponse<Any, Error>)
+                return null
+            }
+        }
+    }
+
+    override suspend fun saveUserData(user: User, params: Map<String, RequestBody>?): UserData? {
+        var result = api.saveUserData(user.first_name, user.last_name, "")
+        return when (result) {
+            is NetworkResponse.Success -> {
+                Log.d(TAG, result.toString())
+                return result.body
             }
             else ->{
                 checkError(result as NetworkResponse<Any, Error>)

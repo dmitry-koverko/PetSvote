@@ -41,11 +41,24 @@ open class BesieLayout @JvmOverloads constructor(
                     ContextCompat.getColor(context, R.color.ripple_gray))
                 paint.color = getColor(R.styleable.BesieLayout_bl_background,
                     ContextCompat.getColor(context, android.R.color.transparent))
+                changeLayout = getBoolean(R.styleable.BesieLayout_bl_change_layout, true)
+
             }
             dotColor = getColor(R.styleable.BesieLayout_bl_background,
                 ContextCompat.getColor(context, android.R.color.transparent))
             dotColor()
         }
+
+        rootView.viewTreeObserver.addOnGlobalFocusChangeListener(object: ViewTreeObserver.OnGlobalLayoutListener,
+            ViewTreeObserver.OnGlobalFocusChangeListener {
+            override fun onGlobalLayout() {
+                Log.d("BESIE LAYOUT", "width = $width height = $height")
+            }
+
+            override fun onGlobalFocusChanged(p0: View?, p1: View?) {
+            }
+
+        })
 
 //        viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
 //            override fun onGlobalLayout() {
@@ -122,6 +135,11 @@ open class BesieLayout @JvmOverloads constructor(
         findViewById<DotIndicator>(R.id.dot).apply {
             isRipple = value
         }
+    }
+
+    override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
+        super.onLayout(changed, left, top, right, bottom)
+        Log.d("BESIE LAYOUT", "left = $left  right = $right top = $top bottom = $bottom")
     }
 
     override fun setOnClickListener(l: OnClickListener?) {

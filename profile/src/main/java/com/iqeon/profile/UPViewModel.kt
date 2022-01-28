@@ -9,6 +9,7 @@ import com.petsvote.room.RoomRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import okhttp3.RequestBody
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -26,6 +27,13 @@ class UPViewModel (
             user?.let {
                 uiUser.value = user
             }
+        }
+    }
+
+    fun saveUserInfo(user: User){
+        viewModelScope.launch (Dispatchers.IO) {
+            val map: HashMap<String, RequestBody> = HashMap()
+            var user = networkRepository.saveUserData(user, null)
         }
     }
 

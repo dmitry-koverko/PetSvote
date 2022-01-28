@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -87,12 +88,12 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 saveAccount(account)
             }
         } catch (e:ApiException){
-            //Toast.makeText(context,e.toString(),Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,e.toString(),Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun saveAccount(account: GoogleSignInAccount) {
-        registerViewModel.getCurrensies("123")
+        account.id?.let { registerViewModel.getCurrensies(it) }
     }
 
     override fun onStart() {
@@ -105,7 +106,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         super.onCreate(savedInstanceState)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestIdToken(getString(R.string.default_web_client_id_3))
             .requestEmail()
             .build()
         mGoogleSignInClient= context?.let { GoogleSignIn.getClient(it,gso) }!!
