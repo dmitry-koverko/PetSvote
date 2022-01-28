@@ -74,6 +74,7 @@
 
     <declare-styleable name="BesieTabLayout">
         <attr name="btl_count_tabs" format="integer"/>
+        <attr name="btl_type" format="integer"/>
     </declare-styleable>
 
     <declare-styleable name="BesieImage">

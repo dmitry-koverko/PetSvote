@@ -3,10 +3,11 @@ package com.petsvote.register
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -15,10 +16,17 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.petsvote.register.databinding.FragmentRegisterBinding
 import com.petsvote.register.di.RegisterComponentViewModel
+import com.petsvote.ui.navigation.RegisterNavigation
 import javax.inject.Inject
 import dagger.Lazy
+import kotlinx.coroutines.flow.collect
+import me.vponomarenko.injectionmanager.x.XInjectionManager
 
 class RegisterFragment : Fragment(R.layout.fragment_register) {
+
+    private val navigation: RegisterNavigation by lazy {
+        XInjectionManager.findComponent<RegisterNavigation>()
+    }
 
     @Inject
     internal lateinit var registerViewModelFactory: Lazy<RegisterViewModel.Factory>
@@ -27,7 +35,6 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
     private val registerViewModel: RegisterViewModel by viewModels{
         registerViewModelFactory.get()
     }
-
 
     lateinit var mGoogleSignInClient: GoogleSignInClient
     val Req_Code:Int= 123
@@ -38,11 +45,17 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         var binding = FragmentRegisterBinding.bind(view)
 
         binding.legal.setOnClickListener {
-            Toast.makeText(context, "fsdfsdfsfsf", Toast.LENGTH_LONG).show()
+            navigation.toLegal()
         }
 
         binding.register.setOnClickListener {
             signInGoogle()
+        }
+
+        lifecycleScope.launchWhenStarted {
+            registerViewModel.uiState.collect { uiState ->
+               if(uiState) navigation.closeRegister()
+            }
         }
 
     }
@@ -79,7 +92,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
     }
 
     private fun saveAccount(account: GoogleSignInAccount) {
-
+        registerViewModel.getCurrensies("123")
     }
 
     override fun onStart() {

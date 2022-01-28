@@ -1,101 +1,251 @@
 package com.petsvote.rating
 
+import android.animation.ObjectAnimator
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.ConcatAdapter
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.bumptech.glide.Glide
-import com.petsvote.api.entity.Pet
-import com.petsvote.rating.adapter.HeaderRatingAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.petsvote.api.entity.PetRating
+import com.petsvote.data.FilterPetsObject
+import com.petsvote.filter.fragments.MenuFilterFragment
 import com.petsvote.rating.adapter.RatingPetAdapter
 import com.petsvote.rating.databinding.FragmentRatingBinding
-import com.petsvote.ui.BesieTransformation
+import com.petsvote.rating.di.RatingComponentViewModel
+import com.petsvote.ui.list.RecyclerViewLoadMoreScroll
+import com.petsvote.ui.loadImage
+import dagger.Lazy
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RatingFragment : Fragment(R.layout.fragment_rating) {
+class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnClickItemListener {
 
     private val TAG = RatingFragment::class.java.name
 
-    private var listPet = mutableListOf<Pet>()
+    private var listPet = mutableListOf<PetRating>()
     private var ratingPetAdapter = RatingPetAdapter(listPet)
+    lateinit var scrollListener: RecyclerViewLoadMoreScroll
 
     private var topLinearHeight = 0
     private var topLinearContainerHeight = 0
     private var filterContainerHeight = 0
 
+    private var cardHeight = 0
+    private var loadMore = false
+
+    @Inject
+    internal lateinit var ratingViewModelFactory: Lazy<RatingViewModel.Factory>
+
+    private val ratingComponentViewModel: RatingComponentViewModel by viewModels()
+    private val ratingViewModel: RatingViewModel by viewModels {
+        ratingViewModelFactory.get()
+    }
+
+    var binding: FragmentRatingBinding? = null
+
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var binding = FragmentRatingBinding.bind(view)
-        binding.listRating.apply {
-            layoutManager = GridLayoutManager(context, 2)
-            adapter = ratingPetAdapter
+        binding = FragmentRatingBinding.bind(view)
+
+        var mLayoutManager = GridLayoutManager(context, 2)
+        binding!!.listRating.apply {
+            layoutManager = mLayoutManager
+            this.adapter = ratingPetAdapter
         }
 
-        binding.refresh.setColorSchemeResources(R.color.ui_primary)
-        binding.refresh.setOnRefreshListener { binding.refresh.isRefreshing = false }
+        ratingPetAdapter.setOnClickItemListener(this)
 
-        var listPetIndex = Randomizer.generatePet()
-        if(listPetIndex.isNotEmpty()){
-           binding.topPet.root.visibility = View.VISIBLE
-           binding.topPet.image.setImageDrawable(
-               context?.let { ContextCompat.getDrawable(it, Randomizer.getRandomPhoto()) }
-           )
-            binding.topPet.location.text = "${listPetIndex[0].country_name}, " +
-                    "${listPetIndex[0].city_name}"
-            binding.topPet.name.text = listPetIndex[0].name
-        }
-        if(listPetIndex.size > 1)
-            listPet.addAll(listPetIndex.subList(1, listPetIndex.size - 1))
+        binding!!.listRating.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if (dy <= 0) return
 
-        binding.topLinear.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
+                var lastVisibleItem =
+                    (mLayoutManager as GridLayoutManager).findLastVisibleItemPosition()
+                var totalItemCount = mLayoutManager.itemCount
+
+                Log.d(TAG, "totalItemCount = $totalItemCount ### lastVisibleItem = $lastVisibleItem")
+
+            }
+        })
+
+        binding!!.refresh.setColorSchemeResources(R.color.ui_primary)
+        binding!!.refresh.setOnRefreshListener { binding!!.refresh.isRefreshing = false }
+
+
+        binding!!.topLinear.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
             override fun onGlobalLayout() {
                 if(topLinearHeight == 0)
-                    topLinearHeight = binding.topLinear.measuredHeight
+                    topLinearHeight = binding!!.topLinear.measuredHeight
+                binding!!.topLinear.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
 
-        binding.topLinearContainer.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
+        binding!!.topLinearContainer.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
             override fun onGlobalLayout() {
                 if(topLinearContainerHeight == 0)
-                    topLinearContainerHeight = binding.topLinearContainer.measuredHeight
+                    topLinearContainerHeight = binding!!.topLinearContainer.measuredHeight
+                binding!!.topLinearContainer.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
-        binding.filterContainer.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
+        binding!!.filterContainer.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
             override fun onGlobalLayout() {
                 if(filterContainerHeight == 0)
-                    filterContainerHeight = binding.filterContainer.measuredHeight
+                    filterContainerHeight = binding!!.filterContainer.measuredHeight
+                binding!!.filterContainer.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
 
 
-        binding.nestedScroll.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-            Log.d(TAG, "linTopHeight = $topLinearHeight \n scrollY = $scrollY")
-            var lpTopLinear = binding.topLinear.layoutParams
+        binding!!.nestedScroll.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            Log.d(TAG, "linTopHeight = $topLinearHeight \n scrollY = $scrollY  ### w = ${binding!!.listRating.height}")
+            var loadY = cardHeight * 5
+            Log.d("RatingFragment", "heightRecycler = $loadY")
+//            if(scrollY >= binding.listRating.height - 10000) {
+//                loadMore()
+//            }
+
+            var a = (binding!!.nestedScroll as ViewGroup).getChildAt(0) as ViewGroup
+            Log.d("TAGG", "measuredHeight = ${a.getChildAt(a.getChildCount() - 1).getMeasuredHeight()}" +
+                    "scrollY = $scrollY ### oldScrollY = $oldScrollY")
+
+            Log.d("RatingFragment", "listSize = ${listPet.size}")
+
+            if(a.getChildAt(a.getChildCount() - 1) != null) {
+                if ((scrollY >= (a.getChildAt(a.getChildCount() - 1).getMeasuredHeight() - v.getMeasuredHeight())) &&
+                    scrollY > oldScrollY) {
+                    loadMore()
+
+                    //code to fetch more data for endless scrolling
+                }
+            }
+
+            var lpTopLinear = binding!!.topLinear.layoutParams
             var s = topLinearHeight - scrollY / 2
             if (s < 0) return@setOnScrollChangeListener
             lpTopLinear.height = s
-            binding.topLinear.layoutParams = lpTopLinear
-//            binding.topLinear.translationY = (-scrollY /2).toFloat()
-//            if(scrollY in 1..filterContainerHeight)
-//                binding.filterContainer.translationY = (-scrollY).toFloat()
-//            var lp = binding.topLinearContainer.layoutParams
-//            var sContainer = lp + scrollY / 2
-//            lp.height = sContainer
-//            binding.nestedScroll.layoutParams = lp
+            binding!!.topLinear.layoutParams = lpTopLinear
         }
 
-        context?.let { Glide.with(it).load(R.drawable.cat6).transform(BesieTransformation(requireContext())).into(binding.img1) }
+        lifecycleScope.launchWhenStarted {
+            ratingViewModel.uiState.collect { uiState ->
+                loadMore = false
+                if(uiState.isNullOrEmpty()) return@collect
+                var newList = mutableListOf<PetRating>()
+                newList = uiState as MutableList<PetRating>
+                binding!!.refresh.isRefreshing = false
+                if(binding!!.topPet.root.visibility == View.GONE){
+                    var topPet = uiState[0]
+                    binding!!.topPet.root.visibility = View.VISIBLE
+                    if(!topPet.photos.isNullOrEmpty())
+                        binding!!.topPet.image.loadImage(uiState[0].photos[0].url)
+                    binding!!.topPet.name.text = topPet.name
+                    binding!!.topPet.location.text = "${topPet.country_name}, ${topPet.city_name}"
+
+                    if(newList.isNotEmpty()) newList.removeAt(0)
+                    loadMore()
+                }
+
+                listPet.addAll(newList)
+                ratingPetAdapter.notifyDataSetChanged()
+            }
+        }
+
+        binding!!.imageFilter.setOnClickListener {
+            FilterPetsObject.show.value = 1
+        }
+
+        commitFilter()
+        loadMore()
+
+        lifecycleScope.launchWhenResumed {
+            FilterPetsObject.show.collect {
+                if(it == 1) showFilter(true)
+                else if(it == 2) {
+                    updateFilterText()
+                    showFilter(false)
+                }
+            }
+        }
+
+        ratingViewModel.getUserInfo()
+        updateFilterText()
+
+    }
+
+    private fun commitFilter() {
+        activity?.supportFragmentManager?.beginTransaction()?.apply {
+            replace(R.id.container, MenuFilterFragment())
+            commit()
+        }
+    }
+
+    private fun loadMore() {
+        if(!loadMore){
+            ratingViewModel.getRating()
+            loadMore = true
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        ratingComponentViewModel.ratingComponent.inject(this)
+    }
+
+    override fun onClick(position: Int) {
+
+    }
+
+    override fun onSizeCard(width: Int, height: Int) {
+        cardHeight = height
+    }
+
+    private fun showFilter(isShow: Boolean){
+        val objectAnimator = if(!isShow)
+            ObjectAnimator.ofFloat(binding!!.container, "translationY", binding!!.root.height.toFloat())
+        else ObjectAnimator.ofFloat(binding!!.container, "translationY", 0f)
+        objectAnimator.duration = 300
+        objectAnimator.start()
+
+    }
+
+    private fun updateFilterText(){
+        var txt = "Беларусь, "
+
+        var itKinds = FilterPetsObject.listKinds.value
+        if(itKinds.isEmpty()) txt += "${getString(R.string.all_kinds2).lowercase()}, "
+        else if(itKinds.size == 1) txt += "${itKinds.get(0).name.lowercase()}, "
+        else txt += "${getString(R.string.other_kinds).lowercase()}, "
+
+        var itBreeds = FilterPetsObject.breed.value
+        if (itBreeds.title.isNotEmpty()) {
+            txt += "${itBreeds.title.lowercase()}, "
+        }
+        if(itBreeds.id == -1) txt += "${getString(R.string.no_breeds).lowercase()}, "
+        else if(itBreeds.id == 0) txt += "${getString(R.string.all_breeds).lowercase()}, "
+
+        var tSex = when(FilterPetsObject.sex.value.type){
+            0 -> getString(R.string.sex_all2)
+            1 -> getString(R.string.sex_man)
+            2 -> getString(R.string.sex_girl)
+            else -> getString(R.string.sex_all2)
+        }
+
+        txt += "${tSex.lowercase()}, "
+        txt +=  "${FilterPetsObject.minValue.value} - ${FilterPetsObject.maxValue.value}"
+
+        binding!!.filterText.text = txt
     }
 
 }

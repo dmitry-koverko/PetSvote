@@ -4,23 +4,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:paddingTop="12dp"
-    android:paddingBottom="12dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp"
     android:layout_height="wrap_content">
 
     <com.petsvote.ui.SFTextView
+        android:id="@+id/title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/check"
-        android:text="Кошки"
+        android:text=""
         android:textSize="20sp"
         android:textColor="@color/title_color"
         android:layout_width="0dp"
         android:layout_height="wrap_content"/>
 
     <RadioButton
-        android:checked="true"
+        android:checked="false"
         android:id="@+id/check"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_width="wrap_content"

@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 data class Breeds(
     val lang: String,
     val version: String,
+    val type: String,
     val breeds: List<Breed>
 )
 
@@ -13,5 +14,4 @@ data class Breeds(
 data class Breed(
     val id: Int,
     val title: String,
-    val type: String
 )

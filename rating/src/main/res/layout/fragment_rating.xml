@@ -7,6 +7,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".RatingFragment">
 
+
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/top_linear_container"
         app:layout_constraintTop_toTopOf="parent"
@@ -31,6 +32,8 @@
                 android:layout_height="wrap_content"/>
 
             <com.petsvote.ui.BesieTabLayout
+                app:btl_type="0"
+                android:id="@+id/tabs"
                 android:layout_marginTop="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
@@ -100,6 +103,7 @@
                 android:layout_height="wrap_content">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/ln_nested"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -110,6 +114,7 @@
                         layout="@layout/item_top"/>
 
                     <androidx.recyclerview.widget.RecyclerView
+                        android:descendantFocusability="blocksDescendants"
                         tools:itemCount="2"
                         tools:listitem="@layout/item_rating"
                         android:id="@+id/list_rating"
@@ -154,13 +159,24 @@
 
         </com.petsvote.ui.BesieLayout>
 
-        <ImageView
+        <androidx.recyclerview.widget.RecyclerView
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/search"
             android:id="@+id/img1"
-            android:background="@drawable/ic_bottom_avatar_shape"
-            android:scaleType="centerCrop"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="50dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:translationY="1000dp"
+        android:id="@+id/container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

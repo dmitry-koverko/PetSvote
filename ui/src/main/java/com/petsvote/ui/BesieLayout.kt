@@ -1,8 +1,13 @@
 package com.petsvote.ui
 
 import android.content.Context
+import android.os.CountDownTimer
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewTreeObserver
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.withStyledAttributes
@@ -20,9 +25,11 @@ open class BesieLayout @JvmOverloads constructor(
         }
 
     init {
+
         var inflater =
             context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        inflater.inflate(R.layout.besie_layout, this, true)
+        inflater.inflate(R.layout.besie_layout, this@BesieLayout, true)
+
 
         context.withStyledAttributes(attrs, R.styleable.BesieLayout){
             findViewById<DotIndicator>(R.id.dot).apply {
@@ -32,12 +39,58 @@ open class BesieLayout @JvmOverloads constructor(
                 }
                 pRipple.color = getColor(R.styleable.BesieLayout_bl_ripple_color,
                     ContextCompat.getColor(context, R.color.ripple_gray))
+                paint.color = getColor(R.styleable.BesieLayout_bl_background,
+                    ContextCompat.getColor(context, android.R.color.transparent))
             }
             dotColor = getColor(R.styleable.BesieLayout_bl_background,
                 ContextCompat.getColor(context, android.R.color.transparent))
+            dotColor()
         }
 
+//        viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
+//            override fun onGlobalLayout() {
+//
+//                viewTreeObserver.removeOnGlobalLayoutListener(this)
+//
+//                val childView: View = getChildAt(0)
+//                removeAllViews()
+//
+//                var inflater =
+//                    context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+//                inflater.inflate(R.layout.besie_layout, this@BesieLayout, true)
+//
+//                var root = (findViewById<View>(R.id.root) as ConstraintLayout)
+//                root.addView(childView)
+//
+//
+//                Log.d("TAG", "${childView.width}")
+//                Log.d("TAG", "${childView.height}")
+//
+//                findViewById<DotIndicator>(R.id.dot).apply {
+//                    widthView = childView.width
+//                    heightView = childView.height
+//                    radius = childView.height / 2f
+//                }
+//
+//
+//            }
+//
+//        })
+
     }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+
+        when (event!!.action) {
+            MotionEvent.ACTION_DOWN -> {}
+            MotionEvent.ACTION_MOVE -> {}
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                animRipple()
+            }
+        }
+        return true
+    }
+
 
     fun setLp(w: Int, h: Int){
         findViewById<DotIndicator>(R.id.dot).apply {
@@ -51,6 +104,14 @@ open class BesieLayout @JvmOverloads constructor(
             isAmim = true
             animRipple()
         }
+        val timer = object: CountDownTimer(200, 200) {
+            override fun onTick(millisUntilFinished: Long) {
+
+            }
+
+            override fun onFinish() {mOnClickListener?.onClick(this@BesieLayout)}
+        }
+        //timer.start()
     }
 
     private fun dotColor(){
@@ -66,4 +127,5 @@ open class BesieLayout @JvmOverloads constructor(
     override fun setOnClickListener(l: OnClickListener?) {
         mOnClickListener = l
     }
+
 }

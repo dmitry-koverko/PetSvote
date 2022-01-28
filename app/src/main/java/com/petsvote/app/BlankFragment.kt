@@ -14,10 +14,13 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
+import com.iqeon.profile.UserProfileFragment
 import com.petsvote.app.databinding.BlankFragmentBinding
 import com.petsvote.legal.LegalFragment
+import com.petsvote.rating.RatingFragment
 import com.petsvote.register.RegisterFragment
 import com.petsvote.splash.SplashFragment
+import com.petsvote.vote.VoteFragment
 
 class BlankFragment : Fragment(R.layout.blank_fragment) {
 
@@ -105,15 +108,13 @@ class MyAdapter(private val myContext: Context, fm: FragmentManager, internal va
     override fun getItem(position: Int): Fragment {
         when (position) {
             0 -> {
-                //  val homeFragment: HomeFragment = HomeFragment()
-                return RegisterFragment()
+                return RatingFragment()
             }
             1 -> {
-                return LegalFragment()
+                return VoteFragment()
             }
             2 -> {
-                // val movieFragment = MovieFragment()
-                return LegalFragment()
+                return UserProfileFragment()
             }
             else -> return RegisterFragment()
         }

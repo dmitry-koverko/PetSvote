@@ -1,7 +1,9 @@
 package com.petsvote.api
 
+import android.content.Context
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.petsvote.api.adapter.NetworkResponseAdapterFactory
+import com.petsvote.data.UserInfo
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -14,13 +16,16 @@ import javax.net.ssl.HttpsURLConnection
 
 class NetworkService() {
 
-    fun createService(): Api{
+    private var mContext: Context? = null
+
+    fun createService(context: Context): Api{
+        mContext = context
         return create(Api::class.java)
     }
 
     private fun <T> create(apiClass: Class<T>): T {
-        var token = "Bearer 83a72d7d24a858321170f6ac21a2659aea3b43d4"
-        val httpClient = if (token.isEmpty()) httpClientBuilder().build()
+        var token = mContext?.let { UserInfo.getBearer(it) } ?: ""
+        val httpClient = if (token.isEmpty()) httpClientBuilder()
         else authHttpClient(token)
         return retrofitClient(httpClient).create(apiClass)
     }
@@ -34,15 +39,49 @@ class NetworkService() {
             baseUrl(SettingsApi.BASE_URL)
             client(httpClient)
             addCallAdapterFactory(NetworkResponseAdapterFactory())
-            addConverterFactory(Json.asConverterFactory(contentType))
+            addConverterFactory(Json {
+                ignoreUnknownKeys = true
+            }.asConverterFactory(contentType))
             build()
         }
     }
 
-    private fun httpClientBuilder() = OkHttpClient.Builder().apply {
-        readTimeout(60L, TimeUnit.SECONDS)
-        connectTimeout(60L, TimeUnit.SECONDS)
-        writeTimeout(60L, TimeUnit.SECONDS)
+    private fun httpClientBuilder(): OkHttpClient{
+        val client: OkHttpClient.Builder = OkHttpClient().newBuilder()
+        client.apply {
+            readTimeout(60L, TimeUnit.SECONDS)
+            connectTimeout(60L, TimeUnit.SECONDS)
+            writeTimeout(60L, TimeUnit.SECONDS)
+        }
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.setLevel(HttpLoggingInterceptor.Level.HEADERS)
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+
+        client.addInterceptor(interceptor).hostnameVerifier(object :HostnameVerifier {
+            override fun verify(p0: String?, p1: SSLSession?): Boolean {
+                val hv = HttpsURLConnection.getDefaultHostnameVerifier()
+                return hv.verify("d.pvapi.site", p1)
+            }
+
+        })
+
+        mContext?.let {
+            var bearer = UserInfo.getBearer(mContext!!)
+            if(bearer.isNotEmpty()){
+                client.addInterceptor { chain ->
+                    chain.proceed(
+                        chain.request().newBuilder().header("Authorization", "$bearer").build()
+                    )
+                }.build()
+            }
+        }
+
+        client.addInterceptor { chain ->
+            chain.proceed(
+                chain.request().newBuilder().header("X-Api-Key", "r0ReOEO3749jg3rg").build()
+            )
+        }.build()
+        return client.build()
     }
 
     private fun authHttpClient(token: String): OkHttpClient {

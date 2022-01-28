@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.petsvote.api.NetworkRepository
 import com.petsvote.register.RegisterFragment
+import com.petsvote.room.RoomRepository
 import dagger.Component
 import dagger.Module
 import javax.inject.Scope
@@ -41,7 +42,7 @@ interface RegisterDepsProvider {
 
 interface RegisterDeps{
     val networkRepository: NetworkRepository
-    //val roomRepository: RoomRepository
+    val roomRepository: RoomRepository
 }
 
 val Context.registerDepsProvider: RegisterDepsProvider

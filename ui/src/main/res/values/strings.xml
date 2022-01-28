@@ -4,5 +4,24 @@
     <string name="register_with_google">Sign in with Google</string>
     <string name="change">change</string>
     <string name="reset">reset</string>
+    <string name="termsTitle">Пользовательское соглашение</string>
+    <string name="sex_all">Любой</string>
+    <string name="sex_all2">Любой пол</string>
+    <string name="sex_girl">Девочки</string>
+    <string name="sex_man">Мальчики</string>
+    <string name="all_kinds">Все</string>
+    <string name="all_kinds2">Все виды</string>
+    <string name="all_breeds">Все породы</string>
+    <string name="no_breeds">Без породы</string>
+    <string name="other_kinds">Разные виды</string>
+    <string name="contin">Продолжить</string>
+    <string name="share">Пригласить друзей</string>
+    <string name="vote_list_empty_">Вы проголосовали за всех \nпитомцев с интересующими вас параметрами</string>
+    <string name="vote_list_empty_text">Пригласите друзей, чтобы вам было интереснее и веселее.</string>
+    <string name="bonus">БОНУС</string>
+    <string name="bonus_50">+50</string>
+    <string name="bonus_text">Евгений, вы совершили 50 голосований и Марсик получил +50 баллов к своей популярности</string>
+    <string name="name">Имя</string>
+    <string name="family">Фамилия</string>
 
 </resources>

@@ -16,7 +16,7 @@
     <color name="ripple_primary">#1AFF2D55</color>
     <color name="ripple_bold">#1AFFFFFF</color>
     <color name="ripple_gray">#1A000000</color>
-    <color name="ripple_text">#1AFFFFFF</color>
+    <color name="ripple_text">#57666666</color>
 
     //text
     <color name="tab_text_color">#61000000</color>

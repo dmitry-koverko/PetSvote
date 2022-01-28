@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/root_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:src="@drawable/shape_gray"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"/>
+
+    <com.petsvote.ui.SFTextView
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="7dp"
+        android:paddingTop="7dp"
+        android:textSize="15sp"
+        android:textColor="@color/title_color"
+        android:text="Legal information"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.petsvote.ui.BesieLayout
+        android:id="@+id/bl"
+        app:bl_ripple="true"
+        app:bl_ripple_color="@color/ripple_gray"
+        app:bl_background="@android:color/transparent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

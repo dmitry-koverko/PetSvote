@@ -3,6 +3,7 @@ package com.petsvote.splash.di
 import android.app.Application
 import android.content.Context
 import com.petsvote.api.NetworkRepository
+import com.petsvote.room.RoomRepository
 import com.petsvote.splash.SplashFragment
 import dagger.Component
 import dagger.Module
@@ -42,7 +43,7 @@ interface SplashDepsProvider {
 
 interface SplashDeps{
     val networkRepository: NetworkRepository
-    //val roomRepository: RoomRepository
+    val roomRepository: RoomRepository
 }
 
 val Context.splashDepsProvider: SplashDepsProvider

@@ -4,6 +4,34 @@ import android.content.Context
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.content.ContextCompat
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import com.bumptech.glide.signature.ObjectKey
+
+import com.bumptech.glide.request.RequestOptions
+
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Glide.with
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+
+
+fun ImageView.loadImage(url: String){
+
+    val circularProgressDrawable = CircularProgressDrawable(this.context)
+    circularProgressDrawable.strokeWidth = 5f
+    circularProgressDrawable.centerRadius = 50f
+    //circularProgressDrawable.backgroundColor = ContextCompat.getColor(this.context, R.color.ui_gray)
+    circularProgressDrawable.start()
+
+    Glide
+        .with(context)
+        .load(url)
+        .placeholder(circularProgressDrawable)
+        .transition(DrawableTransitionOptions.withCrossFade())
+        .skipMemoryCache(true)
+        .into(this);
+}
 
 fun View.margin(left: Float? = null, top: Float? = null, right: Float? = null, bottom: Float? = null) {
     layoutParams<ViewGroup.MarginLayoutParams> {

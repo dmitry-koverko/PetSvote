@@ -40,7 +40,10 @@ android {
 
 dependencies {
     implementation project(path: ':api')
+    implementation project(path: ':room')
     def dagger_version = "2.40.5"
+
+    implementation "com.github.valeryponomarenko.componentsmanager:androidx:2.0.1"
 
     implementation platform('com.google.firebase:firebase-bom:29.0.0')
     implementation 'com.google.firebase:firebase-analytics-ktx'

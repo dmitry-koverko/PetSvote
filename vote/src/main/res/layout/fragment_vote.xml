@@ -7,10 +7,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".VoteFragment">
 
-    <androidx.core.widget.NestedScrollView
 
+    <ProgressBar
+        android:id="@+id/progress"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nested"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/vote_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp">
 
         <androidx.viewpager2.widget.ViewPager2
             android:layout_marginBottom="16dp"
@@ -24,7 +36,11 @@
 
     </androidx.core.widget.NestedScrollView>
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/nested"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="24dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
@@ -87,6 +103,162 @@
             app:layout_constraintTop_toTopOf="parent"
             android:layout_width="51dp"
             android:layout_height="48dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.petsvote.ui.Shape
+        android:visibility="gone"
+        android:id="@+id/contin_button"
+        app:besie_text="@string/contin"
+        app:besie_text_size="19"
+        app:besie_text_color="@color/white"
+        app:besie_background="@color/ui_primary"
+        app:besie_ripple="@color/ripple_primary"
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"/>
+
+    <androidx.cardview.widget.CardView
+        android:visibility="gone"
+        android:id="@+id/card"
+        app:cardCornerRadius="20dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:backgroundTint="@color/card_color"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/vote_bar"
+        android:layout_marginBottom="104dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:scaleType="centerCrop"
+                android:src="@drawable/cat6"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <View
+                android:id="@+id/view_black"
+                android:visibility="visible"
+                android:alpha="0.64"
+                android:background="@color/bold"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <com.petsvote.ui.SFTextView
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="72sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:text="@string/bonus"
+                android:layout_margin="40dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <com.petsvote.ui.SFTextView
+                android:textStyle="bold"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textSize="182sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:text="@string/bonus_50"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <com.petsvote.ui.SFTextView
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:textAlignment="center"
+                android:layout_marginBottom="24dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:text="@string/bonus_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:visibility="gone"
+        android:id="@+id/container_list_empty"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/contin_button"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
+
+        <ImageView
+            android:id="@+id/emptylist_img"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="80dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:src="@drawable/votelistempty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.petsvote.ui.SFTextView
+            android:id="@+id/empty_text"
+            android:textSize="20sp"
+            android:textColor="@color/title_color"
+            android:gravity="center"
+            android:text="@string/vote_list_empty_"
+            android:layout_marginTop="16dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/emptylist_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.petsvote.ui.SFTextView
+            android:id="@+id/empty_text_sub"
+            android:textSize="15sp"
+            android:textColor="@color/sub_text_color"
+            android:gravity="center"
+            android:text="@string/vote_list_empty_text"
+            android:layout_marginTop="16dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/empty_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.petsvote.ui.BesieLayout
+            android:layout_marginBottom="28dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:bl_ripple="true"
+            app:bl_background="@color/ui_gray"
+            app:bl_ripple_color="@color/ripple_primary"
+            android:layout_width="36dp"
+            android:layout_height="36dp">
+
+            <ImageView
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:src="@drawable/ic_refresh"
+                android:layout_width="24dp"
+                android:layout_height="24dp"/>
+
+        </com.petsvote.ui.BesieLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

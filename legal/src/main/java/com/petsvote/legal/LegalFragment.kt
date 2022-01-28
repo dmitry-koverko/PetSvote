@@ -2,18 +2,18 @@ package com.petsvote.legal
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import com.petsvote.legal.databinding.FragmentLegalBinding
+import com.petsvote.ui.navigation.RegisterNavigation
+import me.vponomarenko.injectionmanager.x.XInjectionManager
 
 class LegalFragment : Fragment(R.layout.fragment_legal) {
 
-    companion object {
-        @JvmStatic
-        fun newInstance() = LegalFragment()
+    private val navigation: RegisterNavigation by lazy {
+        XInjectionManager.findComponent<RegisterNavigation>()
     }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -27,6 +27,24 @@ class LegalFragment : Fragment(R.layout.fragment_legal) {
                 )
             }
         }
+
+        binding.close.setOnClickListener {
+            navigation.legalToRegister()
+        }
+
+        binding.back.setOnClickListener {
+            navigation.legalToRegister()
+        }
+
+        binding.containerTerms.setOnClickListener {
+            navigation.toInfoLegal(0)
+        }
+
+        binding.containerPolicy.setOnClickListener {
+            navigation.toInfoLegal(1)
+        }
+
+
     }
 
 }

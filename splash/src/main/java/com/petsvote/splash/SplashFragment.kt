@@ -2,6 +2,9 @@ package com.petsvote.splash
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Handler
@@ -12,13 +15,26 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.petsvote.base.BaseFragment
+import com.petsvote.data.UserInfo
 import com.petsvote.splash.databinding.FragmentSplashBinding
 import com.petsvote.splash.di.SplashComponentViewModel
+import com.petsvote.ui.navigation.RegisterNavigation
+import com.petsvote.ui.navigation.TabsNavigation
 import javax.inject.Inject
 import dagger.Lazy
 import kotlinx.coroutines.flow.collect
+import me.vponomarenko.injectionmanager.x.XInjectionManager
 
 class SplashFragment : Fragment(R.layout.fragment_splash) {
+
+    private val navigationRegister: RegisterNavigation by lazy {
+        XInjectionManager.findComponent<RegisterNavigation>()
+    }
+
+    private val navigationTabs: TabsNavigation by lazy {
+        XInjectionManager.findComponent<TabsNavigation>()
+    }
+
 
     @Inject
     internal lateinit var splashViewModelFactory: Lazy<SplashViewModel.Factory>
@@ -35,6 +51,17 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentSplashBinding.bind(view)
+
+        val resources: Resources? = activity?.getResources()
+        val config: Configuration? = resources?.getConfiguration()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            var lang = config?.locales?.get(0)?.language?.toString()!!
+            Log.d(TAG, "language user = $lang")
+            if(UserInfo.listLanguage.contains(lang))
+                UserInfo.languge = lang
+        }
+
+
         setUIStart()
     }
 
@@ -49,9 +76,10 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
         lifecycleScope.launchWhenStarted {
             splashViewModel.uiState.collect { uiState ->
                 Log.d(TAG, uiState.toString())
-                if(uiState.globalConfig && uiState.localizationData){
-//                    startActivity(Intent(this, MainActivity::class.java))
-//                    finish()
+                if(uiState == 2){
+                    var bearer = context?.let { UserInfo.getBearer(it) } ?: ""
+                    if(bearer.isNotEmpty()) navigationTabs.startTabsNavigation()
+                    else navigationRegister.startRegisterNavigation()
                 }
             }
         }
@@ -60,7 +88,6 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
     private fun setUIProgress(){
         binding!!.icon.visibility = View.GONE
         binding!!.progressBar.visibility = View.VISIBLE
-
         splashViewModel.getConfig()
 
     }

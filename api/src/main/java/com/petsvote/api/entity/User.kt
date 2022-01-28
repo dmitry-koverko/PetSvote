@@ -4,18 +4,21 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class User(
-    val id: Int,
-    val first_name: String,
-    val is_blocked: Boolean,
-    val last_name: String,
-    val avatar: String,
-    val first_vote: Int,
-    val has_paid_votes: Boolean?,
-    val notify_status: Int,
-    val official: Int,
-    val location: Location,
-    val pets: List<UserPets>
+    //val is_blocked: Boolean,
+    val location: Location?,
+    val pets: List<UserPets>?,
+    val id: Int?,
+    //val bearer: String,
+    val first_name: String?,
+    //val has_blocked: Boolean,
+    val last_name: String?,
+    val avatar: String?,
+    val first_vote: Int?,
+    //val has_paid_votes: Boolean,
+    //val notify_status: Int,
+    val official: Int?
 )
+
 
 @Serializable
 data class Location(

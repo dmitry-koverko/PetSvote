@@ -14,12 +14,15 @@ import androidx.cardview.widget.CardView
 import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.petsvote.api.entity.Pet
+import com.petsvote.api.entity.PetRating
 import com.petsvote.ui.layoutParams
+import com.petsvote.ui.parallax.ParallaxView
 import com.petsvote.vote.R
 
 class CardViewPagerAdapter(
     private val context: Context,
-    private val arrayList: List<Int>,
+    private var pet: Pet,
     private val height: Int) :
     RecyclerView.Adapter<CardViewPagerAdapter.MyViewHolder>() {
 
@@ -30,8 +33,14 @@ class CardViewPagerAdapter(
     private var alphaText = 1f
     private var cafSize = 0.0f
 
+
     private var startAnim = false
     private var animator: ValueAnimator? = null
+
+    fun submitList(petNew: Pet){
+        this.pet = petNew
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.item_card, parent, false)
@@ -40,6 +49,8 @@ class CardViewPagerAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         var lp = holder.card.layoutParams
+
+        var item = pet
 
         if(startAnim) {
             holder.card.scaleX = scaleX
@@ -65,10 +76,17 @@ class CardViewPagerAdapter(
             holder.rate.scaleX = 1f
             holder.rate.scaleY = 1f
         }
+        var listPhoto = mutableListOf<String>()
+        for (i in item.photos){
+            listPhoto.add(i.url)
+        }
+        holder.paralax.list = listPhoto
+        holder.title.text = item.name
+        holder.title.text = item.name
     }
 
     override fun getItemCount(): Int {
-        return arrayList.size
+        return 1
     }
 
     fun startAnim(){
@@ -119,6 +137,7 @@ class CardViewPagerAdapter(
         var title: TextView
         var description: TextView
         var rate: ImageView
+        var paralax: ParallaxView
 
         init {
             card = itemView.findViewById(R.id.card)
@@ -126,6 +145,7 @@ class CardViewPagerAdapter(
             title = itemView.findViewById(R.id.title)
             description = itemView.findViewById(R.id.description)
             rate = itemView.findViewById(R.id.rate)
+            paralax = itemView.findViewById(R.id.parallax)
         }
     }
 

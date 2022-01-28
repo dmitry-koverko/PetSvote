@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <EditText
+        android:id="@+id/edit"
         android:textSize="16sp"
         android:textCursorDrawable="@drawable/cursor"
         android:paddingLeft="36dp"
@@ -33,6 +34,7 @@
     </com.petsvote.ui.BesieLayout>
 
     <com.petsvote.ui.BesieLayout
+        android:id="@+id/clear"
         app:bl_ripple="true"
         app:bl_background="@android:color/transparent"
         app:bl_ripple_color="@color/ui_gray"

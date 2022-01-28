@@ -1,14 +1,19 @@
 package com.petsvote.rating.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.petsvote.api.entity.Pet
+import com.petsvote.api.entity.PetRating
 import com.petsvote.rating.Randomizer
 import com.petsvote.rating.databinding.ItemRatingBinding
+import com.petsvote.ui.loadImage
 
-class RatingPetAdapter(private val list: List<Pet>) : RecyclerView.Adapter<RatingPetAdapter.RatingHolder>() {
+class RatingPetAdapter(private val list: MutableList<PetRating>) : RecyclerView.Adapter<RatingPetAdapter.RatingHolder>() {
 
     private var mOnClickItemListener: OnClickItemListener? = null
 
@@ -19,7 +24,7 @@ class RatingPetAdapter(private val list: List<Pet>) : RecyclerView.Adapter<Ratin
     }
 
     override fun onBindViewHolder(holder: RatingHolder, position: Int) {
-        val pet: Pet = list[position]
+        val pet: PetRating = list[position]
         holder.bind(pet)
     }
 
@@ -28,11 +33,28 @@ class RatingPetAdapter(private val list: List<Pet>) : RecyclerView.Adapter<Ratin
     inner class RatingHolder(private val binding: ItemRatingBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Pet) {
+        fun bind(item: PetRating) {
+            if(!item.photos.isNullOrEmpty()){
+                binding.image.loadImage(item.photos[0].url)
+            }
+            binding.rate.text = item.index.toString()
+            binding.name.text = item.name
+            binding.location.text = "${item.country_name}, ${item.city_name}"
 
-            binding.image.setImageDrawable(
-                ContextCompat.getDrawable(binding.root.context, Randomizer.getRandomPhoto())
-            )
+            binding.image.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
+                override fun onGlobalLayout() {
+                    //Log.d("RatingPetAdapter", "width = ${binding.root.width} ## height = ${binding.root.height}")
+                    mOnClickItemListener?.onSizeCard(binding.root.width, binding.root.height + binding.root.width)
+                    var lp = binding.image.layoutParams
+                    binding.image.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    lp.height = binding.root.width
+                    lp.width = binding.root.width
+                    binding.image.layoutParams = lp
+
+                }
+
+            })
+
         }
     }
 
@@ -42,5 +64,6 @@ class RatingPetAdapter(private val list: List<Pet>) : RecyclerView.Adapter<Ratin
 
     interface OnClickItemListener{
         fun onClick(position: Int)
+        fun onSizeCard(width: Int, height: Int)
     }
 }

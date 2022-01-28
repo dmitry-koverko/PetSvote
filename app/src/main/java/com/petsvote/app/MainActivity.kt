@@ -1,7 +1,6 @@
 package com.petsvote.app;
 
 import android.Manifest
-import android.app.SearchManager.QUERY
 import android.content.ContentUris
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -13,23 +12,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.provider.MediaStore
 import android.util.Log
-import android.view.View
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.google.android.material.snackbar.Snackbar
+import androidx.navigation.findNavController
 
-import com.iqeon.profile.CropImageFragment;
-import com.petsvote.filter.SelectCountryFragment
-import com.petsvote.pet.PetInfoFragment
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import me.vponomarenko.injectionmanager.x.XInjectionManager
 import java.io.FileDescriptor
 import java.io.IOException
 
 public class MainActivity: AppCompatActivity() {
 
+    private val navigator: Navigator by lazy {
+        XInjectionManager.findComponent<Navigator>()
+    }
 
     private val PROJECTION = arrayOf(MediaStore.Images.Media._ID)
     private val collection =
@@ -112,5 +106,15 @@ public class MainActivity: AppCompatActivity() {
             e.printStackTrace()
         }
         return null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        navigator.bind(findNavController(R.id.my_nav_host_fragment))
+    }
+
+    override fun onPause() {
+        super.onPause()
+        navigator.unbind()
     }
 }

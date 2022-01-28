@@ -66,17 +66,21 @@
                android:layout_height="wrap_content"/>
 
            <com.petsvote.ui.BesieLayout
+               android:id="@+id/bl_avatar"
                android:layout_marginLeft="16dp"
                android:layout_marginRight="16dp"
                android:layout_marginTop="12dp"
                android:layout_width="96dp"
                android:layout_height="96dp">
 
-               <com.petsvote.ui.BesieImage
+               <com.petsvote.ui.BesieLayout
+                   app:bl_background="@color/ui_gray"
                    android:layout_width="96dp"
                    android:layout_height="96dp"/>
 
                <ImageView
+                   android:id="@+id/avatar"
+                   android:scaleType="centerCrop"
                    app:layout_constraintTop_toTopOf="parent"
                    app:layout_constraintBottom_toBottomOf="parent"
                    app:layout_constraintRight_toRightOf="parent"
@@ -100,13 +104,16 @@
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"/>
 
-               <androidx.appcompat.widget.AppCompatEditText
-                   android:layout_marginLeft="16dp"
+               <com.google.android.material.textfield.TextInputEditText
+                   android:textCursorDrawable="@drawable/cursor"
+                   android:hint="@string/name"
+                   android:layout_marginLeft="14dp"
                    android:layout_marginRight="16dp"
-                   android:layout_marginBottom="-8dp"
+                   android:layout_marginBottom="-6dp"
                    android:layout_marginTop="-10dp"
                    android:textSize="20sp"
-                   android:textColor="@color/et_text_color"
+                   android:textColor="@color/title_color"
+                   android:id="@+id/username"
                    android:fontFamily="@font/myfont"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"/>
@@ -119,6 +126,7 @@
                android:layout_height="wrap_content">
 
                <com.petsvote.ui.SFTextView
+                   android:layout_marginTop="4dp"
                    android:textColor="@color/et_title_color"
                    android:layout_marginLeft="16dp"
                    android:text="не обязательно"
@@ -126,13 +134,16 @@
                    android:layout_height="wrap_content"/>
 
                <androidx.appcompat.widget.AppCompatEditText
+                   android:id="@+id/lastname"
+                   android:textCursorDrawable="@drawable/cursor"
+                   android:hint="@string/family"
                    android:backgroundTint="@color/divider"
-                   android:layout_marginLeft="16dp"
+                   android:layout_marginLeft="14dp"
                    android:layout_marginRight="16dp"
                    android:layout_marginBottom="-8dp"
                    android:layout_marginTop="-10dp"
                    android:textSize="20sp"
-                   android:textColor="@color/et_text_color"
+                   android:textColor="@color/title_color"
                    android:fontFamily="@font/myfont"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"/>

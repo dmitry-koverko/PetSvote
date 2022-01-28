@@ -19,12 +19,15 @@ class SFTextView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : androidx.appcompat.widget.AppCompatTextView(context, attrs) {
 
+    private var mOnClickListener: OnClickListener? = null
+
     private var typeFaceSF = ResourcesCompat.getFont(context, R.font.myfont)
     private var rippleRadius = 0.0f
     private var animator: ValueAnimator? = null
     private var canvas: Canvas? = null
 
     var isAmim = false
+    var animation = false
     private var xTouch = 0f;
     private var yTouth = 0f;
 
@@ -53,20 +56,22 @@ class SFTextView @JvmOverloads constructor(
 
 
     private fun drawRipple(){
-        canvas!!.drawCircle(xTouch, yTouth, rippleRadius, pRipple!!);
-        if(rippleRadius >= height /2){
-            isAmim = false
-            invalidate()
+        if(animation){
+            canvas!!.drawCircle(xTouch, yTouth, rippleRadius, pRipple!!);
+            if(rippleRadius >= height/2){
+                isAmim = false
+                invalidate()
+            }
         }
     }
 
     fun animRipple(){
         val propertyXLeft: PropertyValuesHolder =
-            PropertyValuesHolder.ofFloat("PROPERTY_RADIUS", 0f, height /2.toFloat())
+            PropertyValuesHolder.ofFloat("PROPERTY_RADIUS", 0f, height/2.toFloat())
 
         animator = ValueAnimator()
         animator!!.setValues(propertyXLeft)
-        animator!!.setDuration(300)
+        animator!!.setDuration(200)
         animator!!.addUpdateListener(ValueAnimator.AnimatorUpdateListener { animation ->
             rippleRadius = animation.getAnimatedValue("PROPERTY_RADIUS") as Float
             invalidate()
@@ -81,10 +86,14 @@ class SFTextView @JvmOverloads constructor(
             MotionEvent.ACTION_DOWN -> {}
             MotionEvent.ACTION_MOVE -> {}
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                mOnClickListener?.onClick(this)
                 isAmim = true
                 animRipple()
             }
         }
         return true
+    }
+    override fun setOnClickListener(l: OnClickListener?) {
+        mOnClickListener = l
     }
 }

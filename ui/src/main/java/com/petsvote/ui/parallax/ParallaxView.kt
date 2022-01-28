@@ -27,6 +27,14 @@ class ParallaxView @JvmOverloads constructor(
     private val pageIndicator: PageIndicator
     private var orientation: Int = 0
 
+    private lateinit var viewPagerAdapter: ViewPagerAdapter
+
+    var list = listOf<String>()
+        set(value) {
+            field = value
+            viewPagerAdapter.update(value)
+        }
+
     init{
         val inflater: LayoutInflater =
             context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -36,8 +44,7 @@ class ParallaxView @JvmOverloads constructor(
             orientation = getInt(R.styleable.ParallaxView_pv_orientation, 0)
         }
 
-        var viewPagerAdapter = ViewPagerAdapter(context,
-            listOf<Int>(R.drawable.cat_card, R.drawable.cat2, R.drawable.cat3, R.drawable.cat4))
+        viewPagerAdapter = ViewPagerAdapter(context, list)
         pageIndicator =  findViewById<PageIndicator>(R.id.page_indicators)
         pageIndicator.apply {
             typeOrientation = orientation

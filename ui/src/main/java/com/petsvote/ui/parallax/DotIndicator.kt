@@ -1,5 +1,6 @@
 package com.petsvote.ui.parallax
 
+import android.animation.Animator
 import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
 import android.content.Context
@@ -16,6 +17,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.withStyledAttributes
+import androidx.dynamicanimation.animation.DynamicAnimation
 import com.petsvote.ui.R
 
 class DotIndicator @JvmOverloads constructor(
@@ -27,19 +29,29 @@ class DotIndicator @JvmOverloads constructor(
     private var mOnClickListener: OnClickListener? = null
     var widthView: Int = 0
         set(value){
-            field = value
-            invalidate()
+            if(value > field){
+                field = value
+                invalidate()
+            }
         }
     var heightView: Int = 0
         set(value) {
-            field = value
-            invalidate()
+            if(value > field){
+                field = value
+                invalidate()
+            }
         }
     private var canvas: Canvas? = null
 
     private var path = Path()
 
-    private var radius = 0f
+    var radius = 0f
+        set(value) {
+            if(value > field){
+                field = value
+                invalidate()
+            }
+        }
     private var animator: ValueAnimator? = null
     private var rippleRadius = 0f;
     var isAmim = false
@@ -63,6 +75,10 @@ class DotIndicator @JvmOverloads constructor(
             color = Color.argb(50, 255, 255, 255)
             style = Paint.Style.FILL
         }
+        set(value){
+            field = value
+            invalidate()
+        }
     var isRipple = false
         set(value){
             field = value
@@ -73,7 +89,7 @@ class DotIndicator @JvmOverloads constructor(
         context.withStyledAttributes(attrs, R.styleable.DotIndicator){
             paint.color =
                 getColor(R.styleable.DotIndicator_dot_background,
-                ContextCompat.getColor(context, android.R.color.white))
+                ContextCompat.getColor(context, android.R.color.black))
             isRipple = getBoolean(R.styleable.DotIndicator_dot_ripple, false)
         }
     }
@@ -114,10 +130,34 @@ class DotIndicator @JvmOverloads constructor(
 
         animator = ValueAnimator()
         animator!!.setValues(propertyXLeft)
-        animator!!.setDuration(1000)
+        animator!!.setDuration(300)
         animator!!.addUpdateListener(ValueAnimator.AnimatorUpdateListener { animation ->
             rippleRadius = animation.getAnimatedValue("PROPERTY_RADIUS") as Float
             invalidate()
+        })
+        animator!!.addListener(object : DynamicAnimation.OnAnimationEndListener,
+            Animator.AnimatorListener {
+            override fun onAnimationEnd(
+                animation: DynamicAnimation<*>?,
+                canceled: Boolean,
+                value: Float,
+                velocity: Float
+            ) {
+            }
+
+            override fun onAnimationStart(p0: Animator?) {
+            }
+
+            override fun onAnimationEnd(p0: Animator?) {
+                mOnClickListener?.onClick(this@DotIndicator)
+            }
+
+            override fun onAnimationCancel(p0: Animator?) {
+            }
+
+            override fun onAnimationRepeat(p0: Animator?) {
+            }
+
         })
         animator!!.start()
     }
@@ -131,7 +171,6 @@ class DotIndicator @JvmOverloads constructor(
             MotionEvent.ACTION_MOVE -> {}
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                if(isRipple){
-                   mOnClickListener?.onClick(this)
                    isAmim = true
                    animRipple()
                }

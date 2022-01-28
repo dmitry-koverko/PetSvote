@@ -3,22 +3,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".SelectCountryFragment">
+    tools:context=".fragments.SelectCountryFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/tob_bar"
         android:layout_width="match_parent"
         android:layout_height="56dp">
 
-        <ImageView
+        <com.petsvote.ui.BesieLayout
+            android:id="@+id/back"
+            app:bl_ripple="true"
+            app:bl_ripple_color="@color/ripple_primary"
+            android:layout_marginLeft="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginLeft="18dp"
-            android:src="@drawable/ic_back_m"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_width="36dp"
+            android:layout_height="36dp">
+            <ImageView
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:src="@drawable/ic_back_m"
+                android:layout_width="20dp"
+                android:layout_height="20dp"/>
+        </com.petsvote.ui.BesieLayout>
 
         <com.petsvote.ui.SFTextView
             app:layout_constraintTop_toTopOf="parent"
@@ -27,7 +39,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             android:textSize="20sp"
             android:textColor="@color/title_color"
-            android:text="Страна"
+            android:text="Порода"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
@@ -42,7 +54,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    <ProgressBar
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@id/search_bar"
+        android:id="@+id/progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/nested"
+        android:visibility="visible"
         android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_bar"
@@ -62,23 +83,70 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.petsvote.ui.SFTextView
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp"
-                    android:text="Все породы"
-                    android:textSize="20sp"
-                    android:textColor="@color/title_color"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/lin_breeds_all"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
 
-                <com.petsvote.ui.SFTextView
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="20dp"
-                    android:text="Без породы"
-                    android:textSize="20sp"
-                    android:textColor="@color/title_color"
+                    <com.petsvote.ui.SFTextView
+                        android:paddingTop="12dp"
+                        android:paddingBottom="12dp"
+                        android:id="@+id/breeds_all"
+                        android:layout_marginRight="16dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@id/check_all"
+                        android:text="@string/all_breeds"
+                        android:textSize="20sp"
+                        android:textColor="@color/title_color"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+
+                    <ImageView
+                        android:visibility="visible"
+                        android:src="@drawable/ic_vector_21"
+                        android:id="@+id/check_all"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/lin_breeds_no"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
+
+                    <com.petsvote.ui.SFTextView
+                        android:paddingTop="12dp"
+                        android:paddingBottom="20dp"
+                        android:id="@+id/breeds_no"
+                        android:layout_marginRight="16dp"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@id/check_no"
+                        android:text="@string/no_breeds"
+                        android:textSize="20sp"
+                        android:textColor="@color/title_color"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
+
+                    <ImageView
+                        android:visibility="gone"
+                        android:src="@drawable/ic_vector_21"
+                        android:id="@+id/check_no"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
 
                 <View
                     android:background="@color/divider"
@@ -90,11 +158,12 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 tools:itemCount="20"
+                android:id="@+id/list"
                 tools:listitem="@layout/item_breeds"
                 android:layout_marginTop="20dp"
                 app:layout_constraintTop_toBottomOf="@id/breeds_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

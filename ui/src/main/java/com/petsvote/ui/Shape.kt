@@ -37,7 +37,12 @@ open class Shape @JvmOverloads constructor(
     private var canvas: Canvas? = null
     private var animator: ValueAnimator? = null
 
-    private var text: String = ""
+    var text: String = ""
+        @RequiresApi(Build.VERSION_CODES.O)
+        set(value) {
+            field = value
+            onDraw(canvas)
+        }
     private var textSize = 15
 
     private var pRipple: Paint? = null
@@ -68,7 +73,7 @@ open class Shape @JvmOverloads constructor(
         paintText = Paint(Paint.ANTI_ALIAS_FLAG)
         paintText!!.setColor(Color.WHITE)
         paintText!!.strokeWidth = 5f
-        paintText!!.typeface = Typeface.create(customTypeface, Typeface.BOLD)
+        paintText!!.typeface = Typeface.create(customTypeface, Typeface.NORMAL)
 
         context.withStyledAttributes(attrs, R.styleable.Shape) {
             p!!.setColor(getInt(R.styleable.Shape_besie_background, Color.BLACK))
@@ -172,9 +177,9 @@ open class Shape @JvmOverloads constructor(
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 isAmim = true
                 animRipple()
+                mOnClickListener?.onClick(this)
             }
         }
-        mOnClickListener?.onClick(this)
         return true
     }
 

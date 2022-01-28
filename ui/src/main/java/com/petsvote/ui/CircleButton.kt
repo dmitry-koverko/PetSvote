@@ -1,5 +1,6 @@
 package com.petsvote.ui
 
+import android.animation.Animator
 import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
 import android.content.Context
@@ -12,6 +13,8 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.withStyledAttributes
 import android.graphics.Rect
 import android.view.MotionEvent
+import android.view.animation.Animation
+import androidx.core.animation.addListener
 import androidx.core.content.ContextCompat
 
 
@@ -167,9 +170,9 @@ open class CircleButton @JvmOverloads constructor(
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 isAmim = true
                 animRipple()
+                //
             }
         }
-        mOnClickListener?.onClick(this)
         return true
     }
 
@@ -179,10 +182,25 @@ open class CircleButton @JvmOverloads constructor(
 
         animator = ValueAnimator()
         animator!!.setValues(propertyXLeft)
-        animator!!.setDuration(400)
+        animator!!.setDuration(200)
         animator!!.addUpdateListener(ValueAnimator.AnimatorUpdateListener { animation ->
             rippleRadius = animation.getAnimatedValue("PROPERTY_RADIUS") as Float
             invalidate()
+        })
+        animator!!.addListener(object :Animator.AnimatorListener {
+            override fun onAnimationStart(p0: Animator?) {
+            }
+
+            override fun onAnimationEnd(p0: Animator?) {
+                mOnClickListener?.onClick(this@CircleButton)
+            }
+
+            override fun onAnimationCancel(p0: Animator?) {
+            }
+
+            override fun onAnimationRepeat(p0: Animator?) {
+            }
+
         })
         animator!!.start()
     }

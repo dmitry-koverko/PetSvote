@@ -24,6 +24,8 @@
             android:layout_height="match_parent">
 
             <com.petsvote.ui.parallax.ParallaxView
+                android:id="@+id/parallax"
+                app:pv_orientation="HORIZONTAL"
                 android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>

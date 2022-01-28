@@ -9,11 +9,15 @@ import kotlin.Error
 
 interface Api {
 
-    @GET("get-breed-list")
+    @GET("v2/get-breed-list")
     suspend fun getBreeds(
-        @Query("type") type: String,
-        @Query("lang") lang: String): Breeds
+        @Query("type[]") type: List<String>?,
+        @Query("lang") lang: String?)
+        : NetworkResponse<List<Breeds>, com.petsvote.api.entity.Error>
 
+    @POST("register-apple")
+    suspend fun register(@Query("code") code: String?):
+            NetworkResponse<Register, com.petsvote.api.entity.Error>
 
     @GET("get-localization-data")
     suspend fun getLocalization(
@@ -35,7 +39,7 @@ interface Api {
         @Query("age_between") age_between: String?,
         @Query("rating_type") rating_type: String?,
         @Query("ids") ids: String?,
-    ): Pets
+    ): NetworkResponse<Pets, com.petsvote.api.entity.Error>
 
     @GET("get-rating-list")
     suspend fun getRating(
@@ -50,7 +54,7 @@ interface Api {
         @Query("rating_type") rating_type: String?,
         @Query("id") id: Int?,
         @Query("breed_id") breed_id: Int?,
-    ): Rating
+    ): NetworkResponse<Rating, com.petsvote.api.entity.Error>
 
 
     @Headers("Content-Type: application/x-www-form-urlencoded")
@@ -81,7 +85,7 @@ interface Api {
     @GET("get-current-user")
     suspend fun getCurrentUser(
         @Query("lang") lang: String?,
-    ): User
+    ): NetworkResponse<User, com.petsvote.api.entity.Error>
 
     @Multipart
     @POST("save-user-data")
@@ -148,7 +152,7 @@ interface Api {
         @Query("country_id") country_id: Int?,
         @Query("limit") limit: Int?,
         @Query("offset") offset: Int?,
-    ): Cities
+    ): NetworkResponse<Cities, com.petsvote.api.entity.Error>
 
     @GET("get-city-country")
     suspend fun getCityCountry(

@@ -5,16 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
-
     <com.petsvote.ui.BesieLayout
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:bl_background="@color/ui_gray"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_width="0dp"
+        android:layout_height="40dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <com.petsvote.ui.BesieLayout
+                android:visibility="visible"
+                android:layout_weight="1"
+                android:id="@+id/tab_indicator"
+                app:bl_background="@color/ui_primary"
+                android:layout_width="0dp"
+                app:layout_constraintWidth_percent="0.33"
+                android:layout_height="40dp"/>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:visibility="visible"
@@ -24,55 +33,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                 <com.petsvote.ui.BesieTab
-                     android:id="@+id/tab1"
-                     app:bt_text="Город"
-                     android:layout_weight="1"
-                     android:layout_width="match_parent"
-                     android:layout_height="match_parent"/>
+                <com.petsvote.ui.SFTextView
+                    android:layout_weight="1"
+                    android:id="@+id/text_city"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:text="Город"
+                    android:textColor="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
 
-                <com.petsvote.ui.BesieTab
-                    android:id="@+id/tab2"
-                    app:bt_text="Страна"
+                <com.petsvote.ui.SFTextView
+                    android:id="@+id/text_country"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:text="Страна"
+                    android:textColor="@color/tab_text_color"
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 
-                <com.petsvote.ui.BesieTab
-                    android:id="@+id/tab3"
-                    app:bt_text="Мир"
+                <com.petsvote.ui.SFTextView
+                    android:id="@+id/text_world"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:text="Мир"
+                    android:textColor="@color/tab_text_color"
                     android:layout_weight="1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:visibility="visible"
-                android:weightSum="3"
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
 
-                <com.petsvote.ui.BesieTabActive
-                    android:layout_weight="1"
-                    android:id="@+id/tab_active"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-                <View
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-                <View
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.petsvote.ui.BesieLayout>
