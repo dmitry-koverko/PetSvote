@@ -142,7 +142,7 @@ interface Api {
     suspend fun getCountries(
         @Query("lang") lang: String?,
         @Query("country_name") country_name: String?,
-    ): Countries
+    ): NetworkResponse<Countries, com.petsvote.api.entity.Error>
 
 
     @GET("get-city-list")
@@ -158,7 +158,7 @@ interface Api {
     suspend fun getCityCountry(
         @Query("lang") lang: String?,
         @Query("city_id") city_id: Int?,
-    ): CityCountry
+    ): NetworkResponse<Countries, com.petsvote.api.entity.Error>
 
     @Multipart
     @POST("edit-pet")

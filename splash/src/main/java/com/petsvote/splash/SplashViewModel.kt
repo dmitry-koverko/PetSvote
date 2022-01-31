@@ -3,8 +3,8 @@ package com.petsvote.splash
 import android.util.Log
 import androidx.lifecycle.*
 import com.petsvote.api.NetworkRepository
-import com.petsvote.data.UserInfo
-import com.petsvote.room.Breed
+import com.petsvote.api.entity.Country
+import com.petsvote.room.CountryInfo
 import com.petsvote.room.RoomRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,26 +53,44 @@ class SplashViewModel(
         }
 
         viewModelScope.launch (Dispatchers.IO){
-            var breedsList= networkRepository.getBreeds()
-            breedsList?.let {
-                roomRepository.deleteBreeds()
-                for(breeds in breedsList){
 
-                    for(breed in breeds.breeds){
-
-                        var breedRoom = Breed(0, breeds.lang, breeds.type, breed.id, breed.title)
-                        //roomRepository.saveBreed(breedRoom)
-                    }
-
-                }
-
-                result += 1
+            var res = networkRepository.getCountries()
+            res?.let {
                 _uiState.value = result
+                var dList = mutableListOf<com.petsvote.room.Country>()
+                for(country in it){
+                    var dCountry = com.petsvote.room.Country(country.id, country.title)
+                    dList.add(dCountry)
+                }
+                var countryInfo = CountryInfo(0,"ru", listOf(), dList as List<com.petsvote.room.Country>)
+                roomRepository.saveCountries(countryInfo)
+                val currentDateAndTimeF: String = simpleDateFormat.format(Date())
+                Log.d(TAG, "FINISH = $currentDateAndTimeF")
 
+
+                var rooC = roomRepository.getCounties()
+                for (i in rooC){
+                    Log.d(TAG, "${i.toString()}")
+                }
             }
+//            var breedsList= networkRepository.getBreeds()
+//            breedsList?.let {
+//                roomRepository.deleteBreeds()
+//                for(breeds in breedsList){
+//
+//                    for(breed in breeds.breeds){
+//
+//                        var breedRoom = Breed(0, breeds.lang, breeds.type, breed.id, breed.title)
+//                        //roomRepository.saveBreed(breedRoom)
+//                    }
+//
+//                }
+//
+//                result += 1
+//                _uiState.value = result
+//
+//            }
 
-            val currentDateAndTimeF: String = simpleDateFormat.format(Date())
-            Log.d(TAG, "FINISH = $currentDateAndTimeF")
         }
 
     }

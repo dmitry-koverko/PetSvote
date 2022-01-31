@@ -7,6 +7,7 @@ class RoomRepository(private val application: Application): RRepository {
     private var userDao: UserDao = UserDatabase.getDatabase(application).userDao()
     private var locationDao: LocationDao = UserDatabase.getDatabase(application).locationDao()
     private var breedDao: BreedsDao = UserDatabase.getDatabase(application).breedDao()
+    private var countryInfoDao: CountryInfoDao = UserDatabase.getDatabase(application).countryInfoDao()
     override suspend fun saveRegister(
         bearer: String?,
         id: Int?,
@@ -36,6 +37,14 @@ class RoomRepository(private val application: Application): RRepository {
 
     override suspend fun deleteBreeds() {
         breedDao.deleteAll()
+    }
+
+    override suspend fun saveCountries(info: CountryInfo) {
+        countryInfoDao.insert(info)
+    }
+
+    override suspend fun getCounties(): List<Country> {
+        return countryInfoDao.getCountryInfo().countries
     }
 
 

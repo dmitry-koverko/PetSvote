@@ -47,3 +47,17 @@ interface BreedsDao{
     @Query("DELETE FROM breed")
     suspend fun deleteAll()
 }
+
+@Dao
+interface CountryInfoDao{
+    @Query("SELECT * FROM countryinfo")
+    fun getCountryInfo(): CountryInfo
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(info: CountryInfo)
+
+    @Query("DELETE FROM countryinfo")
+    suspend fun deleteAll()
+}
+
+

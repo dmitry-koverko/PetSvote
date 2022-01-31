@@ -57,6 +57,8 @@ class Navigator: RegisterNavigation, TabsNavigation {
     }
 
     override fun startSelectActivity(state: Int, currentActivity: Activity) {
-        currentActivity.startActivity(Intent(currentActivity, SelectActivity::class.java))
+        var intent = Intent(currentActivity, SelectActivity::class.java)
+        intent.putExtra("id", state)
+        currentActivity.startActivity(intent)
     }
 }

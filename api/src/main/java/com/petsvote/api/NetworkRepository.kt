@@ -130,6 +130,20 @@ class NetworkRepository(private val context: Context): NReposirory {
         }
     }
 
+    override suspend fun getCountries(): List<Country>? {
+        var result = api.getCountries("ru", null)
+        return when (result) {
+            is NetworkResponse.Success -> {
+                Log.d(TAG, result.toString())
+                return result.body.countries
+            }
+            else ->{
+                checkError(result as NetworkResponse<Any, Error>)
+                return null
+            }
+        }
+    }
+
     override fun checkError(result: NetworkResponse<Any, Error>){
         when(result){
             is NetworkResponse.ApiError -> {

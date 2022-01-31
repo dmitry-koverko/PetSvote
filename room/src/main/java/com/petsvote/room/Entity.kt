@@ -1,6 +1,8 @@
 package com.petsvote.room
 
 import androidx.room.*
+import com.petsvote.room.converters.CityConverter
+import com.petsvote.room.converters.CountryConverter
 
 @Entity
 data class UserInfo(
@@ -55,3 +57,33 @@ data class Breed(
     val title: String
 )
 
+@Entity
+data class CountryInfo(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int,
+    val language: String,
+    @TypeConverters(CityConverter::class)
+    val cities: List<City>?,
+
+    @TypeConverters(CountryConverter::class)
+    val countries: List<Country>
+)
+
+@Entity
+data class City(
+    @PrimaryKey(autoGenerate = false)
+    val id: Int,
+    val important: Int,
+    val country_id: Int,
+    val title: String,
+    val region: String,
+    val area: String,
+    val region_id: Int
+)
+
+@Entity
+data class Country(
+    @PrimaryKey(autoGenerate = false)
+    val id: Int,
+    val title: String
+)

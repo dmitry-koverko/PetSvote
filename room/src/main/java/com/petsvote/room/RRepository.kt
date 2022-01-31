@@ -16,4 +16,7 @@ interface RRepository {
 
     suspend fun saveBreed(breed: Breed)
     suspend fun deleteBreeds()
+
+    suspend fun saveCountries(info: CountryInfo)
+    suspend fun getCounties(): List<Country>
 }

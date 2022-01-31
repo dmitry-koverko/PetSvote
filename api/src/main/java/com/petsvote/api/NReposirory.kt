@@ -15,5 +15,6 @@ interface NReposirory {
     suspend fun getPetsList(): List<Pet>?
     suspend fun saveUserData(user: User, params: Map<String, @JvmSuppressWildcards RequestBody>?)
                 : UserData?
+    suspend fun getCountries(): List<Country>?
     abstract fun checkError(result: NetworkResponse<Any, Error>)
 }
