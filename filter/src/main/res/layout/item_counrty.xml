@@ -9,15 +9,16 @@
     android:layout_height="wrap_content">
 
     <com.petsvote.ui.SFTextView
+        android:id="@+id/title"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/check"
-        android:text="Багамы"
         android:textSize="20sp"
         android:textColor="@color/title_color"
         android:layout_width="0dp"
         android:layout_height="wrap_content"/>
 
     <ImageView
+        android:visibility="gone"
         android:src="@drawable/ic_vector_21"
         android:id="@+id/check"
         app:layout_constraintBottom_toBottomOf="parent"

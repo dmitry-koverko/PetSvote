@@ -23,5 +23,6 @@
     <string name="bonus_text">Евгений, вы совершили 50 голосований и Марсик получил +50 баллов к своей популярности</string>
     <string name="name">Имя</string>
     <string name="family">Фамилия</string>
+    <string name="country">Страна</string>
 
 </resources>

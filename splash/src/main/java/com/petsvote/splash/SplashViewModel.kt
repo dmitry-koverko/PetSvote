@@ -66,12 +66,6 @@ class SplashViewModel(
                 roomRepository.saveCountries(countryInfo)
                 val currentDateAndTimeF: String = simpleDateFormat.format(Date())
                 Log.d(TAG, "FINISH = $currentDateAndTimeF")
-
-
-                var rooC = roomRepository.getCounties()
-                for (i in rooC){
-                    Log.d(TAG, "${i.toString()}")
-                }
             }
 //            var breedsList= networkRepository.getBreeds()
 //            breedsList?.let {

@@ -5,6 +5,7 @@ import android.content.Context
 import com.petsvote.api.NetworkRepository
 import com.petsvote.filter.fragments.FilterFragment
 import com.petsvote.filter.fragments.SelectBreedsFragment
+import com.petsvote.filter.fragments.SelectCountryFragment
 import com.petsvote.room.RoomRepository
 import dagger.Component
 import dagger.Module
@@ -21,6 +22,7 @@ interface FilterComponent {
 
     fun inject(filterFragment: FilterFragment)
     fun injectSelectBreeds(selectBreedsFragment: SelectBreedsFragment)
+    fun injectSelectCountry(selectCountryFragment: SelectCountryFragment)
 
     @Component.Builder
     interface Builder{
