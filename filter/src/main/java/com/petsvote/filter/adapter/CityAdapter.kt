@@ -5,23 +5,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.petsvote.api.entity.Breed
+import com.petsvote.api.entity.City
 import com.petsvote.filter.databinding.ItemBreedsBinding
+import com.petsvote.filter.databinding.ItemCityBinding
 import com.petsvote.filter.databinding.ItemCounrtyBinding
 import com.petsvote.room.Country
 
-class CountryAdapter(private var list: MutableList<Country>) : RecyclerView.Adapter<CountryAdapter.CountryHolder>() {
+class CityAdapter(private var list: MutableList<City>) : RecyclerView.Adapter<CityAdapter.CityHolder>() {
 
     private var mOnSelectedItem: OnSelectedItem? = null
     private var selectedItem = -1
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CountryHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CityHolder {
         val itemBinding =
-            ItemCounrtyBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return CountryHolder(itemBinding)
+            ItemCityBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return CityHolder(itemBinding)
     }
 
-    override fun onBindViewHolder(holder: CountryHolder, position: Int) {
-        val country: Country = list[position]
+    override fun onBindViewHolder(holder: CityHolder, position: Int) {
+        val country: City = list[position]
         holder.bind(country, position)
     }
 
@@ -30,22 +32,27 @@ class CountryAdapter(private var list: MutableList<Country>) : RecyclerView.Adap
         notifyDataSetChanged()
     }
 
-    fun updateList(listNew: MutableList<Country>){
+    fun updateList(listNew: MutableList<City>){
         list = listNew
         notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = list.size
 
-    inner class CountryHolder(private val binding: ItemCounrtyBinding) :
+    inner class CityHolder(private val binding: ItemCityBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: Country, position: Int) {
+        fun bind(item: City, position: Int) {
 
-            binding.title.text = item.title
+            binding.titile.text = item.title
+            binding.subText.text = item.region
             binding.check.visibility = if(selectedItem == item.id)  View.VISIBLE else View.GONE
 
-            binding.title.setOnClickListener {
+            binding.titile.setOnClickListener {
+                mOnSelectedItem?.select(item)
+            }
+
+            binding.subText.setOnClickListener {
                 mOnSelectedItem?.select(item)
             }
         }
@@ -56,6 +63,6 @@ class CountryAdapter(private var list: MutableList<Country>) : RecyclerView.Adap
     }
 
     interface OnSelectedItem{
-        fun select(breed: Country)
+        fun select(city: City)
     }
 }

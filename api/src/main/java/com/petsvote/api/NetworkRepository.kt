@@ -99,8 +99,6 @@ class NetworkRepository(private val context: Context): NReposirory {
         }
     }
 
-
-
     override suspend fun getPetsList(): List<Pet>? {
         var result = api.getPets(null, null, null, null, null, null,
                                 null, null, null, null)
@@ -117,7 +115,11 @@ class NetworkRepository(private val context: Context): NReposirory {
     }
 
     override suspend fun saveUserData(user: User, params: Map<String, RequestBody>?): UserData? {
-        var result = api.saveUserData(user.first_name, user.last_name, "")
+        var result = api.saveUserData(user.first_name, user.last_name,
+            user.location?.country?.let {
+                Location(user.location?.country_id, 0,
+                    it, "").toString()
+            })
         return when (result) {
             is NetworkResponse.Success -> {
                 Log.d(TAG, result.toString())

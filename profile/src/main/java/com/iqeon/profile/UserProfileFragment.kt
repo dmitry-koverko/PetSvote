@@ -14,6 +14,7 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,10 @@ import androidx.lifecycle.lifecycleScope
 import com.iqeon.profile.databinding.FragmentUserProfileBinding
 import com.iqeon.profile.di.UserProfileComponentViewModel
 import com.petsvote.api.entity.User
+import com.petsvote.data.FilterUserInfo
+import com.petsvote.data.UserInfo
+import com.petsvote.room.Country
+import com.petsvote.room.Location
 import com.petsvote.ui.loadImage
 import com.petsvote.ui.navigation.TabsNavigation
 import dagger.Lazy
@@ -34,6 +39,9 @@ import me.vponomarenko.injectionmanager.x.XInjectionManager
 import javax.inject.Inject
 
 class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
+
+    private val TAG = UserProfileFragment::class.java.name
+
 
     @Inject
     internal lateinit var upViewModelFactory: Lazy<UPViewModel.Factory>
@@ -46,6 +54,8 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
     private val navigationTabs: TabsNavigation by lazy {
         XInjectionManager.findComponent<TabsNavigation>()
     }
+
+    private var location: Location = Location(0, 0, "", "")
 
     private lateinit var binding: FragmentUserProfileBinding
     private var userUI = User(null,null, null, null,
@@ -62,7 +72,6 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
                 //user.avatar?.let { binding.avatar.loadImage(it) }
                 user.first_name?.let { binding.username.setText(it) }
                 user.last_name?.let {binding.lastname.setText(it)}
-
                 userUI = user
 
             }
@@ -117,6 +126,17 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
         })
 
         viewModel.getUserInfo()
+
+        lifecycleScope.launchWhenStarted {
+            FilterUserInfo.country.collect { value: Country ->
+               if(value != null && value.id != 0){
+                   userUI.location?.country_id = value.id
+                   userUI?.location?.country = value.title
+                   binding.country.text = value.title
+                   Log.d(TAG, "location changed = ${value.toString()}")
+               }
+            }
+        }
     }
 
     fun startSelect(state: Int){
@@ -130,7 +150,7 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
 
     private fun checkData(){
         if(userUI.first_name.isNullOrEmpty()) return
-        if (userUI.last_name.isNullOrEmpty()) return
+        if(userUI.last_name.isNullOrEmpty()) return
 
         binding.save.setOnClickListener {
             viewModel.saveUserInfo(userUI)

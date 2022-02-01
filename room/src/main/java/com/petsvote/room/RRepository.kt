@@ -13,6 +13,7 @@ interface RRepository {
                              country_id: Int?,
                              country: String?,
                              city: String?)
+    suspend fun getLocation(): Location
 
     suspend fun saveBreed(breed: Breed)
     suspend fun deleteBreeds()

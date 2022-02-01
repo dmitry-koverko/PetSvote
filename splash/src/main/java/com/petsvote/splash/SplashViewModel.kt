@@ -49,6 +49,11 @@ class SplashViewModel(
             var result = networkRepository.getCurrentUser()
             result?.let {
                 Log.d(TAG, "userListPets = ${it.pets.toString()}")
+                result.location?.let {
+                    if(it.country_id != 0){
+                        roomRepository.saveLocation(it.country_id, it.city_id, it.country, it.city)
+                    }
+                }
             }
         }
 

@@ -31,6 +31,11 @@ class RoomRepository(private val application: Application): RRepository {
         locationDao.insert(location)
     }
 
+    override suspend fun getLocation(): Location {
+        var res = locationDao.getLocation()
+        return if(res == null) Location(-1, -1, "", "") else res
+    }
+
     override suspend fun saveBreed(breed: Breed) {
         breedDao.insert(breed)
     }

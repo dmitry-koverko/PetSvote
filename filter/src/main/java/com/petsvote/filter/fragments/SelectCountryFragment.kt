@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.petsvote.data.FilterUserInfo
 import com.petsvote.filter.R
 import com.petsvote.filter.adapter.CountryAdapter
 import com.petsvote.filter.adapter.KindsAdapter
@@ -14,6 +15,7 @@ import com.petsvote.filter.databinding.FragmentSelectCountryBinding
 import com.petsvote.filter.di.FilterComponentViewModel
 import com.petsvote.filter.viewmodels.SelectCountryViewModel
 import com.petsvote.room.Country
+import com.petsvote.room.Location
 import com.petsvote.ui.SearchBar
 import dagger.Lazy
 import kotlinx.coroutines.flow.collect
@@ -55,6 +57,19 @@ class SelectCountryFragment : Fragment(R.layout.fragment_select_country),
                 countryAdapter.notifyDataSetChanged()
             }
         }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.uiStateLocation.collect { value: Location ->
+                if(value.country_id != -1){
+                    value.country_id?.let { adapter?.setSelectedId(it) }
+                }
+            }
+        }
+
+        binding.back.setOnClickListener {
+            activity?.finish()
+        }
+
         viewModel.getCountry()
     }
 
@@ -72,8 +87,9 @@ class SelectCountryFragment : Fragment(R.layout.fragment_select_country),
         countryAdapter.updateList(listCountry)
     }
 
-    override fun select(breed: Country) {
-
+    override fun select(country: Country) {
+        FilterUserInfo.country.value = country
+        activity?.finish()
     }
 
 }
