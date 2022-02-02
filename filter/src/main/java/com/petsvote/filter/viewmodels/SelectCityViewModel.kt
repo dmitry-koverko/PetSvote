@@ -4,10 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.petsvote.api.NetworkRepository
-import com.petsvote.api.entity.Breed
+import com.petsvote.api.entity.City
 import com.petsvote.data.FilterUserInfo
-import com.petsvote.room.City
-import com.petsvote.room.Country
 import com.petsvote.room.Location
 import com.petsvote.room.RoomRepository
 import kotlinx.coroutines.Dispatchers
@@ -24,29 +22,34 @@ class SelectCityViewModel(
 
     private val TAG = SelectCityViewModel::class.java.name
 
-    private val _uiState = MutableStateFlow(listOf<Country>())
-    val uiState: StateFlow<List<Country>> = _uiState
+    private val _uiState = MutableStateFlow(listOf<City>())
+    val uiState: StateFlow<List<City>> = _uiState
 
     private val _uiStateLocation = MutableStateFlow(Location(-1, -1, "", ""))
     val uiStateLocation: StateFlow<Location> = _uiStateLocation
 
-    fun getCountry(){
+    fun getLocation(){
         viewModelScope.launch (Dispatchers.IO){
-            var res = roomRepository.getCounties()
-            if(!res.isNullOrEmpty()) _uiState.value = res
+            var res = roomRepository.getLocation()
+            if(res.country_id != -1) {
+                _uiStateLocation.value = res
+                res.country_id?.let { getCities(it) }
+            }
+            else{
+                var country = FilterUserInfo.country.value
+                if(country.id != -1 && country.id != 0){
+                    getCities(country.id)
+                }
+            }
+
         }
 
+    }
+
+    fun getCities(countryId: Int){
         viewModelScope.launch (Dispatchers.IO){
-//            var res = roomRepository.getLocation()
-//            if(res.country_id != -1) _uiStateLocation.value = res
-//            else{
-//                var country = FilterUserInfo.country.value
-//                if(country.id != -1 && country.id != 0){
-//                    _uiStateLocation.value = Location(
-//                        country.id, -1, country.title, ""
-//                    )
-//                }
-//            }
+            var res = countryId.let { networkRepository.getCities(it) }
+            if(!res.isNullOrEmpty()) _uiState.value = res
         }
     }
 

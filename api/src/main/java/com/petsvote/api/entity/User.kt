@@ -22,10 +22,10 @@ data class User(
 
 @Serializable
 data class Location(
-    val city_id: Int,
+    var city_id: Int,
     var country_id: Int,
     var country: String,
-    val city: String
+    var city: String
 )
 
 @Serializable

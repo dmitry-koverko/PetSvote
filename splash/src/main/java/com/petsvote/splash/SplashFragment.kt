@@ -54,9 +54,11 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
 
         val resources: Resources? = activity?.getResources()
         val config: Configuration? = resources?.getConfiguration()
+        Log.d(TAG, "bearer user = ${UserInfo.getBearer(requireContext())}")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             var lang = config?.locales?.get(0)?.language?.toString()!!
             Log.d(TAG, "language user = $lang")
+            Log.d(TAG, "bearer user = ${UserInfo.getBearer(requireContext())}")
             if(UserInfo.listLanguage.contains(lang))
                 UserInfo.languge = lang
         }

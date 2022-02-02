@@ -115,11 +115,11 @@ class NetworkRepository(private val context: Context): NReposirory {
     }
 
     override suspend fun saveUserData(user: User, params: Map<String, RequestBody>?): UserData? {
-        var result = api.saveUserData(user.first_name, user.last_name,
-            user.location?.country?.let {
-                Location(user.location?.country_id, 0,
-                    it, "").toString()
-            })
+        var loc =  user.location?.country?.let {
+            Location(user.location?.city_id, user.location?.country_id,
+                it, user.location.city).toString() //TODO !!!!!
+        }
+        var result = api.saveUserData(user.first_name, user.last_name, loc)
         return when (result) {
             is NetworkResponse.Success -> {
                 Log.d(TAG, result.toString())
@@ -138,6 +138,20 @@ class NetworkRepository(private val context: Context): NReposirory {
             is NetworkResponse.Success -> {
                 Log.d(TAG, result.toString())
                 return result.body.countries
+            }
+            else ->{
+                checkError(result as NetworkResponse<Any, Error>)
+                return null
+            }
+        }
+    }
+
+    override suspend fun getCities(countryId: Int): List<City>? {
+        var result = api.getCities("ru", null, countryId,null, 0)
+        return when (result) {
+            is NetworkResponse.Success -> {
+                Log.d(TAG, result.toString())
+                return result.body.cities
             }
             else ->{
                 checkError(result as NetworkResponse<Any, Error>)

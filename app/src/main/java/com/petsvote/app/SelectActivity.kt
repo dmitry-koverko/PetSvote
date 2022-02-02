@@ -14,7 +14,9 @@ class SelectActivity : AppCompatActivity() {
         setContentView(R.layout.activity_select)
 
         var id = intent.getIntExtra("id", 1)
-        var fragment: Fragment = if(id?.toInt() == 1) SelectCityFragment() else SelectCountryFragment()
+        var countryId = intent.getIntExtra("countryId", 0)
+        var fragment: Fragment =
+            if(id == 1) SelectCityFragment(countryId) else SelectCountryFragment()
 
         supportFragmentManager.commit {
             replace(R.id.container, fragment)

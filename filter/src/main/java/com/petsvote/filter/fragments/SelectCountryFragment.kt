@@ -2,6 +2,7 @@ package com.petsvote.filter.fragments
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -23,6 +24,8 @@ import javax.inject.Inject
 
 class SelectCountryFragment : Fragment(R.layout.fragment_select_country),
     SearchBar.OnTextSearchBar, CountryAdapter.OnSelectedItem {
+
+    private val TAG = SelectCountryFragment::class.java.name
 
     @Inject
     internal lateinit var sCountryVMFactory: Lazy<SelectCountryViewModel.Factory>
@@ -60,6 +63,7 @@ class SelectCountryFragment : Fragment(R.layout.fragment_select_country),
 
         lifecycleScope.launchWhenStarted {
             viewModel.uiStateLocation.collect { value: Location ->
+                Log.d(TAG, "location = ${value.toString()}")
                 if(value.country_id != -1){
                     value.country_id?.let { adapter?.setSelectedId(it) }
                 }
@@ -69,6 +73,9 @@ class SelectCountryFragment : Fragment(R.layout.fragment_select_country),
         binding.back.setOnClickListener {
             activity?.finish()
         }
+
+        var idCountry = FilterUserInfo.country.value.id
+        if(idCountry != 0 && idCountry != -1) countryAdapter?.setSelectedId(idCountry)
 
         viewModel.getCountry()
     }

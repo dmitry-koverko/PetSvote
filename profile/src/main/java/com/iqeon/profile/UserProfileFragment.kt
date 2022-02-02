@@ -29,6 +29,7 @@ import com.iqeon.profile.di.UserProfileComponentViewModel
 import com.petsvote.api.entity.User
 import com.petsvote.data.FilterUserInfo
 import com.petsvote.data.UserInfo
+import com.petsvote.room.City
 import com.petsvote.room.Country
 import com.petsvote.room.Location
 import com.petsvote.ui.loadImage
@@ -65,10 +66,10 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentUserProfileBinding.bind(view)
+        Log.d(TAG, "bearer user = ${UserInfo.getBearer(requireContext())}")
 
         lifecycleScope.launchWhenStarted {
             viewModel.uiUser.collect { user ->
-
                 //user.avatar?.let { binding.avatar.loadImage(it) }
                 user.first_name?.let { binding.username.setText(it) }
                 user.last_name?.let {binding.lastname.setText(it)}
@@ -94,7 +95,7 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
             binding.selectCity.performClick()
         }
         binding.selectCity.setOnClickListener {
-            startSelect(1)
+            userUI.location?.country_id?.let { it1 -> startSelect(1, it1) }
         }
 
         binding.username.addTextChangedListener(object: TextWatcher{
@@ -137,13 +138,24 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
                }
             }
         }
+
+        lifecycleScope.launchWhenStarted {
+            FilterUserInfo.city.collect { value: City ->
+                if(value != null && value.id != 0){
+                    userUI.location?.city_id = value.id
+                    userUI?.location?.city = value.title
+                    binding.city.text = value.title
+                    Log.d(TAG, "location changed = ${value.toString()}")
+                }
+            }
+        }
     }
 
-    fun startSelect(state: Int){
+    fun startSelect(state: Int, countryId: Int = 0){
         object : CountDownTimer(300, 300) {
             override fun onTick(millisUntilFinished: Long) {}
             override fun onFinish() {
-                activity?.let { it1 -> navigationTabs.startSelectActivity(state, it1) }
+                activity?.let { it1 -> navigationTabs.startSelectActivity(state, it1, countryId) }
             }
         }.start()
     }
