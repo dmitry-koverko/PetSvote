@@ -64,6 +64,7 @@
                android:visibility="gone" />
 
            <androidx.constraintlayout.widget.ConstraintLayout
+               android:id="@+id/cropImage"
                android:layout_marginLeft="16dp"
                android:layout_marginRight="16dp"
                android:layout_marginTop="12dp"
@@ -71,6 +72,8 @@
                android:layout_height="96dp">
 
                <com.petsvote.ui.BesieLayout
+                   app:bl_ripple="true"
+                   app:bl_ripple_color="@color/ripple_gray"
                    app:bl_change_layout="false"
                    app:layout_constraintBottom_toBottomOf="parent"
                    app:layout_constraintTop_toTopOf="parent"
@@ -82,6 +85,7 @@
                    android:layout_height="0dp">
 
                    <ImageView
+                       android:padding="32dp"
                        android:id="@+id/avatar"
                        android:scaleType="centerCrop"
                        app:layout_constraintTop_toTopOf="parent"
@@ -89,8 +93,8 @@
                        app:layout_constraintRight_toRightOf="parent"
                        app:layout_constraintLeft_toLeftOf="parent"
                        android:src="@drawable/ic_add_a_photo"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"/>
+                       android:layout_width="0dp"
+                       android:layout_height="0dp"/>
 
                </com.petsvote.ui.BesieLayout>
            </androidx.constraintlayout.widget.ConstraintLayout>

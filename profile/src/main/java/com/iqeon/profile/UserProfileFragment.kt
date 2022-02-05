@@ -32,17 +32,21 @@ import com.petsvote.data.UserInfo
 import com.petsvote.room.City
 import com.petsvote.room.Country
 import com.petsvote.room.Location
+import com.petsvote.ui.dialogs.InformationPhotoDialog
+import com.petsvote.ui.dialogs.InformationPhotoDialogListener
 import com.petsvote.ui.loadImage
+import com.petsvote.ui.navigation.CropNavigation
 import com.petsvote.ui.navigation.TabsNavigation
 import dagger.Lazy
 import kotlinx.coroutines.flow.collect
 import me.vponomarenko.injectionmanager.x.XInjectionManager
 import javax.inject.Inject
 
-class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
+class UserProfileFragment : Fragment(R.layout.fragment_user_profile){
 
     private val TAG = UserProfileFragment::class.java.name
 
+    private var dialogInfoPhoto = InformationPhotoDialog()
 
     @Inject
     internal lateinit var upViewModelFactory: Lazy<UPViewModel.Factory>
@@ -54,6 +58,10 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
 
     private val navigationTabs: TabsNavigation by lazy {
         XInjectionManager.findComponent<TabsNavigation>()
+    }
+
+    private val navigationCrop: CropNavigation by lazy {
+        XInjectionManager.findComponent<CropNavigation>()
     }
 
     private var location: Location = Location(0, 0, "", "")
@@ -149,6 +157,13 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
                 }
             }
         }
+
+        binding.avatar.setOnClickListener {
+            binding.blAvatar.animRipple()
+            activity?.supportFragmentManager?.let {
+                    it1 -> dialogInfoPhoto.show(it1, "InformationPhotoDialog") }
+//            activity?.let { it1 -> navigationCrop.startCropActivity(it1) }
+        }
     }
 
     fun startSelect(state: Int, countryId: Int = 0){
@@ -173,6 +188,5 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile) {
         super.onAttach(context)
         UPCViewModel.ratingComponent.inject(this)
     }
-
 
 }

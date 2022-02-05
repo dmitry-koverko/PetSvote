@@ -24,5 +24,10 @@
     <string name="name">Имя</string>
     <string name="family">Фамилия</string>
     <string name="country">Страна</string>
+    <string name="add_photos">Добавление фотографий</string>
+    <string name="add_photos_text">При размещении любой рекламы и фотографий не соответствующих тематике приложения ваш профиль будет заблокирован навсегда.</string>
+    <string name="ok">Хорошо</string>
+    <string name="all_photos">Все фотографии</string>
+    <string name="cancel">Отменить</string>
 
 </resources>

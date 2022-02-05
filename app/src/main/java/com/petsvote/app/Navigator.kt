@@ -4,10 +4,11 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.navigation.NavController
+import com.petsvote.ui.navigation.CropNavigation
 import com.petsvote.ui.navigation.RegisterNavigation
 import com.petsvote.ui.navigation.TabsNavigation
 
-class Navigator: RegisterNavigation, TabsNavigation {
+class Navigator: RegisterNavigation, TabsNavigation, CropNavigation {
 
     private var navController: NavController? = null
     override fun closeRegister() {
@@ -61,4 +62,11 @@ class Navigator: RegisterNavigation, TabsNavigation {
         intent.putExtra("id", state)
         currentActivity.startActivity(intent)
     }
+
+    override fun startCropActivity(currentActivity: Activity) {
+        var intent = Intent(currentActivity, CropImageActivity::class.java)
+        currentActivity.startActivity(intent)
+    }
+
+
 }
