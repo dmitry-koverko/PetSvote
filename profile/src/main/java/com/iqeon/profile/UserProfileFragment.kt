@@ -34,6 +34,7 @@ import com.petsvote.room.Country
 import com.petsvote.room.Location
 import com.petsvote.ui.dialogs.InformationPhotoDialog
 import com.petsvote.ui.dialogs.InformationPhotoDialogListener
+import com.petsvote.ui.dialogs.SelectPhotoDialog
 import com.petsvote.ui.loadImage
 import com.petsvote.ui.navigation.CropNavigation
 import com.petsvote.ui.navigation.TabsNavigation
@@ -47,6 +48,7 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile){
     private val TAG = UserProfileFragment::class.java.name
 
     private var dialogInfoPhoto = InformationPhotoDialog()
+    private var dialogSelectPhoto = SelectPhotoDialog()
 
     @Inject
     internal lateinit var upViewModelFactory: Lazy<UPViewModel.Factory>
@@ -161,7 +163,7 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile){
         binding.avatar.setOnClickListener {
             binding.blAvatar.animRipple()
             activity?.supportFragmentManager?.let {
-                    it1 -> dialogInfoPhoto.show(it1, "InformationPhotoDialog") }
+                    it1 -> dialogSelectPhoto.show(it1, "SelectPhotoDialog") }
 //            activity?.let { it1 -> navigationCrop.startCropActivity(it1) }
         }
     }

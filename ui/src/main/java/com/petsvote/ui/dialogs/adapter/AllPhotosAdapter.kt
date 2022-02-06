@@ -1,5 +1,6 @@
 package com.petsvote.ui.dialogs.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.SurfaceHolder
 import android.view.View
@@ -18,6 +19,11 @@ class AllPhotosAdapter(private var list: MutableList<LocalPhoto>) : RecyclerView
         return AllPhotosHolder(itemBinding)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun submit(list: List<LocalPhoto>){
+        this.list.addAll(list)
+    }
+
     override fun onBindViewHolder(holder: AllPhotosHolder, position: Int) {
         val photo: LocalPhoto = list[position]
         holder.bind(photo, position)
@@ -31,8 +37,7 @@ class AllPhotosAdapter(private var list: MutableList<LocalPhoto>) : RecyclerView
         fun bind(item: LocalPhoto, position: Int) {
 
             if(position == 0){
-                val holder = binding.surfaceView.holder
-                val holderCallback = HolderCallback()
+                //binding.previewCamera.bin
             }
 
         }
