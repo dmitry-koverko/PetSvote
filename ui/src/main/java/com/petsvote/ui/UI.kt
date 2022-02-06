@@ -1,6 +1,9 @@
 package com.petsvote.ui
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +17,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Glide.with
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import java.io.FileDescriptor
+import java.io.IOException
 
 
 fun ImageView.loadImage(url: String){
@@ -31,6 +36,19 @@ fun ImageView.loadImage(url: String){
         .transition(DrawableTransitionOptions.withCrossFade())
         .skipMemoryCache(true)
         .into(this);
+}
+
+fun Context.uriToBitmap(selectedFileUri: Uri): Bitmap? {
+    try {
+        val parcelFileDescriptor = applicationContext?.contentResolver?.openFileDescriptor(selectedFileUri, "r")
+        val fileDescriptor: FileDescriptor = parcelFileDescriptor!!.fileDescriptor
+        val image = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+        parcelFileDescriptor.close()
+        return image
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+    return null
 }
 
 fun View.margin(left: Float? = null, top: Float? = null, right: Float? = null, bottom: Float? = null) {

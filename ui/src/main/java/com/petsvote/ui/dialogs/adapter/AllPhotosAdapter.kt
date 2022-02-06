@@ -1,13 +1,21 @@
 package com.petsvote.ui.dialogs.adapter
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.util.Rational
+import android.util.Size
 import android.view.LayoutInflater
-import android.view.SurfaceHolder
 import android.view.View
 import android.view.ViewGroup
+import androidx.camera.core.CameraXConfig
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.Preview
+import androidx.camera.core.impl.PreviewConfig
+import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.petsvote.ui.databinding.LocalPhotoItemBinding
 import com.petsvote.ui.entity.LocalPhoto
+
 
 class AllPhotosAdapter(private var list: MutableList<LocalPhoto>) : RecyclerView.Adapter<AllPhotosAdapter.AllPhotosHolder>() {
 
@@ -35,11 +43,7 @@ class AllPhotosAdapter(private var list: MutableList<LocalPhoto>) : RecyclerView
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: LocalPhoto, position: Int) {
-
-            if(position == 0){
-                //binding.previewCamera.bin
-            }
-
+            binding.preview.setImageBitmap(item.bitmap)
         }
     }
 

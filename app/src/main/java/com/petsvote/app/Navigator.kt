@@ -2,6 +2,8 @@ package com.petsvote.app
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import androidx.navigation.NavController
 import com.petsvote.ui.navigation.CropNavigation
@@ -63,8 +65,14 @@ class Navigator: RegisterNavigation, TabsNavigation, CropNavigation {
         currentActivity.startActivity(intent)
     }
 
-    override fun startCropActivity(currentActivity: Activity) {
+    override fun startCropActivity(currentActivity: Activity, bitmap: Bitmap?, path: Uri?) {
         var intent = Intent(currentActivity, CropImageActivity::class.java)
+        bitmap?.let {
+            intent.putExtra("bitmap", bitmap);
+        }
+        path?.let {
+            intent.putExtra("uri", path);
+        }
         currentActivity.startActivity(intent)
     }
 

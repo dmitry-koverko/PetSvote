@@ -62,9 +62,6 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile){
         XInjectionManager.findComponent<TabsNavigation>()
     }
 
-    private val navigationCrop: CropNavigation by lazy {
-        XInjectionManager.findComponent<CropNavigation>()
-    }
 
     private var location: Location = Location(0, 0, "", "")
 

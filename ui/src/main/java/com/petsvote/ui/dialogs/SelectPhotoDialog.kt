@@ -1,27 +1,41 @@
 package com.petsvote.ui.dialogs
 
 import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentUris
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.ImageDecoder
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.Gravity
 import android.view.View
+import android.view.WindowManager
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.petsvote.ui.R
 import com.petsvote.ui.databinding.DialogSelectPhotoBinding
 import com.petsvote.ui.dialogs.adapter.AllPhotosAdapter
 import com.petsvote.ui.entity.LocalPhoto
+import com.petsvote.ui.navigation.CropNavigation
+import com.petsvote.ui.uriToBitmap
+import me.vponomarenko.injectionmanager.x.XInjectionManager
 import java.io.FileDescriptor
 import java.io.IOException
+
 
 class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo) {
 
@@ -32,31 +46,110 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo) {
     var READ_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
 
     var RC_PERMISSION = 101
+    private val REQUEST_ID = 123
+    val PICK_PHOTO_CODE = 1046
 
     private lateinit var binding: DialogSelectPhotoBinding
+
+    private var imageCapture: ImageCapture? = null
+
+    private val navigationCrop: CropNavigation by lazy {
+        XInjectionManager.findComponent<CropNavigation>()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = DialogSelectPhotoBinding.bind(view)
 
-        var mLayoutManager = LinearLayoutManager(context)
+        var mLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.photosList.apply {
             layoutManager = mLayoutManager
             this.adapter = photoAdapter
         }
-        listPhoto.add(LocalPhoto(0, ""))
-        photoAdapter.submit(listPhoto)
 
         lifecycleScope.launchWhenStarted {
-            //if (checkPermissions())  getLocalImages() else requestPermissions()
+            if(checkPermissions()) startCamera() else requestPermissions()
             if (checkPermissionsRead())  getLocalImages() else requestPermissionsRead()
+        }
+
+        binding.cancel.setOnClickListener { dismiss() }
+        binding.allPhotos.setOnClickListener { pickPhoto() }
+        binding.viewFinder.setOnClickListener { launchCameraRawPhoto() }
+
+    }
+
+    private fun pickPhoto(){
+        val intent = Intent(
+            Intent.ACTION_PICK,
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        )
+        if (context?.getPackageManager()?.let { intent.resolveActivity(it) } != null) {
+            startActivityForResult(intent, PICK_PHOTO_CODE);
         }
 
     }
 
+    fun launchCameraRawPhoto() {
+        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        startActivityForResult(cameraIntent, REQUEST_ID)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode === Activity.RESULT_OK && data != null && requestCode == REQUEST_ID) {
+            var bitmap = data.extras?.get("data") as Bitmap
+            bitmap?.let { startCrop(it, null) }
+        }else if (resultCode === Activity.RESULT_OK && data != null && requestCode == PICK_PHOTO_CODE) {
+            val photoUri: Uri? = data.data
+            photoUri?.let { startCrop(null, it) }
+
+        }
+    }
+
+    private fun startCrop(bitmap: Bitmap?, uri: Uri?){
+        bitmap?.let {
+            activity?.let { navigationCrop.startCropActivity(it, bitmap, null) }
+        }
+        uri?.let {
+            activity?.let { navigationCrop.startCropActivity(it, null, uri) }
+        }
+    }
+    private fun startCamera() {
+        val cameraProviderFuture = context?.let { ProcessCameraProvider.getInstance(it) }
+
+        cameraProviderFuture?.addListener(Runnable {
+
+            // Used to bind the lifecycle of cameras to the lifecycle owner
+            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+
+            // Preview
+            val preview = Preview.Builder()
+                .build()
+                .also {
+                    it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
+                }
+
+            imageCapture = ImageCapture.Builder().build()
+            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
+            try {
+                // Unbind use cases before rebinding
+                cameraProvider.unbindAll()
+
+                // Bind use cases to camera
+                cameraProvider.bindToLifecycle(
+                    this, cameraSelector, preview, imageCapture
+                )
+
+            } catch (exc: Exception) {
+                Log.e("TAG", "Use case binding failed", exc)
+            }
+
+        }, context?.let { ContextCompat.getMainExecutor(it) })
+    }
+
     fun getLocalImages(){
-        var list = mutableListOf<String>()
+        var list = mutableListOf<LocalPhoto>()
         context?.contentResolver?.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             null,
@@ -68,28 +161,13 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo) {
                 val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)
                 val id = cursor.getLong(idColumn)
                 val contentUri: Uri = ContentUris.withAppendedId(
-                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     id
                 )
-                contentUri.encodedPath?.let { list.add(it) }
-                Log.d("TAG", "${contentUri.encodedPath}")
+                list.add(LocalPhoto(context?.uriToBitmap(contentUri)))
             }
         }
-        var bm = uriToBitmap(Uri.parse(list[0]))
-        binding.image.setImageBitmap(bm)
-    }
-
-    private fun uriToBitmap(selectedFileUri: Uri): Bitmap? {
-        try {
-            val parcelFileDescriptor = activity?.contentResolver?.openFileDescriptor(selectedFileUri, "r")
-            val fileDescriptor: FileDescriptor = parcelFileDescriptor!!.fileDescriptor
-            val image = BitmapFactory.decodeFileDescriptor(fileDescriptor)
-            parcelFileDescriptor.close()
-            return image
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        return null
+        photoAdapter?.submit(list)
     }
 
     private fun requestPermissions() {
@@ -135,4 +213,18 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo) {
             .setPositiveButton("Grant") { dialog, which -> requestPermissions() }
             .show()
     }
+
+    override fun onResume() {
+        super.onResume()
+        if (dialog == null) return
+        val window = dialog!!.window ?: return
+        val width = resources.displayMetrics.widthPixels - resources.displayMetrics.density * 16
+        val height = resources.displayMetrics.density * 308
+        val params: WindowManager.LayoutParams = window.attributes
+        params.width = width.toInt()
+        params.height = height.toInt()
+        params.gravity = Gravity.BOTTOM
+        window.attributes = params
+    }
+
 }
