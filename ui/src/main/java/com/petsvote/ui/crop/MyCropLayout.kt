@@ -112,7 +112,7 @@ class MyCropLayout @JvmOverloads constructor(
                     (totalHeight + frameHeight) / 2f
                 )
                 val frameF = RectF(
-                    0f,0f,1080f, 1920f
+                    0f,0f,totalWidth, totalHeight
                 )
 
                 cropImageView.setFrame(frameF)
@@ -177,12 +177,15 @@ class MyCropLayout @JvmOverloads constructor(
         val source = (cropImageView.drawable as BitmapDrawable).bitmap
         thread {
             val bitmap = Bitmap.createScaledBitmap(source, targetRect.width(), targetRect.height(), false)
-            val leftOffset = (frame.left - targetRect.left).toInt()
-            val topOffset = (frame.top - targetRect.top).toInt()
-            val width = frame.width().toInt()
-            val height = frame.height().toInt()
+            val totalWidth = measuredWidth.toFloat()
+            val totalHeight = measuredHeight.toFloat()
+            var wR = totalWidth / 2
+            var wH = totalHeight / 2
+            var l = wH - wR
+            var b = (totalHeight - wR).toInt()
             try {
-                val result = Bitmap.createBitmap(bitmap, leftOffset, topOffset, width, height)
+                //val result = Bitmap.createBitmap(bitmap, l.toInt() , 0, b.toInt(), totalWidth.toInt())
+                val result = Bitmap.createBitmap(bitmap, 0 , l.toInt(), b, totalWidth.toInt())
                 mainHandler.post {
                     for (listener in listeners) {
                         listener.onSuccess(result)

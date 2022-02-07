@@ -73,7 +73,13 @@ class Navigator: RegisterNavigation, TabsNavigation, CropNavigation {
         path?.let {
             intent.putExtra("uri", path);
         }
-        currentActivity.startActivity(intent)
+        currentActivity.startActivityForResult(intent,104)
+    }
+
+    override fun setResultCrop(currentActivity: Activity, bitmap: Bitmap?) {
+        val intent = Intent()
+        bitmap?.let {  intent.putExtra("bitmap", bitmap) }
+        currentActivity.setResult((currentActivity as CropImageActivity).REQUEST_CROP, intent)
     }
 
 

@@ -26,18 +26,23 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.petsvote.data.CropperShared
 import com.petsvote.ui.R
 import com.petsvote.ui.databinding.DialogSelectPhotoBinding
 import com.petsvote.ui.dialogs.adapter.AllPhotosAdapter
 import com.petsvote.ui.entity.LocalPhoto
 import com.petsvote.ui.navigation.CropNavigation
 import com.petsvote.ui.uriToBitmap
+import kotlinx.coroutines.flow.collect
 import me.vponomarenko.injectionmanager.x.XInjectionManager
 import java.io.FileDescriptor
 import java.io.IOException
 
 
-class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo) {
+class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
+    AllPhotosAdapter.OnSelectedItem {
+
+    private val TAG = SelectPhotoDialog::class.java.name
 
     private var listPhoto = mutableListOf<LocalPhoto>()
     private var photoAdapter = AllPhotosAdapter(listPhoto)
@@ -45,9 +50,10 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo) {
     var CAMERA_PERMISSION = Manifest.permission.CAMERA
     var READ_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
 
-    var RC_PERMISSION = 101
+    private var RC_PERMISSION = 101
     private val REQUEST_ID = 123
-    val PICK_PHOTO_CODE = 1046
+    private val PICK_PHOTO_CODE = 1046
+    private val CROP_REQUEST = 104
 
     private lateinit var binding: DialogSelectPhotoBinding
 
@@ -56,6 +62,8 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo) {
     private val navigationCrop: CropNavigation by lazy {
         XInjectionManager.findComponent<CropNavigation>()
     }
+
+    private var mSelectPhotoDialogListener: SelectPhotoDialogListener? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -73,10 +81,17 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo) {
             if (checkPermissionsRead())  getLocalImages() else requestPermissionsRead()
         }
 
+
         binding.cancel.setOnClickListener { dismiss() }
         binding.allPhotos.setOnClickListener { pickPhoto() }
         binding.viewFinder.setOnClickListener { launchCameraRawPhoto() }
 
+        photoAdapter?.setOnSelected(this)
+
+    }
+
+    fun setSelectedPhotoCrop(listener: SelectPhotoDialogListener){
+        mSelectPhotoDialogListener = listener
     }
 
     private fun pickPhoto(){
@@ -103,6 +118,12 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo) {
             val photoUri: Uri? = data.data
             photoUri?.let { startCrop(null, it) }
 
+        }else if (resultCode === Activity.RESULT_OK && data != null && requestCode == CROP_REQUEST) {
+            var bitmap: Bitmap? = data.getParcelableExtra<Bitmap>("bitmap")
+            bitmap?.let {
+                mSelectPhotoDialogListener?.crop(it)
+                dismiss()
+            }
         }
     }
 
@@ -227,4 +248,11 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo) {
         window.attributes = params
     }
 
+    interface SelectPhotoDialogListener{
+        fun crop(bitmap: Bitmap)
+    }
+
+    override fun select(photo: LocalPhoto) {
+        startCrop(photo.bitmap, null)
+    }
 }

@@ -130,6 +130,7 @@ open class BesieImage @JvmOverloads constructor(
         try{
             this.canvas = canvas
             drawBesie()
+            super.onDraw(canvas);
             //if(iconResources.isNotEmpty()) getVectorBitmap()
             if(isAmim){
                 drawRipple()

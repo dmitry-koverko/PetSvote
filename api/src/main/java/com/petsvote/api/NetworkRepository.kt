@@ -7,6 +7,7 @@ import com.petsvote.api.entity.*
 import com.petsvote.data.UserInfo
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import kotlin.Error
 
@@ -116,14 +117,14 @@ class NetworkRepository(private val context: Context): NReposirory {
         }
     }
 
-    override suspend fun saveUserData(user: User, params: Map<String, RequestBody>?): UserData? {
+    override suspend fun saveUserData(user: User, params: MultipartBody.Part?): UserData? {
         var loc =  user.location?.country?.let {
             Location(user.location?.city_id, user.location?.country_id,
                 it, user.location.city)
         }
         var locString = Json.encodeToString(loc)
         Log.d(TAG, "location for save = $locString")
-        var result = api.saveUserData(user.first_name, user.last_name, locString)
+        var result = api.saveUserData(params, user.first_name, user.last_name, locString)
         return when (result) {
             is NetworkResponse.Success -> {
                 Log.d(TAG, result.toString())

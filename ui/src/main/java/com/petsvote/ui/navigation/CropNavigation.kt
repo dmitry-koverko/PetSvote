@@ -6,4 +6,5 @@ import android.net.Uri
 
 interface CropNavigation {
     fun startCropActivity(currentActivity: Activity, bitmap: Bitmap?, path: Uri?)
+    fun setResultCrop(currentActivity: Activity,bitmap: Bitmap?)
 }

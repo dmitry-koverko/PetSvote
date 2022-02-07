@@ -1,5 +1,6 @@
 package com.petsvote.api.entity
 
+import android.graphics.Bitmap
 import kotlinx.serialization.Serializable
 
 @Serializable

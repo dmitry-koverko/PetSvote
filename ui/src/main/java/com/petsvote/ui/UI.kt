@@ -38,6 +38,23 @@ fun ImageView.loadImage(url: String){
         .into(this);
 }
 
+fun ImageView.loadImage(bitmap: Bitmap){
+
+    val circularProgressDrawable = CircularProgressDrawable(this.context)
+    circularProgressDrawable.strokeWidth = 5f
+    circularProgressDrawable.centerRadius = 50f
+    //circularProgressDrawable.backgroundColor = ContextCompat.getColor(this.context, R.color.ui_gray)
+    circularProgressDrawable.start()
+
+    Glide
+        .with(context)
+        .load(bitmap)
+        .placeholder(circularProgressDrawable)
+        .transition(DrawableTransitionOptions.withCrossFade())
+        .skipMemoryCache(true)
+        .into(this);
+}
+
 fun Context.uriToBitmap(selectedFileUri: Uri): Bitmap? {
     try {
         val parcelFileDescriptor = applicationContext?.contentResolver?.openFileDescriptor(selectedFileUri, "r")

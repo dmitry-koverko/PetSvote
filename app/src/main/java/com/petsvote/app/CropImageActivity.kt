@@ -6,8 +6,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.iqeon.profile.CropImageFragment
+import me.vponomarenko.injectionmanager.x.XInjectionManager
 
 class CropImageActivity : AppCompatActivity() {
+
+    private val navigator: Navigator by lazy {
+        XInjectionManager.findComponent<Navigator>()
+    }
+
+    val REQUEST_CROP = 104
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crop_image)
@@ -30,6 +38,8 @@ class CropImageActivity : AppCompatActivity() {
                     .commitNow()
             };
         }
+
+
 
     }
 }

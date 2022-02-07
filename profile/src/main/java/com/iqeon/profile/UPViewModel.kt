@@ -1,5 +1,6 @@
 package com.iqeon.profile
 
+import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -9,7 +10,9 @@ import com.petsvote.room.RoomRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -30,10 +33,10 @@ class UPViewModel (
         }
     }
 
-    fun saveUserInfo(user: User){
+    fun saveUserInfo(user: User, newAva: MultipartBody.Part?){
         viewModelScope.launch (Dispatchers.IO) {
-            val map: HashMap<String, RequestBody> = HashMap()
-            var user = networkRepository.saveUserData(user, null)
+            var user = networkRepository.saveUserData(user, newAva)
+            var d= ""
         }
     }
 

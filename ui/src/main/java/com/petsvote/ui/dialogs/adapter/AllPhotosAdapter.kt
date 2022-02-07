@@ -44,6 +44,9 @@ class AllPhotosAdapter(private var list: MutableList<LocalPhoto>) : RecyclerView
 
         fun bind(item: LocalPhoto, position: Int) {
             binding.preview.setImageBitmap(item.bitmap)
+            binding.preview.setOnClickListener {
+                mOnSelectedItem?.select(item)
+            }
         }
     }
 

@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
@@ -27,6 +28,7 @@ import androidx.lifecycle.lifecycleScope
 import com.iqeon.profile.databinding.FragmentUserProfileBinding
 import com.iqeon.profile.di.UserProfileComponentViewModel
 import com.petsvote.api.entity.User
+import com.petsvote.data.CropperShared
 import com.petsvote.data.FilterUserInfo
 import com.petsvote.data.UserInfo
 import com.petsvote.room.City
@@ -41,9 +43,15 @@ import com.petsvote.ui.navigation.TabsNavigation
 import dagger.Lazy
 import kotlinx.coroutines.flow.collect
 import me.vponomarenko.injectionmanager.x.XInjectionManager
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.*
 import javax.inject.Inject
 
-class UserProfileFragment : Fragment(R.layout.fragment_user_profile){
+class UserProfileFragment : Fragment(R.layout.fragment_user_profile),
+    SelectPhotoDialog.SelectPhotoDialogListener {
 
     private val TAG = UserProfileFragment::class.java.name
 
@@ -68,6 +76,7 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile){
     private lateinit var binding: FragmentUserProfileBinding
     private var userUI = User(null,null, null, null,
         null, null, null, null)
+    private var userBitmap: Bitmap? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -77,9 +86,16 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile){
 
         lifecycleScope.launchWhenStarted {
             viewModel.uiUser.collect { user ->
-                //user.avatar?.let { binding.avatar.loadImage(it) }
                 user.first_name?.let { binding.username.setText(it) }
                 user.last_name?.let {binding.lastname.setText(it)}
+                user.avatar?.let {
+                    binding.iconPhoto.visibility = View.GONE
+                    binding.avatar.loadImage(it)
+                }
+                user.location?.let {
+                    binding.country.text = it.country
+                    binding.city.text = it.city
+                }
                 userUI = user
 
             }
@@ -158,10 +174,32 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile){
         }
 
         binding.avatar.setOnClickListener {
-            binding.blAvatar.animRipple()
-            activity?.supportFragmentManager?.let {
-                    it1 -> dialogSelectPhoto.show(it1, "SelectPhotoDialog") }
-//            activity?.let { it1 -> navigationCrop.startCropActivity(it1) }
+            try{
+                if(!dialogSelectPhoto.isAdded)
+                    activity?.supportFragmentManager?.let {
+                        it1 -> dialogSelectPhoto.show(it1, "SelectPhotoDialog") }
+            }catch (e: Exception){}
+        }
+        binding.iconPhoto.setOnClickListener {
+            try{
+                if(!dialogSelectPhoto.isAdded)
+                    activity?.supportFragmentManager?.let {
+                            it1 -> dialogSelectPhoto.show(it1, "SelectPhotoDialog") }
+            }catch (e: Exception){}
+        }
+
+        dialogSelectPhoto.setSelectedPhotoCrop(this)
+
+        lifecycleScope.launchWhenResumed {
+            CropperShared.cropBitmap.collect { bitmap ->
+                bitmap?.let {
+                    userBitmap = bitmap
+                    if(dialogSelectPhoto.isAdded) dialogSelectPhoto.dismiss()
+                    binding.avatar.loadImage(bitmap)
+                    binding.iconPhoto.visibility = View.GONE
+                    Log.d(TAG, "crop bitmap is not null")
+                }
+            }
         }
     }
 
@@ -179,13 +217,53 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile){
         if(userUI.last_name.isNullOrEmpty()) return
 
         binding.save.setOnClickListener {
-            viewModel.saveUserInfo(userUI)
+            var ava =
+                if(userBitmap != null) buildImageBodyPart("photo_data", userBitmap!!)
+                else null
+            viewModel.saveUserInfo(userUI, ava)
         }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         UPCViewModel.ratingComponent.inject(this)
+    }
+
+    override fun crop(bitmap: Bitmap) {
+        var b = bitmap
+        var d = ""
+    }
+
+    private fun buildImageBodyPart(fileName: String, bitmap: Bitmap):  MultipartBody.Part {
+        val leftImageFile = convertBitmapToFile(fileName, bitmap)
+        val reqFile = RequestBody.create("image/*".toMediaTypeOrNull(), leftImageFile)
+        return MultipartBody.Part.createFormData(fileName,     leftImageFile.name, reqFile)
+    }
+    private fun convertBitmapToFile(fileName: String, bitmap: Bitmap): File {
+        //create a file to write bitmap data
+        val file = File(context?.cacheDir, fileName)
+        file.createNewFile()
+
+        //Convert bitmap to byte array
+        val bos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 0 /*ignored for PNG*/, bos)
+        val bitMapData = bos.toByteArray()
+
+        //write the bytes in file
+        var fos: FileOutputStream? = null
+        try {
+            fos = FileOutputStream(file)
+        } catch (e: FileNotFoundException) {
+            e.printStackTrace()
+        }
+        try {
+            fos?.write(bitMapData)
+            fos?.flush()
+            fos?.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return file
     }
 
 }
