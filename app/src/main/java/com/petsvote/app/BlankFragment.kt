@@ -18,6 +18,7 @@ import com.iqeon.profile.SimpleUserProfileFragment
 import com.iqeon.profile.UserProfileFragment
 import com.petsvote.app.databinding.BlankFragmentBinding
 import com.petsvote.legal.LegalFragment
+import com.petsvote.pet.DraggableSwipeableExampleFragment
 import com.petsvote.rating.RatingFragment
 import com.petsvote.register.RegisterFragment
 import com.petsvote.splash.SplashFragment
@@ -112,7 +113,7 @@ class MyAdapter(private val myContext: Context, fm: FragmentManager, internal va
                 return RatingFragment()
             }
             1 -> {
-                return VoteFragment()
+                return DraggableSwipeableExampleFragment()
             }
             2 -> {
                 return SimpleUserProfileFragment()
