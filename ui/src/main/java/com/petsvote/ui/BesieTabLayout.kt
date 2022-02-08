@@ -76,6 +76,10 @@ class BesieTabLayout @JvmOverloads constructor(
             tab1.text = sex_allS
             tab2.text = sex_manS
             tab3.text = sex_girlS
+        }else if(type_tabs == 2){
+            tab1.text = context.getString(R.string.sex_girl_one)
+            tab2.text = context.getString(R.string.sex_man_one)
+            tab3.text = context.getString(R.string.sex_no)
         }
         initListener()
     }

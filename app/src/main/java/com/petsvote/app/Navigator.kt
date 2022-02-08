@@ -6,11 +6,13 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import androidx.navigation.NavController
+import com.petsvote.pet.PetActivity
 import com.petsvote.ui.navigation.CropNavigation
+import com.petsvote.ui.navigation.PetNavigation
 import com.petsvote.ui.navigation.RegisterNavigation
 import com.petsvote.ui.navigation.TabsNavigation
 
-class Navigator: RegisterNavigation, TabsNavigation, CropNavigation {
+class Navigator: RegisterNavigation, TabsNavigation, CropNavigation, PetNavigation {
 
     private var navController: NavController? = null
     override fun closeRegister() {
@@ -80,6 +82,10 @@ class Navigator: RegisterNavigation, TabsNavigation, CropNavigation {
         val intent = Intent()
         bitmap?.let {  intent.putExtra("bitmap", bitmap) }
         currentActivity.setResult((currentActivity as CropImageActivity).REQUEST_CROP, intent)
+    }
+
+    override fun toAddPet(currentActivity: Activity) {
+        currentActivity.startActivity(Intent(currentActivity, PetActivity::class.java))
     }
 
 

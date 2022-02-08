@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/add_pet_navigation"
+    app:startDestination="@id/addPetFragment">
+
+    <fragment
+        android:id="@+id/addPetFragment"
+        android:name="com.petsvote.pet.AddPetFragment"
+        android:label="AddPetFragment" />
+</navigation>

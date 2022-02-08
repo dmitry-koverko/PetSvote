@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
+import com.iqeon.profile.SimpleUserProfileFragment
 import com.iqeon.profile.UserProfileFragment
 import com.petsvote.app.databinding.BlankFragmentBinding
 import com.petsvote.legal.LegalFragment
@@ -114,7 +115,7 @@ class MyAdapter(private val myContext: Context, fm: FragmentManager, internal va
                 return VoteFragment()
             }
             2 -> {
-                return UserProfileFragment()
+                return SimpleUserProfileFragment()
             }
             else -> return RegisterFragment()
         }
