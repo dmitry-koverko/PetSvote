@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.petsvote.ui.BesieLayout
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:bl_background="@color/ui_gray"
+        android:layout_width="0dp"
+        android:layout_height="40dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.petsvote.ui.BesieLayout
+                android:visibility="visible"
+                android:layout_weight="1"
+                android:id="@+id/tab_indicator"
+                app:bl_background="@color/ui_primary"
+                android:layout_width="0dp"
+                app:layout_constraintWidth_percent="0.5"
+                android:layout_height="40dp"/>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:visibility="visible"
+                android:weightSum="2"
+                android:id="@+id/llp_tabs"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.petsvote.ui.SFTextView
+                    android:layout_weight="1"
+                    android:id="@+id/text_city"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:text="Город"
+                    android:textColor="@color/white"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <com.petsvote.ui.SFTextView
+                    android:id="@+id/text_country"
+                    android:textSize="15sp"
+                    android:gravity="center"
+                    android:text="Страна"
+                    android:textColor="@color/tab_text_color"
+                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.petsvote.ui.BesieLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

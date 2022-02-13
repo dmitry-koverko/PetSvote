@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.petsvote.data.CreatePetInfo
 import com.petsvote.data.FilterBreed
 import com.petsvote.data.FilterPetsObject
 import com.petsvote.data.Kinds
@@ -19,6 +20,7 @@ import java.io.Serializable
 class SelectKidsFragment: Fragment(R.layout.fragment_select_kinds), KindsAdapter.OnChangeSelect {
 
     private var isAll = true
+    private var isCreatePet = false
 
     private var listKinds = mutableListOf<Kinds>(
         Kinds(0, "Кошки", true, "cat", 30),
@@ -51,17 +53,31 @@ class SelectKidsFragment: Fragment(R.layout.fragment_select_kinds), KindsAdapter
             this.adapter = kindsAdapter
         }
 
+        var bundle = arguments
+        bundle?.let {
+            isCreatePet = it.getBoolean("create", false)
+            binding.containerAll.visibility = View.GONE
+            if(isCreatePet){
+                for(i in listKinds)
+                    i.select = false
+            }
+        }
 
         binding.back.setOnClickListener {
-            var listStringType = mutableListOf<Kinds>()
-            for(i in listKinds){
-                if(i.select) listStringType.add(i)
+            if(!isCreatePet){
+                var listStringType = mutableListOf<Kinds>()
+                for(i in listKinds){
+                    if(i.select) listStringType.add(i)
+                }
+                if(listStringType.isNotEmpty() && listStringType.size != listKinds.size)
+                    FilterPetsObject._listKinds.value = listStringType
+                else FilterPetsObject._listKinds.value = listOf()
+                FilterPetsObject._breed.value = FilterBreed(0, "")
+                findNavController().popBackStack()
+            }else {
+                CreatePetInfo.kind.value = listKinds.filter { it.select }.first()
+                findNavController().popBackStack()
             }
-            if(listStringType.isNotEmpty() && listStringType.size != listKinds.size)
-                FilterPetsObject._listKinds.value = listStringType
-            else FilterPetsObject._listKinds.value = listOf()
-            FilterPetsObject._breed.value = FilterBreed(0, "")
-            findNavController().popBackStack()
         }
 
         requireActivity()
@@ -82,7 +98,7 @@ class SelectKidsFragment: Fragment(R.layout.fragment_select_kinds), KindsAdapter
         }
 
         lifecycleScope.launchWhenStarted {
-            getListKinds()
+            if(!isCreatePet) getListKinds()
         }
 
     }
@@ -102,21 +118,29 @@ class SelectKidsFragment: Fragment(R.layout.fragment_select_kinds), KindsAdapter
         }
     }
 
-    override fun onChange() {
-        var countTrue = 0
-        var countFalse = 0
+    override fun onChange(position: Int) {
+       if(!isCreatePet){
+           var countTrue = 0
+           var countFalse = 0
 
-        for (i in listKinds){
-            if(i.select) countTrue++
-            else countFalse ++
-        }
-        binding.rbtn.isChecked =
-            when (listKinds.size) {
-                countTrue -> true
-                countFalse -> false
-                else -> false
+           for (i in listKinds){
+               if(i.select) countTrue++
+               else countFalse ++
+           }
+           binding.rbtn.isChecked =
+               when (listKinds.size) {
+                   countTrue -> true
+                   countFalse -> false
+                   else -> false
+               }
+           isAll = binding.rbtn.isChecked
+       }else {
+            for(i in listKinds){
+                i.select = false
             }
-        isAll = binding.rbtn.isChecked
+            listKinds[position].select = true
+            kindsAdapter.notifyDataSetChanged()
+       }
     }
 
 }

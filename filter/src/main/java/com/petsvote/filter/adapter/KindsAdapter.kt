@@ -11,6 +11,7 @@ import com.petsvote.filter.databinding.ItemKindsBinding
 class KindsAdapter(private val list: MutableList<Kinds>) : RecyclerView.Adapter<KindsAdapter.KindsHolder>() {
 
     private var mOnChangeSelect: OnChangeSelect? = null
+    private var isCreate = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): KindsHolder {
         val itemBinding =
@@ -34,7 +35,7 @@ class KindsAdapter(private val list: MutableList<Kinds>) : RecyclerView.Adapter<
             binding.check.setOnClickListener {
                 item.select = !item.select
                 binding.check.isChecked = item.select
-                mOnChangeSelect?.onChange()
+                mOnChangeSelect?.onChange(position)
             }
             binding.check.isChecked = item.select
 
@@ -46,7 +47,7 @@ class KindsAdapter(private val list: MutableList<Kinds>) : RecyclerView.Adapter<
     }
 
     interface OnChangeSelect{
-        fun onChange()
+        fun onChange(position: Int)
     }
 
 }

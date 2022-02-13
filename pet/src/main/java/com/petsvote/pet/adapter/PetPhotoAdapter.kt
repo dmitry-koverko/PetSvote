@@ -1,60 +1,61 @@
 package com.petsvote.pet.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.MotionEventCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.petsvote.pet.R
+import com.petsvote.pet.databinding.ItemPetPhotoBinding
 import com.petsvote.pet.entity.PetPhoto
-import java.util.*
 
-class PetPhotoAdapter(val modelList: List<PetPhoto>, val context: Context) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>(), ItemMoveCallback.ItemTouchHelperContract {
+class PetPhotoAdapter(private val list: MutableList<PetPhoto>) : RecyclerView.Adapter<PetPhotoAdapter.PetPhotoHolder>() {
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as ViewHolder).bind(modelList.get(position));
+    private var mOnClickItemListener: OnClickItemListener? = null
+    private var mDragStartListener: OnStartDragListener? = null
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PetPhotoHolder {
+        val itemBinding =
+            ItemPetPhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return PetPhotoHolder(itemBinding)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        return ViewHolder(layoutInflater.inflate(R.layout.item_pet_photo, parent, false))
+    override fun onBindViewHolder(holder: PetPhotoHolder, position: Int) {
+        val photo: PetPhoto = list[position]
+        holder.bind(photo)
     }
 
-    override fun getItemCount(): Int {
-        return modelList.size;
-    }
+    override fun getItemCount(): Int = list.size
 
-    interface ClickListener {
-        fun onClick(pos: Int, aView: View)
-    }
+    inner class PetPhotoHolder(private val binding: ItemPetPhotoBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bind(item: PetPhoto) {
 
-        fun bind(model: PetPhoto): Unit {
-//            itemView.txt.text = model.name
+//            binding.root.setOnTouchListener (object : View.OnTouchListener {
+//                override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+//                    when (event?.action) {
+//                        MotionEvent.ACTION_DOWN ->  mDragStartListener?.onStartDrag(binding.root);
+//                    }
 //
-//            val id = context.resources.getIdentifier(
-//                model.name.toLowerCase(),
-//                "drawable",
-//                context.packageName
-//            )
-//            itemView.img.setImageResource(id)
+//                    return v?.onTouchEvent(event) ?: true
+//                }
+//            })
+
+
         }
     }
 
-    override fun onRowMoved(fromPosition: Int, toPosition: Int) {
-        if (fromPosition < toPosition) {
-            for (i in fromPosition until toPosition) {
-                Collections.swap(modelList, i, i + 1)
-            }
-        } else {
-            for (i in fromPosition downTo toPosition + 1) {
-                Collections.swap(modelList, i, i - 1)
-            }
-        }
-
-        notifyItemMoved(fromPosition, toPosition)
+    fun setOnClickItemListener(onClickItemListener: OnClickItemListener){
+        mOnClickItemListener = onClickItemListener
     }
 
+    fun setOndragStartListener(dragStartListener: OnStartDragListener ){
+        mDragStartListener = dragStartListener
+    }
+
+    interface OnClickItemListener{
+        fun onClick(position: Int)
+        fun onSizeCard(width: Int, height: Int)
+    }
 }

@@ -4,6 +4,7 @@ import android.app.Application
 import com.iqeon.profile.di.UPDeps
 import com.petsvote.api.NetworkRepository
 import com.petsvote.filter.di.FilterDeps
+import com.petsvote.pet.di.PetDeps
 import com.petsvote.rating.di.RatingDeps
 import com.petsvote.register.di.RegisterDeps
 import com.petsvote.room.RoomRepository
@@ -16,7 +17,7 @@ import dagger.Provides
 import javax.inject.Scope
 
 @[AppScope Component(modules = [AppModule::class])]
-interface AppComponent: RegisterDeps, SplashDeps, RatingDeps, FilterDeps, VoteDeps, UPDeps {
+interface AppComponent: RegisterDeps, SplashDeps, RatingDeps, FilterDeps, VoteDeps, UPDeps, PetDeps {
 
     override val networkRepository: NetworkRepository
     override val roomRepository: RoomRepository

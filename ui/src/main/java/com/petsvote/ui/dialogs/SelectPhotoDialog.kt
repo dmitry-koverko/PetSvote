@@ -44,6 +44,8 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
 
     private val TAG = SelectPhotoDialog::class.java.name
 
+    private lateinit var  cameraProvider: ProcessCameraProvider
+
     private var listPhoto = mutableListOf<LocalPhoto>()
     private var photoAdapter = AllPhotosAdapter(listPhoto)
 
@@ -129,10 +131,10 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
 
     private fun startCrop(bitmap: Bitmap?, uri: Uri?){
         bitmap?.let {
-            activity?.let { navigationCrop.startCropActivity(it, bitmap, null) }
+            activity?.let { navigationCrop.startCropActivity(requireActivity(), bitmap, null) }
         }
         uri?.let {
-            activity?.let { navigationCrop.startCropActivity(it, null, uri) }
+            activity?.let { navigationCrop.startCropActivity(requireActivity(), null, uri) }
         }
     }
     private fun startCamera() {
@@ -141,7 +143,7 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
         cameraProviderFuture?.addListener(Runnable {
 
             // Used to bind the lifecycle of cameras to the lifecycle owner
-            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+            cameraProvider = cameraProviderFuture.get()
 
             // Preview
             val preview = Preview.Builder()

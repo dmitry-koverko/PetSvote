@@ -137,6 +137,28 @@ class NetworkRepository(private val context: Context): NReposirory {
         }
     }
 
+    override suspend fun addPet(
+        photos:List<MultipartBody.Part>,
+        bdate: String?,
+        user_id: Int?,
+        name: String?,
+        breed_id: String?,
+        sex: String?,
+        type: String?
+    ): Pet? {
+        var result = api.addPet(photos, bdate, user_id, name, breed_id, sex, type)
+        return when (result) {
+            is NetworkResponse.Success -> {
+                Log.d(TAG, result.toString())
+                return result.body
+            }
+            else ->{
+                checkError(result as NetworkResponse<Any, Error>)
+                return null
+            }
+        }
+    }
+
     override suspend fun getCountries(): List<Country>? {
         var result = api.getCountries("ru", null)
         return when (result) {

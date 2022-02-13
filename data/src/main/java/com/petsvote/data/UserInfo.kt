@@ -7,6 +7,7 @@ object UserInfo {
     private val USERINFO = "userinfo"
     private val BEARER = "bearer"
     private val APPLYPHOTOS = "applyphotos"
+    private val ID = "id"
 
     fun getBearer(context: Context): String {
         return context.getSharedPreferences(USERINFO, Context.MODE_PRIVATE)
@@ -17,6 +18,19 @@ object UserInfo {
         val sharedPref = context.getSharedPreferences(USERINFO, Context.MODE_PRIVATE) ?: return
         with (sharedPref.edit()) {
             putString(BEARER, bearer)
+            apply()
+        }
+    }
+
+    fun getUserId(context: Context): Int {
+        return context.getSharedPreferences(USERINFO, Context.MODE_PRIVATE)
+            .getInt(ID, 0)
+    }
+
+    fun setUserId(context: Context, id: Int){
+        val sharedPref = context.getSharedPreferences(USERINFO, Context.MODE_PRIVATE) ?: return
+        with (sharedPref.edit()) {
+            putInt(ID, id)
             apply()
         }
     }

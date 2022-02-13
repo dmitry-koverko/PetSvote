@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.Gravity.CENTER
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewTreeObserver
@@ -33,7 +34,7 @@ class BesieTabLayout @JvmOverloads constructor(
 
      var tab1: SFTextView
      var tab2: SFTextView
-     var tab3: SFTextView
+     var tab3: SFTextView? = null
 
     private var tabIndicator: BesieLayout
 
@@ -45,17 +46,26 @@ class BesieTabLayout @JvmOverloads constructor(
     private lateinit var sex_girlS: String
 
     var initCountryWorld = 0
+    var coutTabs = 3
+        set(value) {
+            field = value
+        }
 
     var type_tabs = 0
 
     init {
-        val inflater =
-            context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-        var root = inflater.inflate(R.layout.besie_tab_layout, this, true)
-
 
         context.withStyledAttributes(attrs, R.styleable.BesieTabLayout){
             type_tabs = getInt(R.styleable.BesieTabLayout_btl_type, 0)
+            coutTabs = getInt(R.styleable.BesieTabLayout_btl_count_tabs, 3)
+        }
+
+        val inflater =
+            context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        var root = when(coutTabs){
+            3 -> inflater.inflate(R.layout.besie_tab_layout, this, true)
+            2 -> inflater.inflate(R.layout.besie_tab_latout_two, this, true)
+            else -> inflater.inflate(R.layout.besie_tab_layout, this, true)
         }
 
         sex_allS = context.getString(R.string.sex_all)
@@ -64,22 +74,24 @@ class BesieTabLayout @JvmOverloads constructor(
 
         tab1 = root.findViewById(R.id.text_city)
         tab2 = root.findViewById(R.id.text_country)
-        tab3 = root.findViewById(R.id.text_world)
+        if(coutTabs == 3) tab3 = root.findViewById(R.id.text_world)
 
         tab1.animation = true
         tab2.animation = true
-        tab3.animation = true
+        tab3?.animation = true
 
         tabIndicator = root.findViewById(R.id.tab_indicator)
+
+        tab3?.visibility = View.GONE
 
         if(type_tabs == 1){
             tab1.text = sex_allS
             tab2.text = sex_manS
-            tab3.text = sex_girlS
+            tab3?.text = sex_girlS
         }else if(type_tabs == 2){
             tab1.text = context.getString(R.string.sex_girl_one)
             tab2.text = context.getString(R.string.sex_man_one)
-            tab3.text = context.getString(R.string.sex_no)
+            tab3?.text = context.getString(R.string.sex_no)
         }
         initListener()
     }
@@ -92,7 +104,7 @@ class BesieTabLayout @JvmOverloads constructor(
         Log.d(TAG, "initCountryTabs = $width")
         tabIndicator.translationX = tabWith * 2f
         tab1.setTextColor(ContextCompat.getColor(context, R.color.tab_text_color))
-        tab3.setTextColor(ContextCompat.getColor(context, R.color.tab_text_color_active))
+        tab3?.setTextColor(ContextCompat.getColor(context, R.color.tab_text_color_active))
         currentTab = R.id.text_world
     }
 
@@ -138,12 +150,12 @@ class BesieTabLayout @JvmOverloads constructor(
             }
         }
 
-        tab3.setOnClickListener {
+        tab3?.setOnClickListener {
             if(currentTab != it.id) {
                 checkCurrentTab()
                 animMove(animTranslationX, tabWith * 2.toFloat())
                 currentTab = it.id
-                animColor(tab3, true)
+                animColor(tab3!!, true)
                 when(type_tabs){
                     0 -> mBesieTabLayoutSelectedListener?.selected(BesieTabSelected.WORLD)
                     1 -> mBesieTabLayoutSelectedListener?.selected(BesieTabSelected.GIRLS)
@@ -160,13 +172,18 @@ class BesieTabLayout @JvmOverloads constructor(
             R.id.text_world -> tab3
             else -> tab1
         }
-        animColor(view, false)
+        view?.let { animColor(it, false) }
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         Log.d(TAG, "onSizeChanged")
-        tabWith = w /3
+        tabWith = w / coutTabs
         tabHeight = h
+        if(coutTabs == 2){
+            var lp = tabIndicator.layoutParams as LayoutParams
+            lp.matchConstraintPercentWidth = 0.5f
+            tabIndicator.layoutParams = lp
+        }
         if(initCountryWorld == 1) initCountryTabs()
         else if(initCountryWorld == 2) initWorldTab()
         super.onSizeChanged(w, h, oldw, oldh)

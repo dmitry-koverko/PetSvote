@@ -8,9 +8,15 @@
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/app/src/main/res/layout/activity_select.xml" value="0.22" />
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/app/src/main/res/layout/blank_fragment.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/app/src/main/res/layout/main_activity.xml" value="0.25" />
+        <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/filter/src/main/res/layout/fragment_select_beeds.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/filter/src/main/res/layout/fragment_select_country.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/filter/src/main/res/layout/fragment_select_kinds.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/filter/src/main/res/layout/item_counrty.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/pet/src/main/res/layout/fragment_add_pet.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/pet/src/main/res/layout/fragment_add_pet_test.xml" value="0.17831813576494426" />
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/pet/src/main/res/layout/fragment_recycler_list_view.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/pet/src/main/res/layout/item_pet_photo.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/pet/src/main/res/layout/item_test.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/pet/src/main/res/layout/list_group_item_draggable.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/pet/src/main/res/layout/list_item2_draggable.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/pet/src/main/res/layout/list_item_draggable.xml" value="0.36666666666666664" />
@@ -26,6 +32,8 @@
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/ui/src/main/res/drawable/bg_swipe_item_left.xml" value="0.196" />
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/ui/src/main/res/drawable/bg_swipe_item_right.xml" value="0.196" />
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/ui/src/main/res/drawable/bg_swipe_item_up.xml" value="0.24" />
+        <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/ui/src/main/res/layout/besie_tab_latout_two.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/ui/src/main/res/layout/besie_tab_layout.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/ui/src/main/res/layout/dialog_information_photo.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/ui/src/main/res/layout/dialog_select_photo.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/ui/src/main/res/layout/local_photo_item.xml" value="0.33" />

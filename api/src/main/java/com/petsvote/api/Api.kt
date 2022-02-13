@@ -112,17 +112,16 @@ interface Api {
     )
 
     @Multipart
-    @POST("save-user-data")
+    @POST("add-pet")
     suspend fun addPet(
-        @PartMap params: Map<String, @JvmSuppressWildcards RequestBody>,
-        @Query("first_name") first_name: String?,
+        @Part photos:List<MultipartBody.Part>,
         @Query("bdate") bdate: String?,
         @Query("user_id") user_id: Int?,
         @Query("name") name: String?,
         @Query("breed_id") breed_id: String?,
         @Query("sex") sex: String?,
         @Query("type") type: String?,
-    )
+    ): NetworkResponse<Pet, com.petsvote.api.entity.Error>
 
     @Headers("Content-Type: application/x-www-form-urlencoded")
     @FormUrlEncoded

@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.petsvote.api.entity.Breed
 import com.petsvote.api.entity.PetRating
+import com.petsvote.data.CreatePetInfo
 import com.petsvote.data.FilterBreed
 import com.petsvote.data.FilterPetsObject
 import com.petsvote.filter.adapter.BreedsAdapter
@@ -57,6 +58,9 @@ class SelectBreedsFragment: Fragment(R.layout.fragment_select_beeds), BreedsAdap
     private lateinit var allString: String
     private lateinit var noString: String
 
+
+    private var isCreatePet = false
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -70,6 +74,12 @@ class SelectBreedsFragment: Fragment(R.layout.fragment_select_beeds), BreedsAdap
         binding.list.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             this.adapter = breedsAdapter
+        }
+
+        var bundle = arguments
+        bundle?.let {
+            isCreatePet = it.getBoolean("create", false)
+            binding.linBreedsAll.visibility = View.GONE
         }
 
         breedsAdapter.setOnSelected(this)
@@ -144,8 +154,13 @@ class SelectBreedsFragment: Fragment(R.layout.fragment_select_beeds), BreedsAdap
 
     private fun setBreeds(){
         var breed = FilterBreed(breedsId, breedsName)
-        FilterPetsObject._breed.value = breed
-        findNavController().navigate(R.id.action_selectBreedsFragment_to_filterFragment)
+        if(!isCreatePet){
+            FilterPetsObject._breed.value = breed
+            findNavController().navigate(R.id.action_selectBreedsFragment_to_filterFragment)
+        }else{
+            CreatePetInfo.breed.value = breed
+            findNavController().popBackStack()
+        }
     }
 
     override fun onText(text: String) {

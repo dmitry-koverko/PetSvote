@@ -5,24 +5,18 @@ import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
-import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.iqeon.profile.SimpleUserProfileFragment
-import com.iqeon.profile.UserProfileFragment
 import com.petsvote.app.databinding.BlankFragmentBinding
-import com.petsvote.legal.LegalFragment
-import com.petsvote.pet.DraggableSwipeableExampleFragment
+import com.petsvote.pet.addpet.AddPetFragment
 import com.petsvote.rating.RatingFragment
 import com.petsvote.register.RegisterFragment
-import com.petsvote.splash.SplashFragment
-import com.petsvote.vote.VoteFragment
 
 class BlankFragment : Fragment(R.layout.blank_fragment) {
 
@@ -113,7 +107,7 @@ class MyAdapter(private val myContext: Context, fm: FragmentManager, internal va
                 return RatingFragment()
             }
             1 -> {
-                return DraggableSwipeableExampleFragment()
+                return AddPetFragment()
             }
             2 -> {
                 return SimpleUserProfileFragment()
