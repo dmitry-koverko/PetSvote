@@ -77,8 +77,10 @@ class CardViewPagerAdapter(
             holder.rate.scaleY = 1f
         }
         var listPhoto = mutableListOf<String>()
-        for (i in item.photos){
-            listPhoto.add(i.url)
+        item.photos?.let {
+            for (i in it){
+                listPhoto.add(i.url)
+            }
         }
         holder.paralax.list = listPhoto
         holder.title.text = item.name

@@ -72,15 +72,15 @@ interface Api {
 
     @GET("get-pet-details")
     suspend fun getPetDetails(
-        @Query("type") type: String?,
-        @Query("sex") sex: String?,
+        //@Query("type") type: String?,
+        //@Query("sex") sex: String?,
         @Query("city_id") city_id: Int?,
         @Query("country_id") country_id: Int?,
-        @Query("age_between") age_between: String?,
+        //@Query("age_between") age_between: String?,
         @Query("id") id: Int?,
         @Query("user_id") user_id: Int?,
-        @Query("breed_id") breed_id: Int?,
-    ): PetDatails
+        //@Query("breed_id") breed_id: Int?,
+    ): NetworkResponse<PetDatails, com.petsvote.api.entity.Error>
 
     @GET("get-current-user")
     suspend fun getCurrentUser(
@@ -142,6 +142,12 @@ interface Api {
         @Query("lang") lang: String?,
         @Query("country_name") country_name: String?,
     ): NetworkResponse<Countries, com.petsvote.api.entity.Error>
+
+    @GET("find-pet")
+    suspend fun findPet(
+        @Query("lang") lang: String?,
+        @Query("pet_id") pet_id: Int,
+    ): NetworkResponse<FindPet, com.petsvote.api.entity.Error>
 
 
     @GET("get-city-list")

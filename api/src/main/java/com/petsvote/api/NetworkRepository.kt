@@ -173,6 +173,41 @@ class NetworkRepository(private val context: Context): NReposirory {
         }
     }
 
+    override suspend fun findPet(petId: Int): Pet? {
+        var lang = UserInfo.languge
+        var result = api.findPet(lang, petId)
+        return when (result) {
+            is NetworkResponse.Success -> {
+                Log.d(TAG, result.toString())
+                return result.body.pet
+            }
+            else ->{
+                checkError(result as NetworkResponse<Any, Error>)
+                return null
+            }
+        }
+    }
+
+    override suspend fun petDetails(
+        city_id: Int?,
+        country_id: Int?,
+        id: Int?,
+        user_id: Int?
+    ): PetDatails? {
+
+        var result = api.getPetDetails(city_id, country_id, id, user_id)
+        return when (result) {
+            is NetworkResponse.Success -> {
+                Log.d(TAG, result.toString())
+                return result.body
+            }
+            else ->{
+                checkError(result as NetworkResponse<Any, Error>)
+                return null
+            }
+        }
+    }
+
     override suspend fun getCities(countryId: Int): List<City>? {
         var result = api.getCities("ru", null, countryId,null, 0)
         return when (result) {

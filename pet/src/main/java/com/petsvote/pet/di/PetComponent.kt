@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.petsvote.api.NetworkRepository
 import com.petsvote.pet.addpet.AddPetFragment
+import com.petsvote.pet.info.PetInfoFragment
 import com.petsvote.room.RoomRepository
 import dagger.Component
 import dagger.Module
@@ -19,6 +20,7 @@ internal annotation class PetScope
 interface PetComponent {
 
     fun inject(addPetFragment: AddPetFragment)
+    fun injectInfo(petInfoFragment: PetInfoFragment)
 
     @Component.Builder
     interface Builder{

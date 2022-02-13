@@ -186,7 +186,7 @@ class AddPetFragment: Fragment(R.layout.fragment_add_pet), OnStartDragListener,
             val builder: MultipartBody.Builder = MultipartBody.Builder()
             for(i in 0..listPhotos.size -1){
                 if(listPhotos[i].bitmap != null){
-                    listMP.add((buildImageBodyPart("photo_data[$i]",listPhotos[i].bitmap!!)))
+                    listMP.add((buildImageBodyPart("photo_data[${i+1}]",listPhotos[i].bitmap!!)))
                 }
 //                if(i.bitmap != null){
 ////                    val randomString = (1..15)
@@ -243,7 +243,7 @@ class AddPetFragment: Fragment(R.layout.fragment_add_pet), OnStartDragListener,
 
         //Convert bitmap to byte array
         val bos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 0 /*ignored for PNG*/, bos)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 90 /*ignored for PNG*/, bos)
         val bitMapData = bos.toByteArray()
 
         //write the bytes in file

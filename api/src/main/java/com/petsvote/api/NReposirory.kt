@@ -26,6 +26,8 @@ interface NReposirory {
                        sex: String?,
                        type: String?): Pet?
     suspend fun getCountries(): List<Country>?
+    suspend fun findPet(petId: Int): Pet?
+    suspend fun petDetails(city_id: Int?, country_id: Int?, id: Int?, user_id: Int?): PetDatails?
     suspend fun getCities(countryId: Int): List<City>?
     abstract fun checkError(result: NetworkResponse<Any, Error>)
 }
