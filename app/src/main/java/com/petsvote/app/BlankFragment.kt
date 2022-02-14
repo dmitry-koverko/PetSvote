@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.tabs.TabLayout
-import com.iqeon.profile.SimpleUserProfileFragment
+import com.iqeon.profile.simple.SimpleUserProfileFragment
 import com.petsvote.app.databinding.BlankFragmentBinding
 import com.petsvote.pet.addpet.AddPetFragment
 import com.petsvote.rating.RatingFragment

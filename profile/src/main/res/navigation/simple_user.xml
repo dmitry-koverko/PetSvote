@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/simple_user"
+    app:startDestination="@id/simpleUserProfileFragment">
+
+
+    <fragment
+        tools:layout="@layout/fragment_simple_user_profile"
+        android:id="@+id/simpleUserProfileFragment"
+        android:name="com.iqeon.profile.simple.SimpleUserProfileFragment"
+        android:label="SimpleUserProfileFragment" />
+</navigation>

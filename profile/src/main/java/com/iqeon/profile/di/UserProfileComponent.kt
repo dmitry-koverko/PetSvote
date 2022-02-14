@@ -2,6 +2,7 @@ package com.iqeon.profile.di
 import android.app.Application
 import android.content.Context
 import com.iqeon.profile.UserProfileFragment
+import com.iqeon.profile.simple.SimpleUserProfileFragment
 import com.petsvote.api.NetworkRepository
 import com.petsvote.room.RoomRepository
 import dagger.Component
@@ -18,6 +19,7 @@ internal annotation class UPScope
 interface UserProfileComponent {
 
     fun inject(userProfileFragment: UserProfileFragment)
+    fun injectSimple(simpleUserProfileFragment: SimpleUserProfileFragment)
 
     @Component.Builder
     interface Builder{

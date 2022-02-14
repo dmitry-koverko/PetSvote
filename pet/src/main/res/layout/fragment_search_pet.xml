@@ -12,6 +12,7 @@
         android:layout_height="56dp">
 
         <com.petsvote.ui.BesieImage
+            app:bi_background_color="@android:color/transparent"
             android:padding="7dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -293,7 +294,6 @@
                 app:bl_ripple_color="@color/ripple_primary"
                 app:bl_ripple="true"
                 android:layout_marginBottom="17dp"
-                app:layout_constraintTop_toBottomOf="c"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginRight="16dp"
                 android:layout_marginLeft="16dp"

@@ -6,18 +6,18 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class User(
     //val is_blocked: Boolean,
-    val location: Location?,
-    val pets: List<UserPets>?,
-    val id: Int?,
+    val location: Location? = null,
+    val pets: List<UserPets>? = listOf(),
+    val id: Int? = -1,
     //val bearer: String,
-    var first_name: String?,
+    var first_name: String? = "",
     //val has_blocked: Boolean,
-    var last_name: String?,
-    val avatar: String?,
-    val first_vote: Int?,
+    var last_name: String? = "",
+    val avatar: String? = "",
+    val first_vote: Int? = -1,
     //val has_paid_votes: Boolean,
     //val notify_status: Int,
-    val official: Int?
+    val official: Int? = 0
 )
 
 
@@ -31,17 +31,19 @@ data class Location(
 
 @Serializable
 data class UserPets(
-    val first_name: String,
-    val last_name: String,
-    val avatar: String,
-    val official: Int,
-    val global_range: Int,
-    val country_range: Int,
-    val city_range: Int,
-    val global_score: Int,
-    val global_dynamic: Int,
-    val country_dynamic: Int,
-    val city_dynamic: Int,
-    val mark_dynamic: Int,
-    val has_paid_votes: Int
+    val name: String? = "",
+    val first_name: String? = "",
+    val last_name: String? = "",
+    val avatar: String? = "",
+    val official: Int? = -1,
+    val global_range: Int? = -1,
+    val country_range: Int? = -1,
+    val city_range: Int? = -1,
+    val global_score: Int? = -1,
+    val global_dynamic: Int? = -1,
+    val country_dynamic: Int? = -1,
+    val city_dynamic: Int? = -1,
+    val mark_dynamic: Int? = -1,
+    val has_paid_votes: Int? = -1,
+    val photos: List<Photo>? = listOf()
 )

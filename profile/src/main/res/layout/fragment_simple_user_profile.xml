@@ -21,7 +21,7 @@
                 android:layout_marginRight="16dp"
                 android:textColor="@color/bold"
                 android:textSize="34sp"
-                android:text="Профиль"
+                android:text="Профиль ♂"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -61,6 +61,13 @@
             android:layout_marginTop="16dp"
             android:id="@+id/add_pet"
             android:text="Добавить питомца"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/user_pets"
+            android:layout_marginTop="16dp"
+            android:layout_marginRight="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

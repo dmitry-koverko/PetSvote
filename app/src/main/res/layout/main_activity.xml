@@ -16,6 +16,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:navGraph="@navigation/search_pet_navigation"/>
+        app:navGraph="@navigation/simple_user"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

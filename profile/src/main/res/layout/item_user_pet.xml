@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="16dp"
+    android:layout_width="match_parent"
+    android:layout_marginBottom="8dp"
+    android:layout_height="500dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <ImageView
+            android:scaleType="centerCrop"
+            android:src="@drawable/cat2"
+            android:id="@+id/pet_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <com.petsvote.ui.SFTextView
+            android:id="@+id/name_pet"
+            android:layout_marginBottom="24dp"
+            android:layout_marginLeft="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:textSize="34sp"
+            android:textColor="@color/white"
+            android:text="Ешка, 7 мес."
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
