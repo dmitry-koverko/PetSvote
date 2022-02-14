@@ -5,6 +5,7 @@ import android.content.Context
 import com.petsvote.api.NetworkRepository
 import com.petsvote.pet.addpet.AddPetFragment
 import com.petsvote.pet.info.PetInfoFragment
+import com.petsvote.pet.search.SearchPetFragment
 import com.petsvote.room.RoomRepository
 import dagger.Component
 import dagger.Module
@@ -21,6 +22,7 @@ interface PetComponent {
 
     fun inject(addPetFragment: AddPetFragment)
     fun injectInfo(petInfoFragment: PetInfoFragment)
+    fun injectSearch(searchPetFragment: SearchPetFragment)
 
     @Component.Builder
     interface Builder{

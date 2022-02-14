@@ -37,7 +37,7 @@
         android:id="@+id/clear"
         app:bl_ripple="true"
         app:bl_background="@android:color/transparent"
-        app:bl_ripple_color="@color/ui_gray"
+        app:bl_ripple_color="@color/ripple_gray"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_width="42dp"
         android:layout_height="36dp">
