@@ -100,7 +100,7 @@ class SearchPetFragment: Fragment(R.layout.fragment_search_pet) {
                        if(pet.has_paid_votes == 1){
                            binding.voteContainer.visibility = View.GONE
                            binding.voteBar.visibility = View.VISIBLE
-                           startAnimaVote(3)//TODO pet.count_paid_votes
+                           startAnimaVote(pet.count_paid_votes)//TODO pet.count_paid_votes
 
                        }else {
                             binding.voteContainer.visibility = View.VISIBLE

@@ -1,6 +1,8 @@
 package com.petsvote.room
 
 import android.app.Application
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
 
 class RoomRepository(private val application: Application): RRepository {
 
@@ -8,6 +10,10 @@ class RoomRepository(private val application: Application): RRepository {
     private var locationDao: LocationDao = UserDatabase.getDatabase(application).locationDao()
     private var breedDao: BreedsDao = UserDatabase.getDatabase(application).breedDao()
     private var countryInfoDao: CountryInfoDao = UserDatabase.getDatabase(application).countryInfoDao()
+    override suspend fun updateUser(userInfo: UserInfo) {
+        userDao.insert(userInfo)
+    }
+
     override suspend fun saveRegister(
         bearer: String?,
         id: Int?,
@@ -35,6 +41,11 @@ class RoomRepository(private val application: Application): RRepository {
         var res = locationDao.getLocation()
         return if(res == null) Location(-1, -1, "", "") else res
     }
+
+    override fun getCurrentUser(): Flow<UserInfo> {
+        return userDao.getUser()
+    }
+
 
     override suspend fun saveBreed(breed: Breed) {
         breedDao.insert(breed)

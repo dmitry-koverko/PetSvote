@@ -156,6 +156,7 @@
 
 
                 <com.petsvote.ui.BesieImage
+                    android:src="@drawable/ic_user_avatar"
                     android:scaleType="centerCrop"
                     android:id="@+id/user_image"
                     android:layout_width="56dp"

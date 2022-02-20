@@ -14,14 +14,16 @@
         android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/profile_container"
             android:layout_width="match_parent"
             android:layout_height="40dp">
 
             <com.petsvote.ui.SFTextView
+                android:id="@+id/profile"
                 android:layout_marginRight="16dp"
                 android:textColor="@color/bold"
                 android:textSize="34sp"
-                android:text="Профиль ♂"
+                android:text="Профиль"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 

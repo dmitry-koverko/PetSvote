@@ -1,7 +1,10 @@
 package com.petsvote.room
 
+import kotlinx.coroutines.flow.Flow
+
 interface RRepository {
 
+    suspend fun updateUser(userInfo: UserInfo)
     suspend fun saveRegister(bearer: String?,
                              id: Int?,
                              first_name: String?,
@@ -14,6 +17,7 @@ interface RRepository {
                              country: String?,
                              city: String?)
     suspend fun getLocation(): Location
+    fun getCurrentUser(): Flow<UserInfo>
 
     suspend fun saveBreed(breed: Breed)
     suspend fun deleteBreeds()

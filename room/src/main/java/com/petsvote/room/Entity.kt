@@ -1,50 +1,78 @@
 package com.petsvote.room
 
 import androidx.room.*
-import com.petsvote.room.converters.CityConverter
-import com.petsvote.room.converters.CountryConverter
+import com.petsvote.room.converters.*
+import org.jetbrains.annotations.NotNull
 
 @Entity
 data class UserInfo(
-    @PrimaryKey
-    var id: Int?,
-    var bearer: String? ,
-    var first_name: String? ,
-    var has_blocked: Boolean? ,
-    var last_name: String? ,
-    var avatar: String? ,
-    var first_vote: Int? ,
-    var has_paid_votes: Boolean? ,
-    var notify_status: Int? ,
-    var official: Int?
+    @PrimaryKey(autoGenerate = false)
+    var id: Int? = 1,
+    var bearer: String?  =null,
+    var first_name: String?  =null,
+    var has_blocked: Boolean?  =null,
+    var last_name: String?  =null,
+    var avatar: String?  =null,
+    var first_vote: Int?  =null,
+    var has_paid_votes: Boolean?  =null,
+    var notify_status: Int?  =null,
+    var official: Int? =null,
+
+    @NotNull
+    @TypeConverters(PetConverter::class)
+    var pet: List<UserPets> = listOf(),
+
+    @TypeConverters(LocationConverter::class)
+    var location: Location? =null,
 )
 
 @Entity
 data class Location(
     @PrimaryKey
-    val city_id: Int?,
-    val country_id: Int?,
-    val country: String?,
-    val city: String?
+    var city_id: Int? = null,
+    val country_id: Int? = null,
+    val country: String? = null,
+    val city: String? = null
 )
 
 @Entity
 data class UserPets(
+
     @PrimaryKey(autoGenerate = true)
-    val pets_id: Int,
-    val first_name: String,
-    val last_name: String,
-    val avatar: String,
-    val official: Int,
-    val global_range: Int,
-    val country_range: Int,
-    val city_range: Int,
-    val global_score: Int,
-    val global_dynamic: Int,
-    val country_dynamic: Int,
-    val city_dynamic: Int,
-    val mark_dynamic: Int,
-    val has_paid_votes: Int
+    var idPet: Int? = 1,
+
+    @Ignore
+    var pets_id: Int? = 1,
+    @Ignore
+    val global_range: Int? =null,
+    @Ignore
+    val country_range: Int? =null,
+    @Ignore
+    val city_range: Int? =null,
+    @Ignore
+    val global_score: Int? =null,
+    @Ignore
+    val global_dynamic: Int? =null,
+    @Ignore
+    val country_dynamic: Int? =null,
+    @Ignore
+    val city_dynamic: Int? =null,
+    @Ignore
+    val mark_dynamic: Int? =null,
+    @Ignore
+    val has_paid_votes: Int? =null,
+
+    @NotNull
+    @Ignore
+    @TypeConverters(PhotoConverter::class)
+    var photos: List<Photo> = listOf()
+)
+
+@Entity
+data class Photo(
+    val id: Int,
+    val num: Int,
+    val url: String
 )
 
 @Entity
@@ -62,6 +90,7 @@ data class CountryInfo(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val language: String,
+
     @TypeConverters(CityConverter::class)
     val cities: List<City>?,
 

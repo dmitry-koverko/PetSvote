@@ -1,20 +1,16 @@
 package com.petsvote.splash
 
 import android.content.Context
-import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.petsvote.base.BaseFragment
 import com.petsvote.data.UserInfo
 import com.petsvote.splash.databinding.FragmentSplashBinding
 import com.petsvote.splash.di.SplashComponentViewModel
@@ -52,18 +48,17 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
 
         binding = FragmentSplashBinding.bind(view)
 
-        val resources: Resources? = activity?.getResources()
-        val config: Configuration? = resources?.getConfiguration()
-        Log.d(TAG, "bearer user = ${UserInfo.getBearer(requireContext())}")
+        val resources: Resources? = activity?.resources
+        val config: Configuration? = resources?.configuration
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             var lang = config?.locales?.get(0)?.language?.toString()!!
             Log.d(TAG, "language user = $lang")
             Log.d(TAG, "bearer user = ${UserInfo.getBearer(requireContext())}")
-            if(UserInfo.listLanguage.contains(lang))
+            if(UserInfo.listLanguage.contains(lang)) {
                 UserInfo.languge = lang
+                UserInfo.setLanguage(requireContext(), lang)
+            }
         }
-
-
         setUIStart()
     }
 
@@ -90,7 +85,7 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
     private fun setUIProgress(){
         binding!!.icon.visibility = View.GONE
         binding!!.progressBar.visibility = View.VISIBLE
-        splashViewModel.getConfig()
+        splashViewModel.getConfig(UserInfo.getLanguage(requireContext()))
 
     }
 

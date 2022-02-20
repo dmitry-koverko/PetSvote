@@ -31,6 +31,8 @@ data class Location(
 
 @Serializable
 data class UserPets(
+    val id: Int? = null,
+    val pet_id: Int? = null,
     val name: String? = "",
     val first_name: String? = "",
     val last_name: String? = "",

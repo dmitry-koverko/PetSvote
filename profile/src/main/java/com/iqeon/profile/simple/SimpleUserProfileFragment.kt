@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.iqeon.profile.R
+import com.iqeon.profile.SettingsProfileFragment
 import com.iqeon.profile.UPViewModel
 import com.iqeon.profile.UserProfileFragment
 import com.iqeon.profile.databinding.FragmentSimpleUserProfileBinding
@@ -28,6 +29,7 @@ import javax.inject.Inject
 class SimpleUserProfileFragment: Fragment(R.layout.fragment_simple_user_profile) {
 
     private val TAG = SimpleUserProfileFragment::class.java.name
+    private var settingsDialog = SettingsProfileFragment()
 
     @Inject
     internal lateinit var supViewModelFactory: Lazy<SimpleUPViewModel.Factory>
@@ -62,6 +64,10 @@ class SimpleUserProfileFragment: Fragment(R.layout.fragment_simple_user_profile)
             viewModel.uiUser.collect {
                 if(it.isNotEmpty()) petsAdapter.updateList(it as MutableList<UserPets>)
             }
+        }
+
+        binding.profile.setOnClickListener {
+            settingsDialog.show(childFragmentManager, "TAG")
         }
 
         viewModel.getUserPets()

@@ -32,7 +32,7 @@ android {
 }
 
 dependencies {
-    def roomVersion = '2.3.0'
+    def roomVersion = '2.4.0'
     def dagger_version = "2.39.1"
 
 

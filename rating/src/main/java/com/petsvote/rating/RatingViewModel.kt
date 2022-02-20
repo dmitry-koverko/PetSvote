@@ -5,13 +5,15 @@ import androidx.lifecycle.*
 import com.petsvote.api.NetworkRepository
 import com.petsvote.api.entity.Pet
 import com.petsvote.api.entity.PetRating
-import com.petsvote.api.entity.UserPets
 import com.petsvote.data.UserInfo
 import com.petsvote.room.Breed
+import com.petsvote.room.Location
 import com.petsvote.room.RoomRepository
+import com.petsvote.room.UserPets
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -35,6 +37,8 @@ class RatingViewModel(
     private val _uiStatePets = MutableStateFlow(listOf<UserPets>())
     val uiStatePets: StateFlow<List<UserPets>> = _uiStatePets
 
+    private var uiLocation = MutableStateFlow(Location())
+
     fun getRating(){
 
         viewModelScope.launch (Dispatchers.IO){
@@ -50,11 +54,13 @@ class RatingViewModel(
 
     fun getUserInfo(){
         viewModelScope.launch (Dispatchers.IO){
-            val res = networkRepository.getCurrentUser()
-            res?.let {
-                 it.pets?.let {
-                     _uiStatePets.value
-                 }
+//            roomRepository.getUserLocation().collect {
+//                Log.d(TAG, "userLocation = ${it.toString()}")
+//                uiLocation.value = it
+//            }
+            roomRepository.getCurrentUser().collect {
+                Log.d(TAG, "userPets = ${it.toString()}")
+                _uiStatePets.value = it.pet
             }
         }
     }

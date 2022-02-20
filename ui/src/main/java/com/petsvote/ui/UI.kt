@@ -33,8 +33,8 @@ fun ImageView.loadImage(url: String){
         .with(context)
         .load(url)
         .placeholder(circularProgressDrawable)
-        .transition(DrawableTransitionOptions.withCrossFade())
-        .skipMemoryCache(true)
+        //.transition(DrawableTransitionOptions.withCrossFade())
+        //.skipMemoryCache(true)
         .into(this);
 }
 

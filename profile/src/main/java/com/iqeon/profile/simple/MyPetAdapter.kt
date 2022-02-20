@@ -43,7 +43,9 @@ class MyPetAdapter(private var list: MutableList<UserPets>) : RecyclerView.Adapt
 
         fun bind(item: UserPets, position: Int) {
             binding.namePet.text = item.name
-            item.photos?.get(0)?.let { binding.petImg.loadImage(it.url) }
+            if(item.photos?.isNotEmpty() == true){
+                item.photos?.get(0)?.url?.let { binding.petImg.loadImage(it) }
+            }
         }
     }
 

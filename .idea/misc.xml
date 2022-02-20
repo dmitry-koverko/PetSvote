@@ -25,6 +25,8 @@
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/pet/src/main/res/layout/list_item_draggable.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/pet/src/main/res/layout/widget_expandable_item_indicator.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/profile/src/main/res/layout/fragment_crop_image.xml" value="0.27447916666666666" />
+        <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/profile/src/main/res/layout/fragment_settings_profile.xml" value="0.25" />
+        <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/profile/src/main/res/layout/fragment_simple_user_profile.xml" value="0.3009833262077811" />
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/profile/src/main/res/layout/fragment_user_profile.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/profile/src/main/res/layout/op.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Dmitrydev/AndroidStudioProjects/PetSvote/rating/src/main/res/layout/item_top.xml" value="0.3009833262077811" />
@@ -76,13 +78,9 @@
         <entry key="legal/src/main/res/layout/fragment_terms.xml" value="0.3098958333333333" />
         <entry key="pet/src/main/res/layout/fragment_pet_info.xml" value="0.33" />
         <entry key="pet/src/main/res/layout/fragment_pet_photo.xml" value="0.25" />
-        <entry key="pet/src/main/res/layout/fragment_search_pet.xml" value="0.20742753623188406" />
         <entry key="profile/src/main/res/layout/crop_layout.xml" value="0.3098958333333333" />
         <entry key="profile/src/main/res/layout/fragment_crop_image.xml" value="0.16" />
-        <entry key="profile/src/main/res/layout/fragment_simple_user_profile.xml" value="0.22" />
         <entry key="profile/src/main/res/layout/fragment_user_profile.xml" value="0.25" />
-        <entry key="profile/src/main/res/layout/imte_user_pet.xml" value="0.25" />
-        <entry key="profile/src/main/res/layout/item_user_pet.xml" value="0.18229166666666666" />
         <entry key="profile/src/main/res/layout/op.xml" value="0.24895833333333334" />
         <entry key="rating/src/main/res/drawable/ic_filter.xml" value="0.22037037037037038" />
         <entry key="rating/src/main/res/layout/fragment_rating.xml" value="0.17" />

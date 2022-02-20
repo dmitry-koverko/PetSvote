@@ -7,6 +7,7 @@ object UserInfo {
     private val USERINFO = "userinfo"
     private val BEARER = "bearer"
     private val APPLYPHOTOS = "applyphotos"
+    private val LANGUAGE = "language"
     private val ID = "id"
 
     fun getBearer(context: Context): String {
@@ -36,7 +37,7 @@ object UserInfo {
     }
 
     fun getApplyPhotos(context: Context): Int {
-        return context.getSharedPreferences(APPLYPHOTOS, Context.MODE_PRIVATE)
+        return context.getSharedPreferences(USERINFO, Context.MODE_PRIVATE)
             .getInt(APPLYPHOTOS, 0)
     }
 
@@ -44,6 +45,19 @@ object UserInfo {
         val sharedPref = context.getSharedPreferences(USERINFO, Context.MODE_PRIVATE) ?: return
         with (sharedPref.edit()) {
             putInt(APPLYPHOTOS, type)
+            apply()
+        }
+    }
+
+    fun getLanguage(context: Context): String {
+        return context.getSharedPreferences(USERINFO, Context.MODE_PRIVATE)
+            .getString(LANGUAGE, "") ?: ""
+    }
+
+    fun setLanguage(context: Context, type: String){
+        val sharedPref = context.getSharedPreferences(USERINFO, Context.MODE_PRIVATE) ?: return
+        with (sharedPref.edit()) {
+            putString(LANGUAGE, type)
             apply()
         }
     }
