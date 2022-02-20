@@ -1,15 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.petsvote.ui.BesieLayout
-    app:bl_background="@color/ui_gray"
+<com.petsvote.ui.BesieImage
+    android:id="@+id/pet_image"
+    android:src="@drawable/cat2"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="50dp"
     android:layout_height="50dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"/>
 
-    <ImageView
-        android:src="@drawable/cat6"
-        android:scaleType="centerCrop"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-</com.petsvote.ui.BesieLayout>

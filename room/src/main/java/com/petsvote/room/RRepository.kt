@@ -18,6 +18,7 @@ interface RRepository {
                              city: String?)
     suspend fun getLocation(): Location
     fun getCurrentUser(): Flow<UserInfo>
+    suspend fun deleteUserInfo()
 
     suspend fun saveBreed(breed: Breed)
     suspend fun deleteBreeds()

@@ -13,13 +13,19 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.petsvote.api.entity.PetRating
 import com.petsvote.data.FilterPetsObject
+import com.petsvote.data.UserInfo
 import com.petsvote.filter.fragments.MenuFilterFragment
+import com.petsvote.rating.adapter.MyPetRatingAdapter
 import com.petsvote.rating.adapter.RatingPetAdapter
 import com.petsvote.rating.databinding.FragmentRatingBinding
 import com.petsvote.rating.di.RatingComponentViewModel
+import com.petsvote.room.UserPets
+import com.petsvote.ui.BesieTabLayoutSelectedListener
+import com.petsvote.ui.BesieTabSelected
 import com.petsvote.ui.list.RecyclerViewLoadMoreScroll
 import com.petsvote.ui.loadImage
 import dagger.Lazy
@@ -27,12 +33,16 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnClickItemListener {
+class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnClickItemListener,
+    BesieTabLayoutSelectedListener {
 
     private val TAG = RatingFragment::class.java.name
 
     private var listPet = mutableListOf<PetRating>()
+    private var listPetUser = mutableListOf<UserPets>()
     private var ratingPetAdapter = RatingPetAdapter(listPet)
+    private var userPetAdapter = MyPetRatingAdapter(listPetUser)
+
     lateinit var scrollListener: RecyclerViewLoadMoreScroll
 
     private var topLinearHeight = 0
@@ -56,12 +66,20 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        Log.d(TAG, "userId = ${UserInfo.getUserId(requireContext())}")
+
         binding = FragmentRatingBinding.bind(view)
 
         var mLayoutManager = GridLayoutManager(context, 2)
         binding!!.listRating.apply {
             layoutManager = mLayoutManager
             this.adapter = ratingPetAdapter
+        }
+
+        var mLinearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding!!.listPetsUser.apply {
+            layoutManager = mLinearLayoutManager
+            this.adapter = userPetAdapter
         }
 
         ratingPetAdapter.setOnClickItemListener(this)
@@ -179,6 +197,18 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
             }
         }
 
+        lifecycleScope.launchWhenStarted {
+            ratingViewModel.uiStatePets.collect {
+                listPetUser.addAll(it)
+                userPetAdapter?.notifyDataSetChanged()
+            }
+        }
+        binding!!.tabs.setTabSelectedListener(this)
+        when(UserInfo.getTabsFilter(requireContext())){
+            1 -> binding!!.tabs.initCountryTabs()
+            2 -> binding!!.tabs.initWorldTab()
+        }
+
         ratingViewModel.getUserInfo()
         updateFilterText()
 
@@ -246,6 +276,16 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
         txt +=  "${FilterPetsObject.minValue.value} - ${FilterPetsObject.maxValue.value}"
 
         binding!!.filterText.text = txt
+    }
+
+    override fun selected(tab: BesieTabSelected) {
+        UserInfo.setTabsFilter(requireContext(),
+            when(tab){
+                BesieTabSelected.CITY -> 0
+                BesieTabSelected.COUNTRY -> 1
+                else -> 2
+            })
+
     }
 
 }

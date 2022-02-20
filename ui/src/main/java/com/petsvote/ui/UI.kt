@@ -38,6 +38,15 @@ fun ImageView.loadImage(url: String){
         .into(this);
 }
 
+fun ImageView.loadImageSmall(url: String){
+    Glide
+        .with(context)
+        .load(url)
+        .transition(DrawableTransitionOptions.withCrossFade())
+        .skipMemoryCache(true)
+        .into(this);
+}
+
 fun ImageView.loadImage(bitmap: Bitmap){
 
     val circularProgressDrawable = CircularProgressDrawable(this.context)

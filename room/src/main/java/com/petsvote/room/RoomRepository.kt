@@ -46,6 +46,10 @@ class RoomRepository(private val application: Application): RRepository {
         return userDao.getUser()
     }
 
+    override suspend fun deleteUserInfo() {
+        userDao.deleteAll()
+    }
+
 
     override suspend fun saveBreed(breed: Breed) {
         breedDao.insert(breed)

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="50dp"
+    android:layout_width="wrap_content"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    android:layout_gravity="center_vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.petsvote.ui.BesieImage
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/pet_image_small"
+        android:src="@drawable/cat2"
+        android:layout_width="40dp"
+        android:layout_height="40dp"/>
+
+    <com.petsvote.ui.BesieImage
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/pet_image_top"
+        android:src="@drawable/cat2"
+        android:layout_width="50dp"
+        android:layout_height="50dp"/>
+
+    <com.petsvote.ui.BesieLayout
+        android:visibility="gone"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:id="@+id/search"
+        app:bl_background="@color/ui_primary"
+        app:bl_ripple_color="@color/ui_gray"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="40dp"
+        android:layout_height="40dp">
+        <ImageView
+            android:id="@+id/img"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:src="@drawable/ic_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </com.petsvote.ui.BesieLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -45,6 +45,7 @@ class SplashViewModel(
         viewModelScope.launch (Dispatchers.IO){
             var result = networkRepository.getCurrentUser()
             result?.let {
+                var r = roomRepository.deleteUserInfo()
                 Log.d(TAG, "userListPets = ${it.pets.toString()}")
                 var userInfo = UserInfo()
                 userInfo.avatar = it.avatar

@@ -18,6 +18,7 @@ interface UserDao {
     @Query("DELETE FROM UserInfo")
     suspend fun deleteAll()
 
+
 //    @Query("UPDATE userinfo SET order_price=:price WHERE order_id = :id")
 //    fun update(price: Float?, id: Int)
 

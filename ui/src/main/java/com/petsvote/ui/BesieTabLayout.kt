@@ -82,7 +82,7 @@ class BesieTabLayout @JvmOverloads constructor(
 
         tabIndicator = root.findViewById(R.id.tab_indicator)
 
-        tab3?.visibility = View.GONE
+        if(coutTabs == 2) tab3?.visibility = View.GONE
 
         if(type_tabs == 1){
             tab1.text = sex_allS
@@ -102,10 +102,25 @@ class BesieTabLayout @JvmOverloads constructor(
             return
         }
         Log.d(TAG, "initCountryTabs = $width")
-        tabIndicator.translationX = tabWith * 2f
+        checkCurrentTab()
+        animMove(animTranslationX, tabWith *2.toFloat())
+        currentTab = tab3?.id!!
         tab1.setTextColor(ContextCompat.getColor(context, R.color.tab_text_color))
         tab3?.setTextColor(ContextCompat.getColor(context, R.color.tab_text_color_active))
         currentTab = R.id.text_world
+    }
+
+    fun clickTab2(){
+        if(currentTab != tab2.id) {
+            checkCurrentTab()
+            animMove(animTranslationX, tabWith.toFloat())
+            currentTab = tab2.id
+            animColor(tab2, true)
+            when(type_tabs){
+                0 -> mBesieTabLayoutSelectedListener?.selected(BesieTabSelected.COUNTRY)
+                1 -> mBesieTabLayoutSelectedListener?.selected(BesieTabSelected.MAN)
+            }
+        }
     }
 
     fun clickTab1(){
@@ -127,7 +142,9 @@ class BesieTabLayout @JvmOverloads constructor(
             return
         }
         Log.d(TAG, "initCountryTabs = $width")
-        tabIndicator.translationX = tabWith.toFloat()
+        checkCurrentTab()
+        animMove(animTranslationX, tabWith.toFloat())
+        currentTab = tab2.id
         tab1.setTextColor(ContextCompat.getColor(context, R.color.tab_text_color))
         tab2.setTextColor(ContextCompat.getColor(context, R.color.tab_text_color_active))
     }
@@ -138,16 +155,7 @@ class BesieTabLayout @JvmOverloads constructor(
         }
 
         tab2.setOnClickListener {
-            if(currentTab != it.id) {
-                checkCurrentTab()
-                animMove(animTranslationX, tabWith.toFloat())
-                currentTab = it.id
-                animColor(tab2, true)
-                when(type_tabs){
-                    0 -> mBesieTabLayoutSelectedListener?.selected(BesieTabSelected.COUNTRY)
-                    1 -> mBesieTabLayoutSelectedListener?.selected(BesieTabSelected.MAN)
-                }
-            }
+           clickTab2()
         }
 
         tab3?.setOnClickListener {

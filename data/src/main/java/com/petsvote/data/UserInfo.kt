@@ -8,6 +8,7 @@ object UserInfo {
     private val BEARER = "bearer"
     private val APPLYPHOTOS = "applyphotos"
     private val LANGUAGE = "language"
+    private val TABSFILTER = "tabs"
     private val ID = "id"
 
     fun getBearer(context: Context): String {
@@ -45,6 +46,19 @@ object UserInfo {
         val sharedPref = context.getSharedPreferences(USERINFO, Context.MODE_PRIVATE) ?: return
         with (sharedPref.edit()) {
             putInt(APPLYPHOTOS, type)
+            apply()
+        }
+    }
+
+    fun getTabsFilter(context: Context): Int {
+        return context.getSharedPreferences(USERINFO, Context.MODE_PRIVATE)
+            .getInt(TABSFILTER, 2)//default world
+    }
+
+    fun setTabsFilter(context: Context, type: Int){
+        val sharedPref = context.getSharedPreferences(USERINFO, Context.MODE_PRIVATE) ?: return
+        with (sharedPref.edit()) {
+            putInt(TABSFILTER, type)
             apply()
         }
     }

@@ -14,6 +14,7 @@
         android:layout_height="56dp">
 
         <com.google.android.material.tabs.TabItem
+            android:icon="@drawable/ic_rating"
             android:layout="@layout/tab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
