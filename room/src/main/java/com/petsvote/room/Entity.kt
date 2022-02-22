@@ -42,6 +42,11 @@ data class UserPets(
     var idPet: Int? = 1,
 
     @Ignore
+    val id: Int? = 1,
+
+    @Ignore
+    val name: String? = "",
+    @Ignore
     var pets_id: Int? = 1,
     @Ignore
     val global_range: Int? =null,

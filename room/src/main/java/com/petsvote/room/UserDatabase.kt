@@ -9,7 +9,7 @@ import com.petsvote.room.converters.*
 
 
 @Database(entities = arrayOf(UserInfo::class, UserPets::class, Location::class,
-          Breed::class, CountryInfo::class), version = 17, exportSchema = false)
+          Breed::class, CountryInfo::class), version = 18, exportSchema = false)
 @TypeConverters(CityConverter::class, CountryConverter::class, PetConverter::class,
     LocationConverter::class, PhotoConverter::class)
 public abstract class UserDatabase : RoomDatabase() {

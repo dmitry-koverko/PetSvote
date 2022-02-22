@@ -97,26 +97,6 @@ class SplashViewModel(
 
     }
 
-    private fun convertApitoRoom(pets: List<UserPets>?): List<com.petsvote.room.UserPets> {
-        var list = mutableListOf<com.petsvote.room.UserPets>()
-        if (pets != null) {
-            for (i in pets){
-                val list_photos = mutableListOf<Photo>()
-               if(i.photos != null){
-                   for (i in i.photos!!){
-                        list_photos.add(Photo(i.id, i.num, i.url))
-                   }
-               }
-                list.add(com.petsvote.room.UserPets(null,
-                    i.pet_id, i.global_range, i.country_range, i.city_range, i.global_score,
-                    i.global_dynamic, i.country_dynamic, i.city_dynamic, i.mark_dynamic,
-                    i.has_paid_votes, list_photos
-                ))
-            }
-        }
-        return list
-    }
-
     @Suppress("UNCHECKED_CAST")
     class Factory @Inject constructor(
         private val networkRepository: Provider<NetworkRepository>,
@@ -130,5 +110,25 @@ class SplashViewModel(
             ) as T
         }
 
+    }
+
+    fun convertApitoRoom(pets: List<UserPets>?): List<com.petsvote.room.UserPets> {
+        var list = mutableListOf<com.petsvote.room.UserPets>()
+        if (pets != null) {
+            for (i in pets){
+                val list_photos = mutableListOf<Photo>()
+                if(i.photos != null){
+                    for (i in i.photos!!){
+                        list_photos.add(Photo(i.id, i.num, i.url))
+                    }
+                }
+                list.add(com.petsvote.room.UserPets(null, i.id, i.name,
+                    i.pet_id, i.global_range, i.country_range, i.city_range, i.global_score,
+                    i.global_dynamic, i.country_dynamic, i.city_dynamic, i.mark_dynamic,
+                    i.has_paid_votes, list_photos
+                ))
+            }
+        }
+        return list
     }
 }

@@ -39,16 +39,28 @@ class MyPetRatingAdapter(private val list: MutableList<UserPets>) : RecyclerView
 
         fun bind(item: UserPets, position: Int) {
             when(position){
-                0 -> binding.search.visibility = View.VISIBLE
+                0 -> {
+                    binding.search.visibility = View.VISIBLE
+                    binding.search.setOnClickListener {
+                        mOnClickItemListener?.onSearch()
+                    }
+                }
                 1 -> {
                     binding.petImageTop.visibility = View.VISIBLE
                     binding.petImageTop.loadImageSmall(item.photos[0].url)
+                    binding.petImageTop.setOnClickListener {
+                        mOnClickItemListener?.onClick(item)
+                    }
                 }
                 else -> {
                     binding.petImageSmall.visibility =View.VISIBLE
                     binding.petImageSmall.loadImageSmall(item.photos[0].url)
+                    binding.petImageSmall.setOnClickListener {
+                        mOnClickItemListener?.onClick(item)
+                    }
                 }
             }
+
         }
     }
 
@@ -57,6 +69,7 @@ class MyPetRatingAdapter(private val list: MutableList<UserPets>) : RecyclerView
     }
 
     interface OnClickItemListener{
-        fun onClick(position: Int)
+        fun onClick(pet: UserPets)
+        fun onSearch()
     }
 }

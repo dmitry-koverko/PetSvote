@@ -37,16 +37,32 @@ class RatingViewModel(
     private val _uiStatePets = MutableStateFlow(listOf<UserPets>())
     val uiStatePets: StateFlow<List<UserPets>> = _uiStatePets
 
+    val uiStateUserPets =  MutableStateFlow(listOf<PetRating>())
+
     private var uiLocation = MutableStateFlow(Location())
 
     fun getRating(){
 
         viewModelScope.launch (Dispatchers.IO){
             Log.d(TAG, "getRating() listSize = ${filter.offset}")
-            val res = networkRepository.getRating(filter.offset)
+            val res = networkRepository.getRating(filter.offset, null)
             res?.let {
-                _uiState.value = res.pets
-                filter.offset =+ 50;
+                res.pets?.let {
+                    _uiState.value = it
+                    filter.offset =+ 50;
+                }
+            }
+        }
+    }
+
+    fun getRating(petId: Int){
+
+        viewModelScope.launch (Dispatchers.IO){
+            val res = networkRepository.getRating(0, petId)
+            res?.let {
+                res.pets?.let {
+                    uiStateUserPets.value = it
+                }
             }
         }
 
@@ -54,13 +70,13 @@ class RatingViewModel(
 
     fun getUserInfo(){
         viewModelScope.launch (Dispatchers.IO){
-//            roomRepository.getUserLocation().collect {
-//                Log.d(TAG, "userLocation = ${it.toString()}")
-//                uiLocation.value = it
-//            }
             roomRepository.getCurrentUser().collect {
-                Log.d(TAG, "userPets = ${it.toString()}")
-                _uiStatePets.value = it.pet
+               Log.d(TAG, "userPets = ${it.toString()}")
+               if(it != null){
+                   it.pet.let { pets ->
+                       _uiStatePets.value = pets
+                   }
+               }
             }
         }
     }
@@ -86,5 +102,5 @@ class RatingViewModel(
 }
 
 data class FilterPet(
-    var offset: Int
+    var offset: Int?
 )

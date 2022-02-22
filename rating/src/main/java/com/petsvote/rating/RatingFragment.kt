@@ -34,7 +34,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnClickItemListener,
-    BesieTabLayoutSelectedListener {
+    BesieTabLayoutSelectedListener, MyPetRatingAdapter.OnClickItemListener {
 
     private val TAG = RatingFragment::class.java.name
 
@@ -51,7 +51,7 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
 
     private var cardHeight = 0
     private var loadMore = false
-
+    private var clickMyPet = 0
     @Inject
     internal lateinit var ratingViewModelFactory: Lazy<RatingViewModel.Factory>
 
@@ -69,6 +69,8 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
         Log.d(TAG, "userId = ${UserInfo.getUserId(requireContext())}")
 
         binding = FragmentRatingBinding.bind(view)
+
+        Log.d(TAG, "user id = ${UserInfo.getUserId(requireContext())} user bearer =${UserInfo.getBearer(requireContext())}")
 
         var mLayoutManager = GridLayoutManager(context, 2)
         binding!!.listRating.apply {
@@ -109,7 +111,6 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
                 binding!!.topLinear.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
-
         binding!!.topLinearContainer.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
             override fun onGlobalLayout() {
                 if(topLinearContainerHeight == 0)
@@ -124,7 +125,6 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
                 binding!!.filterContainer.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
-
 
         binding!!.nestedScroll.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
             Log.d(TAG, "linTopHeight = $topLinearHeight \n scrollY = $scrollY  ### w = ${binding!!.listRating.height}")
@@ -203,15 +203,37 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
                 userPetAdapter?.notifyDataSetChanged()
             }
         }
+
+        lifecycleScope.launchWhenStarted {
+            ratingViewModel.uiStateUserPets.collect {
+                listPet.clear()
+                listPet.addAll(it)
+                ratingPetAdapter.notifyDataSetChanged()
+                scrollToPosition()
+            }
+        }
+
         binding!!.tabs.setTabSelectedListener(this)
         when(UserInfo.getTabsFilter(requireContext())){
             1 -> binding!!.tabs.initCountryTabs()
             2 -> binding!!.tabs.initWorldTab()
         }
 
+        userPetAdapter.setOnClickItemListener(this)
+
         ratingViewModel.getUserInfo()
         updateFilterText()
 
+    }
+
+    private fun scrollToPosition() {
+        if(clickMyPet != 0){
+            var indexPet = listPet.firstOrNull { it.id == clickMyPet }
+            var indexArray = listPet.indexOf(indexPet)
+            var scroll = indexArray / 2 * cardHeight
+            binding?.nestedScroll?.scrollTo(0, scroll + 300)
+            Log.d(TAG, "click pet in position ${indexArray / 3}")
+        }
     }
 
     private fun commitFilter() {
@@ -285,6 +307,17 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
                 BesieTabSelected.COUNTRY -> 1
                 else -> 2
             })
+
+    }
+
+    override fun onClick(pet: UserPets) {
+        pet.id?.let {
+            ratingViewModel.getRating(it)
+            clickMyPet = it
+        }
+    }
+
+    override fun onSearch() {
 
     }
 

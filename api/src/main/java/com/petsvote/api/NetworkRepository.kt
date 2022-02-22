@@ -73,9 +73,9 @@ class NetworkRepository(private val context: Context): NReposirory {
         }
     }
 
-    override suspend fun getRating(offset: Int): Rating? {
+    override suspend fun getRating(offset: Int?, id: Int?): Rating? {
         var result = api.getRating(null, offset, null, null, null,
-            null, null, null, null, null, null )
+            null, null, null, "global", id, null )
         return when (result) {
             is NetworkResponse.Success -> {
                 Log.d(TAG, result.toString())
