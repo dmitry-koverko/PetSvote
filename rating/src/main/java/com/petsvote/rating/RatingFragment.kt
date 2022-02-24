@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -51,6 +52,7 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
 
     private var cardHeight = 0
     private var loadMore = false
+    private var loadTop = false
     private var clickMyPet = 0
     @Inject
     internal lateinit var ratingViewModelFactory: Lazy<RatingViewModel.Factory>
@@ -111,11 +113,11 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
                 binding!!.topLinear.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
-        binding!!.topLinearContainer.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
+        binding!!.topLinear.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
             override fun onGlobalLayout() {
                 if(topLinearContainerHeight == 0)
-                    topLinearContainerHeight = binding!!.topLinearContainer.measuredHeight
-                binding!!.topLinearContainer.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    topLinearContainerHeight = binding!!.topLinear.measuredHeight
+                binding!!.topLinear.viewTreeObserver.removeOnGlobalLayoutListener(this)
             }
         })
         binding!!.filterContainer.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
@@ -126,27 +128,27 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
             }
         })
 
-        binding!!.nestedScroll.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-            Log.d(TAG, "linTopHeight = $topLinearHeight \n scrollY = $scrollY  ### w = ${binding!!.listRating.height}")
-            var loadY = cardHeight * 5
-            Log.d("RatingFragment", "heightRecycler = $loadY")
-//            if(scrollY >= binding.listRating.height - 10000) {
-//                loadMore()
+//        binding!!.topLinearContainer.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
+//            override fun onGlobalLayout() {
+//                if(topLinearContainerHeight == 0)
+//                    topLinearContainerHeight = binding!!.topLinearContainer.measuredHeight
+//                binding!!.topLinearContainer.viewTreeObserver.removeOnGlobalLayoutListener(this)
 //            }
+//        })
 
-            var a = (binding!!.nestedScroll as ViewGroup).getChildAt(0) as ViewGroup
-            Log.d("TAGG", "measuredHeight = ${a.getChildAt(a.getChildCount() - 1).getMeasuredHeight()}" +
-                    "scrollY = $scrollY ### oldScrollY = $oldScrollY")
-
-            Log.d("RatingFragment", "listSize = ${listPet.size}")
-
+        binding!!.nested.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+            //Log.d(TAG, "linTopHeight = $topLinearHeight \n scrollY = $scrollY  ### w = ${binding!!.listRating.height}")
+            //Log.d(TAG, "linTopHeight = $topLinearHeight \n scrollY = $scrollY  ### w = ${binding!!.listRating.height}")
+            var loadY = cardHeight * 5
+            var a = (binding!!.nested as ViewGroup).getChildAt(0) as ViewGroup
             if(a.getChildAt(a.getChildCount() - 1) != null) {
+//                Log.d(TAG, "(a.getChildAt(a.getChildCount() - 1).getMeasuredHeight() = ${(a.getChildAt(a.getChildCount() - 1).getMeasuredHeight())} " +
+//                        "\n v.getMeasuredHeight() = ${ v.getMeasuredHeight()}"+
+//                        "\n scrollY = $scrollY  ### w = ${binding!!.listRating.height}\n\n")
                 if ((scrollY >= (a.getChildAt(a.getChildCount() - 1).getMeasuredHeight() - v.getMeasuredHeight())) &&
                     scrollY > oldScrollY) {
                     loadMore()
-
-                    //code to fetch more data for endless scrolling
-                }
+                }else if(scrollY < oldScrollY && scrollY < 2500 && scrollY > 500) loadTop()
             }
 
             var lpTopLinear = binding!!.topLinear.layoutParams
@@ -199,7 +201,9 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
 
         lifecycleScope.launchWhenStarted {
             ratingViewModel.uiStatePets.collect {
-                listPetUser.addAll(it)
+                var new_list = it.toMutableList()
+                new_list.add(0, UserPets())
+                listPetUser.addAll(new_list)
                 userPetAdapter?.notifyDataSetChanged()
             }
         }
@@ -210,6 +214,19 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
                 listPet.addAll(it)
                 ratingPetAdapter.notifyDataSetChanged()
                 scrollToPosition()
+                loadTop = false
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            ratingViewModel.uiStateTopPets.collect {
+                if(it.isNotEmpty()){
+                    loadTop = false
+                    for(i in it.size - 1 downTo 0) {
+                        listPet.add(0, it[i])
+                    }
+                    ratingPetAdapter.notifyDataSetChanged()
+                }
             }
         }
 
@@ -231,8 +248,15 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
             var indexPet = listPet.firstOrNull { it.id == clickMyPet }
             var indexArray = listPet.indexOf(indexPet)
             var scroll = indexArray / 2 * cardHeight
-            binding?.nestedScroll?.scrollTo(0, scroll + 300)
-            Log.d(TAG, "click pet in position ${indexArray / 3}")
+            val timer = object: CountDownTimer(2000, 2000) {
+                override fun onTick(millisUntilFinished: Long) {}
+                override fun onFinish() {
+                    binding?.nested?.smoothScrollTo(0, scroll + 500)
+                }
+            }
+            timer.start()
+
+            Log.d(TAG, "click pet in position ${indexArray / 2}")
         }
     }
 
@@ -245,8 +269,25 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
 
     private fun loadMore() {
         if(!loadMore){
-            ratingViewModel.getRating()
+            if(listPet.size == 0) ratingViewModel.getRating(0)
+            else ratingViewModel.getRating(listPet.last().index)
             loadMore = true
+        }
+    }
+
+    private fun loadTop() {
+        Log.d(TAG, "loadTop(**)")
+        if(!loadTop){
+            if(listPet.size == 0) return
+            if(listPet.first().index == 2) return
+            if(listPet.first().index - 50 > 0){
+                var off = listPet.first().index - 50
+                ratingViewModel.getRatingToTop(off, null)
+            }else {
+                var lim = 50 - listPet.first().index
+                ratingViewModel.getRatingToTop(1,lim)
+            }
+            loadTop = true
         }
     }
 
@@ -312,7 +353,7 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
 
     override fun onClick(pet: UserPets) {
         pet.id?.let {
-            ratingViewModel.getRating(it)
+            ratingViewModel.getRatingMyPet(it)
             clickMyPet = it
         }
     }

@@ -38,27 +38,39 @@ class RatingViewModel(
     val uiStatePets: StateFlow<List<UserPets>> = _uiStatePets
 
     val uiStateUserPets =  MutableStateFlow(listOf<PetRating>())
+    val uiStateTopPets =  MutableStateFlow(listOf<PetRating>())
 
     private var uiLocation = MutableStateFlow(Location())
 
-    fun getRating(){
+    fun getRating(offset: Int){
 
         viewModelScope.launch (Dispatchers.IO){
             Log.d(TAG, "getRating() listSize = ${filter.offset}")
-            val res = networkRepository.getRating(filter.offset, null)
+            val res = networkRepository.getRating(offset, null, null)
             res?.let {
                 res.pets?.let {
                     _uiState.value = it
-                    filter.offset =+ 50;
+                    filter.offset = filter.offset?.plus(50);
+                }
+            }
+        }
+    }
+    fun getRatingToTop(offset: Int, limit: Int?){
+        viewModelScope.launch (Dispatchers.IO){
+            val res = networkRepository.getRating(offset, null, limit)
+            res?.let {
+                res.pets?.let {
+                    uiStateTopPets.value = it
                 }
             }
         }
     }
 
-    fun getRating(petId: Int){
 
+
+    fun getRatingMyPet(petId: Int){
         viewModelScope.launch (Dispatchers.IO){
-            val res = networkRepository.getRating(0, petId)
+            val res = networkRepository.getRating(0, petId, null)
             res?.let {
                 res.pets?.let {
                     uiStateUserPets.value = it

@@ -88,7 +88,6 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 saveAccount(account)
             }
         } catch (e:ApiException){
-            registerViewModel.getCurrensies("32462364324")
             Toast.makeText(context,e.toString(),Toast.LENGTH_SHORT).show()
         }
     }
@@ -107,7 +106,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         super.onCreate(savedInstanceState)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id_home))
+            .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
         mGoogleSignInClient= context?.let { GoogleSignIn.getClient(it,gso) }!!

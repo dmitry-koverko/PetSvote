@@ -13,7 +13,7 @@ interface NReposirory {
     suspend fun getConfig(): GlobalConfig?
     suspend fun getLocalize():List<Localize>?
     suspend fun getBreeds(): List<Breeds>?
-    suspend fun getRating(offset: Int?,  id: Int?): Rating?
+    suspend fun getRating(offset: Int?, id: Int?, limit: Int?): Rating?
     suspend fun getCurrentUser(): User?
     suspend fun getPetsList(): List<Pet>?
     suspend fun saveUserData(user: User, params: MultipartBody.Part?)

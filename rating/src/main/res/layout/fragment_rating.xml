@@ -7,127 +7,124 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".RatingFragment">
 
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/top_linear_container"
-        app:layout_constraintTop_toTopOf="parent"
-        android:orientation="vertical"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/refresh"
+        android:outlineSpotShadowColor="@color/ui_primary"
+        android:outlineAmbientShadowColor="@color/ui_primary"
+        app:swipeRefreshLayoutProgressSpinnerBackgroundColor="@color/ui_primary"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp">
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/top_linear"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_marginBottom="24dp"
-            android:layout_height="wrap_content">
-
-            <com.petsvote.ui.SFTextView
-                android:layout_marginLeft="16dp"
-                android:textColor="@color/bold"
-                android:textStyle="bold"
-                android:textSize="34sp"
-                android:text="Рейтинг"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <com.petsvote.ui.BesieTabLayout
-                app:btl_type="0"
-                android:id="@+id/tabs"
-                android:layout_marginTop="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                app:btl_count_tabs="3"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"/>
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/filterContainer"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nested"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.petsvote.ui.SFTextView
-                android:textColor="@color/bold"
-                android:text="Мир, кошки, все породы, дм, 0-30"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:textSize="18sp"
-                android:id="@+id/filter_text"
-                android:maxLines="2"
-                android:ellipsize="end"
-                app:layout_constraintRight_toLeftOf="@id/image_filter"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
-
-            <com.petsvote.ui.BesieLayout
-                app:bl_ripple_color="@color/ripple_primary"
-                app:layout_constraintTop_toTopOf="parent"
-                android:id="@+id/image_filter"
-                android:layout_marginRight="16dp"
-                app:layout_constraintRight_toRightOf="parent"
-                app:bl_ripple="true"
-                android:layout_width="36dp"
-                android:layout_height="36dp">
-
-                <ImageView
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:src="@drawable/ic_filter"
-                    android:layout_width="26dp"
-                    android:layout_height="23dp"/>
-
-            </com.petsvote.ui.BesieLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/refresh"
-            android:outlineSpotShadowColor="@color/ui_primary"
-            android:outlineAmbientShadowColor="@color/ui_primary"
-            app:swipeRefreshLayoutProgressSpinnerBackgroundColor="@color/ui_primary"
-            android:layout_marginTop="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.core.widget.NestedScrollView
-                android:id="@+id/nested_scroll"
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/ln_nested"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-
                 <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/ln_nested"
-                    android:orientation="vertical"
+                    android:layout_marginTop="16dp"
+                    android:visibility="visible"
+                    android:id="@+id/top_linear"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                    <include
-                        android:visibility="gone"
-                        android:id="@+id/topPet"
-                        layout="@layout/item_top"/>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:descendantFocusability="blocksDescendants"
-                        tools:itemCount="2"
-                        tools:listitem="@layout/item_rating"
-                        android:id="@+id/list_rating"
+                    <com.petsvote.ui.SFTextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:text="Рейтинг"
+                        android:textColor="@color/bold"
+                        android:textSize="34sp"
+                        android:textStyle="bold" />
+
+                    <com.petsvote.ui.BesieTabLayout
+                        android:id="@+id/tabs"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginRight="16dp"
+                        app:btl_count_tabs="3"
+                        app:btl_type="0" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
-            </androidx.core.widget.NestedScrollView>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_marginTop="24dp"
+                    android:visibility="visible"
+                    app:layout_constraintTop_toBottomOf="@id/top_linear"
+                    android:id="@+id/filterContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                    <com.petsvote.ui.SFTextView
+                        android:textColor="@color/bold"
+                        android:text="Мир, кошки, все породы, дм, 0-30"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:textSize="18sp"
+                        android:id="@+id/filter_text"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        app:layout_constraintRight_toLeftOf="@id/image_filter"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"/>
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+                    <com.petsvote.ui.BesieLayout
+                        app:bl_ripple_color="@color/ripple_primary"
+                        app:layout_constraintTop_toTopOf="parent"
+                        android:id="@+id/image_filter"
+                        android:layout_marginRight="16dp"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:bl_ripple="true"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp">
+
+                        <ImageView
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            android:src="@drawable/ic_filter"
+                            android:layout_width="26dp"
+                            android:layout_height="23dp"/>
+
+                    </com.petsvote.ui.BesieLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <include
+                    android:visibility="gone"
+                    android:id="@+id/topPet"
+                    layout="@layout/item_top"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_marginBottom="76dp"
+                    android:descendantFocusability="blocksDescendants"
+                    tools:itemCount="2"
+                    tools:listitem="@layout/item_rating"
+                    android:id="@+id/list_rating"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
