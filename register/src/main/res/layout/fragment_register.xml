@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <TextView
+        <com.petsvote.ui.SimpleSFTextView
             app:layout_constraintTop_toBottomOf="@id/name"
             android:id="@+id/descr"
             android:textColor="@color/bold"
@@ -53,7 +53,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_marginBottom="24dp"
-        app:layout_constraintBottom_toTopOf="@id/legal"
+        app:layout_constraintBottom_toTopOf="@id/legal_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -81,84 +81,40 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:visibility="gone"
+        android:id="@+id/legal_container"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <com.petsvote.ui.parallax.DotIndicator
-            app:dot_ripple="true"
-            app:dot_background="@color/ui_primary"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+        <com.petsvote.ui.BesieLayout
+            android:id="@+id/legal_bl"
+            app:bl_ripple="true"
+            app:bl_ripple_color="@color/ripple_gray"
+            app:bl_background="@color/ui_gray"
             android:layout_width="0dp"
-            android:layout_height="0dp"/>
+            android:layout_height="32dp">
 
-        <com.petsvote.ui.SFTextView
-            android:textAlignment="center"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="7dp"
-            android:layout_marginBottom="7dp"
-            android:textSize="32sp"
-            android:textColor="@color/title_color"
-            android:text="FSFSFSDF"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <com.petsvote.ui.SimpleSFTextView
+                android:clickable="false"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:gravity="center"
+                android:id="@+id/legal"
+                android:textSize="15sp"
+                android:layout_marginRight="16dp"
+                android:layout_marginLeft="16dp"
+                android:textColor="@color/title_color"
+                android:text="Legal information"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+
+        </com.petsvote.ui.BesieLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <com.petsvote.ui.BesieLayout
-        android:visibility="gone"
-        app:bl_ripple="true"
-        app:bl_ripple_color="@color/ui_primary"
-        app:bl_background="@color/ui_gray"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <com.petsvote.ui.SFTextView
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textSize="32sp"
-            android:textColor="@color/title_color"
-            android:text="FSFSFSDF"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-    </com.petsvote.ui.BesieLayout>
-
-    <com.petsvote.ui.Button
-        android:id="@+id/legal"
-        android:layout_marginBottom="24dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-
-
-    <com.petsvote.ui.Shape
-        android:visibility="gone"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        app:besie_text_color="@color/sub_text_color"
-        app:besie_text="Legal information"
-        android:layout_marginBottom="24dp"
-        app:besie_background="@color/ui_gray"
-        app:besie_ripple="@color/ripple_gray"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_width="wrap_content"
-        android:layout_height="36dp"/>
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

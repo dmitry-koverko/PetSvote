@@ -39,6 +39,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <com.petsvote.ui.SFTextView
+                        android:id="@+id/rating_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="16dp"

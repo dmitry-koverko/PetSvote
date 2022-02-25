@@ -1,108 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/motion"
+    app:layoutDescription="@xml/activity_scrolling_scene">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        app:layout_constraintTop_toTopOf="parent"
-        android:id="@+id/header"
+        android:id="@+id/bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="56dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/expandedImage"
-            android:id="@+id/bar"
-            android:layout_width="match_parent"
-            android:layout_height="56dp">
+        <com.petsvote.ui.BesieLayout
+            android:id="@+id/home"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="4dp"
+            app:bl_background="@android:color/transparent"
+            app:bl_ripple="true"
+            app:bl_ripple_color="@color/ripple_primary"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <com.petsvote.ui.BesieLayout
-                app:bl_background="@android:color/transparent"
-                app:bl_ripple="true"
-                app:bl_ripple_color="@color/ripple_primary"
-                android:id="@+id/home"
-                android:layout_marginTop="4dp"
-                android:layout_marginLeft="4dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_width="48dp"
-                android:layout_height="48dp">
-
-                <ImageView
-                    android:layout_margin="14dp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    android:src="@drawable/ic_home"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            </com.petsvote.ui.BesieLayout>
-
-            <com.petsvote.ui.SFTextView
-                android:visibility="visible"
-                android:fontFamily="@font/myfont"
-                android:id="@+id/title"
-                android:textSize="20sp"
-                android:textColor="@color/title_color"
-                android:layout_marginLeft="18dp"
-                android:layout_marginRight="16dp"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="14dp"
+                android:src="@drawable/ic_home"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toRightOf="@id/home"
-                app:layout_constraintTop_toTopOf="parent"
-                android:text="@string/large_text"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <com.petsvote.ui.SFTextView
-            android:layout_marginRight="16dp"
-            app:layout_constraintRight_toRightOf="parent"
-            android:layout_marginTop="48dp"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginLeft="16dp"
-            android:textColor="@color/title_color"
-            android:id="@+id/expandedImage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Пользовательское соглашение"
-            android:textSize="34sp"/>
+        </com.petsvote.ui.BesieLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <com.petsvote.ui.SFTextView
+        android:id="@+id/expandedImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="24dp"
+        android:ellipsize="end"
+        android:text="Пользовательское соглашение"
+        android:textColor="@color/title_color"
+        android:textSize="34sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/scroll"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bar" />
+
     <ScrollView
-        android:layout_marginTop="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/header"
         android:id="@+id/scroll"
         android:layout_width="match_parent"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/expandedImage">
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/text"
-                android:textColor="@color/title_color"
-                android:layout_marginRight="16dp"
-                android:layout_marginLeft="16dp"
-                app:layout_constraintTop_toTopOf="parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:text="@string/info_legal_text"
-                android:textSize="15sp"/>
+                android:textColor="@color/title_color"
+                android:textSize="15sp"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </ScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>

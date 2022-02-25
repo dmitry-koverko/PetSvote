@@ -75,7 +75,7 @@
         <entry key="filter/src/main/res/layout/tem_kinds.xml" value="0.3098958333333333" />
         <entry key="legal/src/main/res/drawable/ic_close.xml" value="0.16666666666666666" />
         <entry key="legal/src/main/res/drawable/item_selector.xml" value="0.31574074074074077" />
-        <entry key="legal/src/main/res/layout/activity_scrolling.xml" value="0.22" />
+        <entry key="legal/src/main/res/layout/activity_scrolling.xml" value="0.25" />
         <entry key="legal/src/main/res/layout/content_scrolling.xml" value="0.20520833333333333" />
         <entry key="legal/src/main/res/layout/fragment_info_terms.xml" value="0.29583333333333334" />
         <entry key="legal/src/main/res/layout/fragment_legal.xml" value="0.2" />
@@ -94,7 +94,7 @@
         <entry key="rating/src/main/res/layout/item_rating.xml" value="0.3098958333333333" />
         <entry key="rating/src/main/res/layout/item_top.xml" value="0.25" />
         <entry key="register/src/main/res/layout/fragment_blank.xml" value="0.3098958333333333" />
-        <entry key="register/src/main/res/layout/fragment_register.xml" value="0.16" />
+        <entry key="register/src/main/res/layout/fragment_register.xml" value="0.1" />
         <entry key="splash/src/main/res/drawable/shadow.xml" value="0.2675213675213675" />
         <entry key="splash/src/main/res/layout/fragment_splash.xml" value="0.2" />
         <entry key="splash/src/main/res/layout/splash_fragment.xml" value="0.11614583333333334" />
@@ -149,5 +149,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.1" />
+      </ProjectState>
+    </option>
   </component>
 </project>

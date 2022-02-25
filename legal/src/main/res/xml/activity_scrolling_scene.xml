@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:motion="http://schemas.android.com/apk/res-auto">
+
+    <Transition
+        android:id="@+id/startAnim"
+        motion:constraintSetEnd="@+id/end"
+        motion:constraintSetStart="@id/start"
+        motion:duration="1000">
+       <KeyFrameSet>
+       </KeyFrameSet>
+        <OnClick motion:targetId="@+id/expandedImage" />
+    </Transition>
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@+id/expandedImage"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:visibility="visible"
+            motion:layout_constraintRight_toRightOf="parent"
+            motion:layout_constraintBottom_toTopOf="@id/scroll"
+            android:layout_marginBottom="24dp"
+            motion:layout_constraintTop_toBottomOf="@id/bar"
+            android:layout_marginRight="16dp"
+            motion:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp">
+            <CustomAttribute
+                motion:attributeName="textSize"
+                motion:customDimension="@dimen/top_text_size_start" />
+            <CustomAttribute
+                motion:attributeName="singleLine"
+                motion:customBoolean="false" />
+        </Constraint>
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+
+        <Constraint
+            android:id="@+id/expandedImage"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:visibility="visible"
+            android:layout_marginTop="16dp"
+            motion:layout_constraintBottom_toTopOf="@id/scroll"
+            android:layout_marginBottom="0dp"
+            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintRight_toRightOf="parent"
+            motion:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="56dp"
+            android:layout_marginRight="16dp">
+            <CustomAttribute
+                motion:attributeName="textSize"
+                motion:customDimension="@dimen/top_text_size" />
+            <CustomAttribute
+                motion:attributeName="singleLine"
+                motion:customBoolean="true" />
+        </Constraint>
+    </ConstraintSet>
+</MotionScene>

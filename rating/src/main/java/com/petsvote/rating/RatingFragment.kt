@@ -29,9 +29,11 @@ import com.petsvote.ui.BesieTabLayoutSelectedListener
 import com.petsvote.ui.BesieTabSelected
 import com.petsvote.ui.list.RecyclerViewLoadMoreScroll
 import com.petsvote.ui.loadImage
+import com.petsvote.ui.navigation.RegisterNavigation
 import dagger.Lazy
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import me.vponomarenko.injectionmanager.x.XInjectionManager
 import javax.inject.Inject
 
 class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnClickItemListener,
@@ -63,6 +65,10 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
     }
 
     var binding: FragmentRatingBinding? = null
+
+    private val navigation: RegisterNavigation by lazy {
+        XInjectionManager.findComponent<RegisterNavigation>()
+    }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
