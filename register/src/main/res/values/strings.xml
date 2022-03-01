@@ -1,7 +1,4 @@
 <resources>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="default_web_client_id">376663371096-e3l3d4ifn5rdtj3j7fcfbt6mcbc15bu0.apps.googleusercontent.com</string>
-    <string name="default_web_client_id_3">376663371096-e3l3d4ifn5rdtj3j7fcfbt6mcbc15bu0.apps.googleusercontent.com</string>
-    <string name="default_web_client_id_home">670227042256-2iv7un3licmmtbneiprhb4t475k4ib3e.apps.googleusercontent.com</string>
 </resources>

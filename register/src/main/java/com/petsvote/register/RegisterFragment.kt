@@ -2,6 +2,9 @@ package com.petsvote.register
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.content.res.Resources
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -16,6 +19,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
+import com.petsvote.data.DocumentsInfo
+import com.petsvote.data.UserInfo
 import com.petsvote.register.databinding.FragmentRegisterBinding
 import com.petsvote.register.di.RegisterComponentViewModel
 import com.petsvote.ui.navigation.RegisterNavigation
@@ -25,6 +30,8 @@ import kotlinx.coroutines.flow.collect
 import me.vponomarenko.injectionmanager.x.XInjectionManager
 
 class RegisterFragment : Fragment(R.layout.fragment_register) {
+
+    private val TAG = RegisterFragment::class.java.name
 
     private val navigation: RegisterNavigation by lazy {
         XInjectionManager.findComponent<RegisterNavigation>()
@@ -38,13 +45,23 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         registerViewModelFactory.get()
     }
 
+
+    private lateinit var binding: FragmentRegisterBinding
     lateinit var mGoogleSignInClient: GoogleSignInClient
     val Req_Code:Int= 123
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        var binding = FragmentRegisterBinding.bind(view)
+        binding = FragmentRegisterBinding.bind(view)
+
+        val resources: Resources? = activity?.resources
+        val config: Configuration? = resources?.configuration
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            var lang = config?.locales?.get(0)?.language?.toString()!!
+            registerViewModel.getPolicy(lang)
+            registerViewModel.getTerms(lang)
+        }
 
         binding.legalBl.setOnClickListener {
             navigation.toLegal()
@@ -56,10 +73,24 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
 
         lifecycleScope.launchWhenStarted {
             registerViewModel.uiState.collect { uiState ->
-               if(uiState) navigation.closeRegister()
+               if(uiState) {
+                   binding.progress.visibility = View.GONE
+                   navigation.closeRegister()
+               }
             }
         }
 
+        lifecycleScope.launchWhenStarted {
+            registerViewModel.uiStatePolicy.collect {
+                DocumentsInfo.setPolicy(requireContext(), it)
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            registerViewModel.uiStateTerms.collect {
+                DocumentsInfo.setTerms(requireContext(), it)
+            }
+        }
     }
 
     companion object {
@@ -94,12 +125,18 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
     }
 
     private fun saveAccount(account: GoogleSignInAccount) {
-        account.id?.let { registerViewModel.getCurrensies(it) }
+        account.id?.let {
+            binding.legalContainer.visibility = View.GONE
+            binding.containerMiddle.visibility = View.GONE
+            binding.containerBottom.visibility = View.GONE
+            binding.progress.visibility = View.VISIBLE
+            registerViewModel.getCurrensies(it)
+        }
     }
 
     override fun onStart() {
         super.onStart()
-        if(context?.let { GoogleSignIn.getLastSignedInAccount(it) } !=null){
+        if(context?.let { GoogleSignIn.getLastSignedInAccount(it) } != null){
         }
     }
 
@@ -107,7 +144,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         super.onCreate(savedInstanceState)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
+            //.requestIdToken(getString(R.string.server_client_id))
             .requestEmail()
             .build()
         mGoogleSignInClient= context?.let { GoogleSignIn.getClient(it,gso) }!!

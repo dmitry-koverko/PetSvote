@@ -7,7 +7,7 @@
         android:id="@+id/startAnim"
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
-        motion:duration="1000">
+        motion:duration="500">
        <KeyFrameSet>
        </KeyFrameSet>
         <OnClick motion:targetId="@+id/expandedImage" />
@@ -21,7 +21,7 @@
             android:visibility="visible"
             motion:layout_constraintRight_toRightOf="parent"
             motion:layout_constraintBottom_toTopOf="@id/scroll"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="8dp"
             motion:layout_constraintTop_toBottomOf="@id/bar"
             android:layout_marginRight="16dp"
             motion:layout_constraintStart_toStartOf="parent"
@@ -29,7 +29,7 @@
             android:layout_marginStart="16dp">
             <CustomAttribute
                 motion:attributeName="textSize"
-                motion:customDimension="@dimen/top_text_size_start" />
+                motion:customFloatValue="34" />
             <CustomAttribute
                 motion:attributeName="singleLine"
                 motion:customBoolean="false" />
@@ -53,7 +53,7 @@
             android:layout_marginRight="16dp">
             <CustomAttribute
                 motion:attributeName="textSize"
-                motion:customDimension="@dimen/top_text_size" />
+                motion:customFloatValue="20" />
             <CustomAttribute
                 motion:attributeName="singleLine"
                 motion:customBoolean="true" />

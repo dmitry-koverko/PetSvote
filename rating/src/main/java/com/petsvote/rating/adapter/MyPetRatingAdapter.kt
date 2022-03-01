@@ -47,14 +47,14 @@ class MyPetRatingAdapter(private val list: MutableList<UserPets>) : RecyclerView
                 }
                 1 -> {
                     binding.petImageTop.visibility = View.VISIBLE
-                    binding.petImageTop.loadImageSmall(item.photos[0].url)
+                    if(item.photos.isNotEmpty())binding.petImageTop.loadImageSmall(item.photos[0].url)
                     binding.petImageTop.setOnClickListener {
                         mOnClickItemListener?.onClick(item)
                     }
                 }
                 else -> {
                     binding.petImageSmall.visibility =View.VISIBLE
-                    binding.petImageSmall.loadImageSmall(item.photos[0].url)
+                    if(item.photos.isNotEmpty()) binding.petImageSmall.loadImageSmall(item.photos[0].url)
                     binding.petImageSmall.setOnClickListener {
                         mOnClickItemListener?.onClick(item)
                     }

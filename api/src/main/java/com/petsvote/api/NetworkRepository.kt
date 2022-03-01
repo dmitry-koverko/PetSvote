@@ -16,6 +16,34 @@ class NetworkRepository(private val context: Context): NReposirory {
     private val TAG = NetworkRepository::class.java.name
     private var api = NetworkService().createService(context)
 
+    override suspend fun getTerms(loc: String): Document? {
+        var result = api.getTerms(loc)
+        return when (result) {
+            is NetworkResponse.Success -> {
+                Log.d(TAG, result.toString())
+                return result.body
+            }
+            else ->{
+                checkError(result as NetworkResponse<Any, Error>)
+                return null
+            }
+        }
+    }
+
+    override suspend fun getPolicy(loc: String): Document? {
+        var result = api.getPolicy(loc)
+        return when (result) {
+            is NetworkResponse.Success -> {
+                Log.d(TAG, result.toString())
+                return result.body
+            }
+            else ->{
+                checkError(result as NetworkResponse<Any, Error>)
+                return null
+            }
+        }
+    }
+
     override suspend fun register(code: String): Register? {
         val result = api.register(code)
         return when(result){

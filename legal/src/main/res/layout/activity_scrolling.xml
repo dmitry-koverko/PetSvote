@@ -2,9 +2,9 @@
 <androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/motion"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/motion"
     app:layoutDescription="@xml/activity_scrolling_scene">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -45,11 +45,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="24dp"
         android:ellipsize="end"
         android:text="Пользовательское соглашение"
         android:textColor="@color/title_color"
-        android:textSize="34sp"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/scroll"
         app:layout_constraintLeft_toLeftOf="parent"

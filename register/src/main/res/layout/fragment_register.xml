@@ -7,6 +7,7 @@
     tools:context=".RegisterFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/containerMiddle"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -34,6 +35,7 @@
             android:layout_height="wrap_content"/>
 
         <com.petsvote.ui.SimpleSFTextView
+            android:layout_marginTop="6dp"
             app:layout_constraintTop_toBottomOf="@id/name"
             android:id="@+id/descr"
             android:textColor="@color/bold"
@@ -81,7 +83,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/legal_container"
         android:layout_marginBottom="24dp"
@@ -116,5 +117,15 @@
         </com.petsvote.ui.BesieLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/progress"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

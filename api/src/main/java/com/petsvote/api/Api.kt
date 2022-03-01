@@ -8,7 +8,7 @@ import retrofit2.http.*
 import kotlin.Error
 
 interface Api {
-
+    //TODO useragreement, privacy-policy
     @GET("v2/get-breed-list")
     suspend fun getBreeds(
         @Query("type[]") type: List<String>?,
@@ -21,8 +21,16 @@ interface Api {
 
     @GET("get-localization-data")
     suspend fun getLocalization(
-        @Query("lang[]") lang: String?,
+        @Query("lang") lang: String?,
     ):  NetworkResponse<List<Localize>, com.petsvote.api.entity.Error>
+
+    @GET("useragreement")
+    suspend fun getTerms(@Query("lang") lang: String?,)
+    :  NetworkResponse<Document, com.petsvote.api.entity.Error>
+
+    @GET("privacy-policy")
+    suspend fun getPolicy(@Query("lang") lang: String?,)
+            :  NetworkResponse<Document, com.petsvote.api.entity.Error>
 
     @GET("get-global-config")
     suspend fun getGlobalConfig(): NetworkResponse<GlobalConfig, com.petsvote.api.entity.Error>

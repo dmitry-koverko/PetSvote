@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.petsvote.api.NetworkRepository
 import com.petsvote.api.entity.Register
 import com.petsvote.api.entity.UserPets
+import com.petsvote.data.DocumentsInfo
 import com.petsvote.room.Location
 import com.petsvote.room.Photo
 import com.petsvote.room.RoomRepository
@@ -23,6 +24,9 @@ class RegisterViewModel(
     private val _uiState = MutableStateFlow(false)
     val uiState: StateFlow<Boolean> = _uiState
 
+    val uiStateTerms = MutableStateFlow<String>("")
+    val uiStatePolicy = MutableStateFlow<String>("")
+
     fun getCurrensies(code: String){
         viewModelScope.launch (Dispatchers.IO){
             var response: Register? = networkRepository.register(code)
@@ -37,7 +41,24 @@ class RegisterViewModel(
                 roomRepository.updateUser(userInfo)
                 _uiState.value = true
             }
+        }
+    }
 
+    fun getTerms(lang: String){
+        viewModelScope.launch (Dispatchers.IO){
+            var term = networkRepository.getTerms(lang)
+            term?.let {
+                uiStateTerms.value = it.data
+            }
+        }
+    }
+
+    fun getPolicy(lang: String){
+        viewModelScope.launch (Dispatchers.IO){
+            var policy = networkRepository.getPolicy(lang)
+            policy?.let {
+                uiStatePolicy.value = it.data
+            }
         }
     }
 

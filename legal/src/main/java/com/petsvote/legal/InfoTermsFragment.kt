@@ -10,6 +10,7 @@ import com.petsvote.legal.databinding.ActivityScrollingBinding
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.motion.widget.MotionLayout
+import com.petsvote.data.DocumentsInfo
 import com.petsvote.ui.navigation.RegisterNavigation
 import me.vponomarenko.injectionmanager.x.XInjectionManager
 
@@ -35,7 +36,7 @@ class InfoTermsFragment : Fragment(R.layout.activity_scrolling) {
         var textSub = 14f //* resources.displayMetrics.density
 
         var termsTextTitle = context?.resources?.getString(R.string.termsTitle)
-        var termsTextText = context?.resources?.getString(R.string.policyText)
+        var termsTextText = context?.resources?.getString(R.string.info_legal_text)
         var policyTextTitle = context?.resources?.getString(R.string.policyTitle)
         var policyTextText = context?.resources?.getString(R.string.policyText)
 
@@ -46,10 +47,10 @@ class InfoTermsFragment : Fragment(R.layout.activity_scrolling) {
         binding.scroll.setOnScrollChangeListener(@RequiresApi(Build.VERSION_CODES.M)
         object: View.OnScrollChangeListener{
             override fun onScrollChange(p0: View?, p1: Int, p2: Int, p3: Int, p4: Int) {
-                if(p2 > p4){ motionLayout.transitionToEnd()}
-                else if(p2 == 0) motionLayout.transitionToStart()
+                Log.d(TAG, "p2 = $p2 p4 = $p4")
+                if(p2 in -50 .. 15) motionLayout.transitionToStart()
+                else if(p2 > p4){ motionLayout.transitionToEnd()}
             }
-
         })
 
 //        binding.scroll.viewTreeObserver.addOnScrollChangedListener(
@@ -117,20 +118,13 @@ class InfoTermsFragment : Fragment(R.layout.activity_scrolling) {
             0 -> {
                 //binding.title.text = termsTextTitle
                 binding.expandedImage.text = termsTextTitle
-                binding.text.text = termsTextText
+                binding.text.text = DocumentsInfo.getTerms(requireContext())
             }
             1 -> {
                 //binding.title.text = policyTextTitle
                 binding.expandedImage.text = policyTextTitle
-                binding.text.text = policyTextText
-            }
+                binding.text.text = DocumentsInfo.getPolicy(requireContext())            }
         }
-////
-////        binding.root.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
-////            override fun onGlobalLayout() {
-////
-//            }
-//
-//        })
+
     }
 }
