@@ -32,5 +32,6 @@
     <string name="sex_girl_one">Девочка</string>
     <string name="sex_man_one">Мальчик</string>
     <string name="sex_no">Бесполое</string>
+    <string name="error_sign_in">Ошибка входа в аккаунт</string>
 
 </resources>

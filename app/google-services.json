@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "464364548284",
+    "firebase_url": "https://long-memory-219919.firebaseio.com",
+    "project_id": "long-memory-219919",
+    "storage_bucket": "long-memory-219919.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:464364548284:android:5ae8b13230a214fd28a0b9",
+        "android_client_info": {
+          "package_name": "com.petsvote.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAMXFnw1DaaLSJ-CTzA37FSJaiX3xR5Ag"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -21,6 +21,7 @@ import com.petsvote.data.FilterPetsObject
 import com.petsvote.data.UserInfo
 import com.petsvote.filter.fragments.MenuFilterFragment
 import com.petsvote.rating.adapter.MyPetRatingAdapter
+import com.petsvote.rating.adapter.RatingAdapter
 import com.petsvote.rating.adapter.RatingPetAdapter
 import com.petsvote.rating.databinding.FragmentRatingBinding
 import com.petsvote.rating.di.RatingComponentViewModel
@@ -37,13 +38,14 @@ import me.vponomarenko.injectionmanager.x.XInjectionManager
 import javax.inject.Inject
 
 class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnClickItemListener,
-    BesieTabLayoutSelectedListener, MyPetRatingAdapter.OnClickItemListener {
+    BesieTabLayoutSelectedListener, MyPetRatingAdapter.OnClickItemListener,
+    RatingAdapter.OnClickItemListener {
 
     private val TAG = RatingFragment::class.java.name
 
     private var listPet = mutableListOf<PetRating>()
     private var listPetUser = mutableListOf<UserPets>()
-    private var ratingPetAdapter = RatingPetAdapter(listPet)
+    private var ratingPetAdapter = RatingAdapter(listPet, this)
     private var userPetAdapter = MyPetRatingAdapter(listPetUser)
 
     lateinit var scrollListener: RecyclerViewLoadMoreScroll
@@ -51,6 +53,9 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
     private var topLinearHeight = 0
     private var topLinearContainerHeight = 0
     private var filterContainerHeight = 0
+
+    private var lastVisibleItem: Int = 0
+    private var totalItemCount:Int = 0
 
     private var cardHeight = 0
     private var loadMore = false
@@ -70,6 +75,8 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
         XInjectionManager.findComponent<RegisterNavigation>()
     }
 
+    private var topRatingPet: PetRating? = null
+
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -80,28 +87,45 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
 
         Log.d(TAG, "user id = ${UserInfo.getUserId(requireContext())} user bearer =${UserInfo.getBearer(requireContext())}")
 
-        var mLayoutManager = GridLayoutManager(context, 2)
+        val mLayoutManager = GridLayoutManager(activity, 2)
+        mLayoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
+            override fun getSpanSize(position: Int) =  when (position) {
+                0 -> 2
+                else -> 1
+            }
+        }
         binding!!.listRating.apply {
             layoutManager = mLayoutManager
             this.adapter = ratingPetAdapter
+            isFocusableInTouchMode = false
         }
+
 
         var mLinearLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding!!.listPetsUser.apply {
             layoutManager = mLinearLayoutManager
             this.adapter = userPetAdapter
+            setHasFixedSize(true)
         }
 
-        ratingPetAdapter.setOnClickItemListener(this)
+        //ratingPetAdapter.setOnClickItemListener(this)
 
         binding!!.listRating.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (dy <= 0) return
+                totalItemCount = mLayoutManager.itemCount
 
                 var lastVisibleItem =
                     (mLayoutManager as GridLayoutManager).findLastVisibleItemPosition()
-                var totalItemCount = mLayoutManager.itemCount
+                if (dy <= 0) {
+                    if (!loadTop && lastVisibleItem < 20) {
+                        loadTop()
+                    }
+                }else {
+                    if (!loadMore && totalItemCount <= lastVisibleItem + 20) {
+                        loadMore()
+                    }
+                }
 
                 Log.d(TAG, "totalItemCount = $totalItemCount ### lastVisibleItem = $lastVisibleItem")
 
@@ -142,48 +166,38 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
 //            }
 //        })
 
-        binding!!.nested.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-            //Log.d(TAG, "linTopHeight = $topLinearHeight \n scrollY = $scrollY  ### w = ${binding!!.listRating.height}")
-            //Log.d(TAG, "linTopHeight = $topLinearHeight \n scrollY = $scrollY  ### w = ${binding!!.listRating.height}")
-            var loadY = cardHeight * 5
-            var a = (binding!!.nested as ViewGroup).getChildAt(0) as ViewGroup
-            if(a.getChildAt(a.getChildCount() - 1) != null) {
-//                Log.d(TAG, "(a.getChildAt(a.getChildCount() - 1).getMeasuredHeight() = ${(a.getChildAt(a.getChildCount() - 1).getMeasuredHeight())} " +
-//                        "\n v.getMeasuredHeight() = ${ v.getMeasuredHeight()}"+
-//                        "\n scrollY = $scrollY  ### w = ${binding!!.listRating.height}\n\n")
-                if ((scrollY >= (a.getChildAt(a.getChildCount() - 1).getMeasuredHeight() - v.getMeasuredHeight())) &&
-                    scrollY > oldScrollY) {
-                    loadMore()
-                }else if(scrollY < oldScrollY && scrollY < 2500 && scrollY > 500) loadTop()
-            }
-
-            var lpTopLinear = binding!!.topLinear.layoutParams
-            var s = topLinearHeight - scrollY / 2
-            if (s < 0) return@setOnScrollChangeListener
-            lpTopLinear.height = s
-            binding!!.topLinear.layoutParams = lpTopLinear
-        }
+//        binding!!.listRating.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+//            var loadY = cardHeight * listPet.size / 2
+//            if (scrollY > oldScrollY && scrollY > loadY) {
+//                loadMore()
+//            }else if(scrollY < oldScrollY && scrollY < 2500 && scrollY > 500) loadTop()
+//
+//            var lpTopLinear = binding!!.topLinear.layoutParams
+//            var s = topLinearHeight - scrollY / 2
+//            if (s < 0) return@setOnScrollChangeListener
+//            lpTopLinear.height = s
+//            binding!!.topLinear.layoutParams = lpTopLinear
+//        }
 
         lifecycleScope.launchWhenStarted {
             ratingViewModel.uiState.collect { uiState ->
                 loadMore = false
                 if(uiState.isNullOrEmpty()) return@collect
-                var newList = mutableListOf<PetRating>()
-                newList = uiState as MutableList<PetRating>
-                binding!!.refresh.isRefreshing = false
-                if(binding!!.topPet.root.visibility == View.GONE){
-                    var topPet = uiState[0]
-                    binding!!.topPet.root.visibility = View.VISIBLE
-                    if(!topPet.photos.isNullOrEmpty())
-                        binding!!.topPet.image.loadImage(uiState[0].photos[0].url)
-                    binding!!.topPet.name.text = topPet.name
-                    binding!!.topPet.location.text = "${topPet.country_name}, ${topPet.city_name}"
+//                var newList = mutableListOf<PetRating>()
+//                newList = uiState as MutableList<PetRating>
+//                binding!!.refresh.isRefreshing = false
+//                if(binding!!.topPet.root.visibility == View.GONE){
+//                    var topPet = uiState[0]
+//                    binding!!.topPet.root.visibility = View.VISIBLE
+//                    if(!topPet.photos.isNullOrEmpty())
+//                        binding!!.topPet.image.loadImage(uiState[0].photos[0].url)
+//                    binding!!.topPet.name.text = topPet.name
+//                    binding!!.topPet.location.text = "${topPet.country_name}, ${topPet.city_name}"
+//
+//                    if(newList.isNotEmpty()) newList.removeAt(0)
+//                }
 
-                    if(newList.isNotEmpty()) newList.removeAt(0)
-                    loadMore()
-                }
-
-                listPet.addAll(newList)
+                listPet.addAll(uiState)
                 ratingPetAdapter.notifyDataSetChanged()
             }
         }
@@ -193,7 +207,6 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
         }
 
         commitFilter()
-        loadMore()
 
         lifecycleScope.launchWhenResumed {
             FilterPetsObject.show.collect {
@@ -227,11 +240,8 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
         lifecycleScope.launchWhenStarted {
             ratingViewModel.uiStateTopPets.collect {
                 if(it.isNotEmpty()){
+                    for(i in it.size -1 downTo 0) listPet.add(0, it[i])
                     loadTop = false
-                    for(i in it.size - 1 downTo 0) {
-                        listPet.add(0, it[i])
-                    }
-                    ratingPetAdapter.notifyDataSetChanged()
                 }
             }
         }
@@ -244,6 +254,7 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
 
         userPetAdapter.setOnClickItemListener(this)
 
+        loadMore()
         ratingViewModel.getUserInfo()
         updateFilterText()
 
@@ -253,14 +264,15 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
         if(clickMyPet != 0){
             var indexPet = listPet.firstOrNull { it.id == clickMyPet }
             var indexArray = listPet.indexOf(indexPet)
-            var scroll = indexArray / 2 * cardHeight
-            val timer = object: CountDownTimer(2000, 2000) {
-                override fun onTick(millisUntilFinished: Long) {}
-                override fun onFinish() {
-                    binding?.nested?.smoothScrollTo(0, scroll + 500)
-                }
-            }
-            timer.start()
+            var scroll = indexArray / 2 * cardHeight + 500
+            binding?.listRating?.smoothScrollToPosition(indexArray +1)
+//            val timer = object: CountDownTimer(2000, 2000) {
+//                override fun onTick(millisUntilFinished: Long) {}
+//                override fun onFinish() {
+//
+//                }
+//            }
+//            timer.start()
 
             Log.d(TAG, "click pet in position ${indexArray / 2}")
         }
@@ -285,13 +297,13 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
         Log.d(TAG, "loadTop(**)")
         if(!loadTop){
             if(listPet.size == 0) return
-            if(listPet.first().index == 2) return
+            if(listPet.first().index == 1) return
             if(listPet.first().index - 50 > 0){
                 var off = listPet.first().index - 50
                 ratingViewModel.getRatingToTop(off, null)
             }else {
                 var lim = 50 - listPet.first().index
-                ratingViewModel.getRatingToTop(1,lim)
+                ratingViewModel.getRatingToTop(0,lim)
             }
             loadTop = true
         }
@@ -359,6 +371,7 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
 
     override fun onClick(pet: UserPets) {
         pet.id?.let {
+            ratingViewModel.uiStateTopPets.value = listOf<PetRating>()
             ratingViewModel.getRatingMyPet(it)
             clickMyPet = it
         }
