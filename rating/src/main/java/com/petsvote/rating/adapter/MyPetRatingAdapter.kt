@@ -17,6 +17,10 @@ import com.petsvote.ui.loadImageSmall
 class MyPetRatingAdapter(private val list: MutableList<UserPets>) : RecyclerView.Adapter<MyPetRatingAdapter.MyPetRatingHolder>() {
 
     private var mOnClickItemListener: OnClickItemListener? = null
+    var selectPetPosition = 1
+        set(value) {
+            field = value
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):MyPetRatingHolder {
         val itemBindingTopPet =
@@ -45,18 +49,21 @@ class MyPetRatingAdapter(private val list: MutableList<UserPets>) : RecyclerView
                         mOnClickItemListener?.onSearch()
                     }
                 }
-                1 -> {
-                    binding.petImageTop.visibility = View.VISIBLE
-                    if(item.photos.isNotEmpty())binding.petImageTop.loadImageSmall(item.photos[0].url)
-                    binding.petImageTop.setOnClickListener {
-                        mOnClickItemListener?.onClick(item)
-                    }
-                }
                 else -> {
-                    binding.petImageSmall.visibility =View.VISIBLE
-                    if(item.photos.isNotEmpty()) binding.petImageSmall.loadImageSmall(item.photos[0].url)
-                    binding.petImageSmall.setOnClickListener {
-                        mOnClickItemListener?.onClick(item)
+                    if(selectPetPosition == position){
+                        binding.petImageTop.visibility = View.VISIBLE
+                        binding.petImageSmall.visibility = View.GONE
+                        if(item.photos.isNotEmpty())binding.petImageTop.loadImageSmall(item.photos[0].url)
+                        binding.petImageTop.setOnClickListener {
+                            mOnClickItemListener?.onClick(item)
+                        }
+                    }else{
+                        binding.petImageTop.visibility = View.GONE
+                        binding.petImageSmall.visibility =View.VISIBLE
+                        if(item.photos.isNotEmpty()) binding.petImageSmall.loadImageSmall(item.photos[0].url)
+                        binding.petImageSmall.setOnClickListener {
+                            mOnClickItemListener?.onClick(item)
+                        }
                     }
                 }
             }

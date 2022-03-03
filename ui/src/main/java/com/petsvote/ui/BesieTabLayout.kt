@@ -45,6 +45,8 @@ class BesieTabLayout @JvmOverloads constructor(
     private lateinit var sex_manS: String
     private lateinit var sex_girlS: String
 
+    var isUserLocation = true
+
     var initCountryWorld = 0
     var coutTabs = 3
         set(value) {
@@ -111,7 +113,7 @@ class BesieTabLayout @JvmOverloads constructor(
     }
 
     fun clickTab2(){
-        if(currentTab != tab2.id) {
+        if(currentTab != tab2.id && isUserLocation) {
             checkCurrentTab()
             animMove(animTranslationX, tabWith.toFloat())
             currentTab = tab2.id
@@ -120,11 +122,11 @@ class BesieTabLayout @JvmOverloads constructor(
                 0 -> mBesieTabLayoutSelectedListener?.selected(BesieTabSelected.COUNTRY)
                 1 -> mBesieTabLayoutSelectedListener?.selected(BesieTabSelected.MAN)
             }
-        }
+        }else mBesieTabLayoutSelectedListener?.selected(BesieTabSelected.NullUserLocation)
     }
 
     fun clickTab1(){
-        if(currentTab != R.id.text_city) {
+        if(currentTab != R.id.text_city && isUserLocation) {
             checkCurrentTab()
             animMove(animTranslationX, 0f)
             currentTab = R.id.text_city
@@ -133,7 +135,7 @@ class BesieTabLayout @JvmOverloads constructor(
                 0 -> mBesieTabLayoutSelectedListener?.selected(BesieTabSelected.CITY)
                 1 -> mBesieTabLayoutSelectedListener?.selected(BesieTabSelected.ALL)
             }
-        }
+        }else mBesieTabLayoutSelectedListener?.selected(BesieTabSelected.NullUserLocation)
     }
 
     fun initCountryTabs(){
@@ -246,7 +248,8 @@ enum class BesieTabSelected{
     WORLD,
     ALL,
     MAN,
-    GIRLS
+    GIRLS,
+    NullUserLocation
 }
 
 

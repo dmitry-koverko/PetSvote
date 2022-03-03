@@ -40,7 +40,7 @@ class RatingViewModel(
     val uiStateUserPets =  MutableStateFlow(listOf<PetRating>())
     val uiStateTopPets =  MutableStateFlow(listOf<PetRating>())
 
-    private var uiLocation = MutableStateFlow(Location())
+    var uiLocation = MutableStateFlow(Location())
 
     fun getRating(offset: Int){
 
@@ -87,6 +87,9 @@ class RatingViewModel(
                if(it != null){
                    it.pet.let { pets ->
                        _uiStatePets.value = pets
+                   }
+                   it.location?.let { location ->
+                       uiLocation.value = location
                    }
                }
             }

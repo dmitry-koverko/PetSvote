@@ -33,5 +33,9 @@
     <string name="sex_man_one">Мальчик</string>
     <string name="sex_no">Бесполое</string>
     <string name="error_sign_in">Ошибка входа в аккаунт</string>
+    <string name="world">Мир</string>
+    <string name="rating">Рейтинг</string>
+    <string name="error_location_rating">Чтобы смотреть рейтинг по городам и странам  заполните ваш профиль.</string>
+    <string name="next">Далее</string>
 
 </resources>

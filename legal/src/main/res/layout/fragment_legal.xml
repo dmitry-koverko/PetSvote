@@ -102,6 +102,7 @@
    </androidx.constraintlayout.widget.ConstraintLayout>
 
    <androidx.constraintlayout.widget.ConstraintLayout
+       android:background="@drawable/item_list_state"
        android:paddingLeft="16dp"
        android:paddingRight="16dp"
        android:paddingTop="6dp"

@@ -41,15 +41,15 @@ class RatingPetAdapter(private val list: MutableList<PetRating>) : RecyclerView.
             binding.name.text = item.name
             binding.location.text = "${item.country_name}, ${item.city_name}"
 
-            binding.image.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
+            binding.card.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
                 override fun onGlobalLayout() {
                     //Log.d("RatingPetAdapter", "width = ${binding.root.width} ## height = ${binding.root.height}")
                     mOnClickItemListener?.onSizeCard(binding.root.width, binding.root.height + binding.root.width)
-                    var lp = binding.image.layoutParams
-                    binding.image.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    lp.height = binding.root.width
+                    var lp = binding.card.layoutParams
+                    binding.card.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                    lp.height = (binding.root.height * 0.36).toInt()
                     lp.width = binding.root.width
-                    binding.image.layoutParams = lp
+                    binding.card.layoutParams = lp
 
                 }
 

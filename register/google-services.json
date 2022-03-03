@@ -1,0 +1,116 @@
+{
+  "project_info": {
+    "project_number": "321900460621",
+    "project_id": "petsvotetest",
+    "storage_bucket": "petsvotetest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321900460621:android:db44cf7b8a32fb5c6eba04",
+        "android_client_info": {
+          "package_name": "com.petsvote.register"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321900460621-2ohn6njt7154g9jaoju06frvdqstpcjl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.petsvote.register",
+            "certificate_hash": "ef22ca0360f2ec2e88e9fa0667eb01634574b45b"
+          }
+        },
+        {
+          "client_id": "321900460621-hs8lmut92ktr6bli6i3bffgg932tmqtr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.petsvote.register",
+            "certificate_hash": "6398bf5ef19b20638d9f136220d8338f7ac108b2"
+          }
+        },
+        {
+          "client_id": "321900460621-mcuef3ounghqjn6qcmdeo5208d0iu97b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.petsvote.register",
+            "certificate_hash": "ac1301ef10836e6dfc751029875ead653a7ff612"
+          }
+        },
+        {
+          "client_id": "321900460621-82lcqsf288tsbqja0h7j9a2uraofpbma.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7VqLhZjgafTzjklkEceVm7LihMgmyDjw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321900460621-82lcqsf288tsbqja0h7j9a2uraofpbma.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321900460621:android:5a4d41c67cc57f246eba04",
+        "android_client_info": {
+          "package_name": "com.petsvotetest.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321900460621-e7booi0knmnfuqvockfshhhn5m0ecdtu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.petsvotetest.app",
+            "certificate_hash": "6398bf5ef19b20638d9f136220d8338f7ac108b2"
+          }
+        },
+        {
+          "client_id": "321900460621-h512bjvfp2fa6n26sdrujupb0vqcmr40.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.petsvotetest.app",
+            "certificate_hash": "ef22ca0360f2ec2e88e9fa0667eb01634574b45b"
+          }
+        },
+        {
+          "client_id": "321900460621-mgudlimotlmjqhkp8q41fkk4fphsa80f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.petsvotetest.app",
+            "certificate_hash": "ac1301ef10836e6dfc751029875ead653a7ff612"
+          }
+        },
+        {
+          "client_id": "321900460621-82lcqsf288tsbqja0h7j9a2uraofpbma.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7VqLhZjgafTzjklkEceVm7LihMgmyDjw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321900460621-82lcqsf288tsbqja0h7j9a2uraofpbma.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

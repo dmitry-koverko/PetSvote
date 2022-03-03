@@ -94,21 +94,21 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
         app:layout_constraintTop_toBottomOf="@+id/ln_nested"
         android:id="@+id/refresh"
         android:outlineSpotShadowColor="@color/ui_primary"
         android:outlineAmbientShadowColor="@color/ui_primary"
         app:swipeRefreshLayoutProgressSpinnerBackgroundColor="@color/ui_primary"
         android:layout_marginTop="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginRight="8dp"
         android:layout_width="match_parent"
         android:layout_height="0dp">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginBottom="76dp"
+            android:paddingBottom="24dp"
             android:descendantFocusability="blocksDescendants"
-            tools:itemCount="2"
+            tools:itemCount="8"
             tools:listitem="@layout/item_rating"
             android:id="@+id/list_rating"
             android:layout_width="match_parent"
@@ -118,21 +118,29 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/bottomBar"
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="72dp">
+        android:layout_height="96dp">
 
         <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginBottom="12dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             android:id="@+id/list_pets_user"
             android:layout_width="wrap_content"
             android:layout_height="50dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/bottomView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
 
     <FrameLayout
         app:layout_constraintBottom_toBottomOf="parent"

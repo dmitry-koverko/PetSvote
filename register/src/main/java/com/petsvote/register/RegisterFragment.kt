@@ -117,9 +117,9 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 saveAccount(account)
             }
         } catch (e:ApiException){
-            //Toast.makeText(context, getString(R.string.error_sign_in),Toast.LENGTH_SHORT).show()
-                registerViewModel.getCurrensies("123")
-                Toast.makeText(context, e.message,Toast.LENGTH_SHORT).show()
+            //firebaseAuthWithGoogle()
+            //registerViewModel.getCurrensies("123")
+            Toast.makeText(context, e.message,Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -143,6 +143,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         super.onCreate(savedInstanceState)
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            //.requestIdToken(getString(R.string.default_client_id))
             .requestEmail()
             .build()
         mGoogleSignInClient= activity?.let { GoogleSignIn.getClient(it, gso) }!!;

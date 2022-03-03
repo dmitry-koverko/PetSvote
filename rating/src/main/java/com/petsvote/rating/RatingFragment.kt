@@ -1,16 +1,18 @@
 package com.petsvote.rating
 
+import android.animation.Animator
 import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
+import android.animation.ValueAnimator
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.annotation.RequiresApi
+import androidx.dynamicanimation.animation.DynamicAnimation
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -25,23 +27,25 @@ import com.petsvote.rating.adapter.RatingAdapter
 import com.petsvote.rating.adapter.RatingPetAdapter
 import com.petsvote.rating.databinding.FragmentRatingBinding
 import com.petsvote.rating.di.RatingComponentViewModel
+import com.petsvote.room.Location
 import com.petsvote.room.UserPets
 import com.petsvote.ui.BesieTabLayoutSelectedListener
 import com.petsvote.ui.BesieTabSelected
+import com.petsvote.ui.dialogs.UserLocationDialog
 import com.petsvote.ui.list.RecyclerViewLoadMoreScroll
-import com.petsvote.ui.loadImage
 import com.petsvote.ui.navigation.RegisterNavigation
 import dagger.Lazy
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import me.vponomarenko.injectionmanager.x.XInjectionManager
 import javax.inject.Inject
+
 
 class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnClickItemListener,
     BesieTabLayoutSelectedListener, MyPetRatingAdapter.OnClickItemListener,
     RatingAdapter.OnClickItemListener {
 
     private val TAG = RatingFragment::class.java.name
+    private var animator: ValueAnimator = ValueAnimator()
 
     private var listPet = mutableListOf<PetRating>()
     private var listPetUser = mutableListOf<UserPets>()
@@ -61,6 +65,10 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
     private var loadMore = false
     private var loadTop = false
     private var clickMyPet = 0
+    private var userLocation: Location? = null
+    private var isShowbottomView = true
+    private var isAnimationbottomView = false
+
     @Inject
     internal lateinit var ratingViewModelFactory: Lazy<RatingViewModel.Factory>
 
@@ -105,7 +113,6 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
         binding!!.listPetsUser.apply {
             layoutManager = mLinearLayoutManager
             this.adapter = userPetAdapter
-            setHasFixedSize(true)
         }
 
         //ratingPetAdapter.setOnClickItemListener(this)
@@ -116,12 +123,14 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
                 totalItemCount = mLayoutManager.itemCount
 
                 var lastVisibleItem =
-                    (mLayoutManager as GridLayoutManager).findLastVisibleItemPosition()
+                    mLayoutManager.findLastVisibleItemPosition()
                 if (dy <= 0) {
+                    if(isShowbottomView && !isAnimationbottomView) animBottomBar(false)
                     if (!loadTop && lastVisibleItem < 20) {
                         loadTop()
                     }
                 }else {
+                    if(!isShowbottomView && !isAnimationbottomView) animBottomBar(true)
                     if (!loadMore && totalItemCount <= lastVisibleItem + 20) {
                         loadMore()
                     }
@@ -183,20 +192,10 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
             ratingViewModel.uiState.collect { uiState ->
                 loadMore = false
                 if(uiState.isNullOrEmpty()) return@collect
-//                var newList = mutableListOf<PetRating>()
-//                newList = uiState as MutableList<PetRating>
-//                binding!!.refresh.isRefreshing = false
-//                if(binding!!.topPet.root.visibility == View.GONE){
-//                    var topPet = uiState[0]
-//                    binding!!.topPet.root.visibility = View.VISIBLE
-//                    if(!topPet.photos.isNullOrEmpty())
-//                        binding!!.topPet.image.loadImage(uiState[0].photos[0].url)
-//                    binding!!.topPet.name.text = topPet.name
-//                    binding!!.topPet.location.text = "${topPet.country_name}, ${topPet.city_name}"
-//
-//                    if(newList.isNotEmpty()) newList.removeAt(0)
-//                }
-
+                var top = uiState.find { it.index == 1 }
+                top?.let{
+                    topRatingPet = it
+                }
                 listPet.addAll(uiState)
                 ratingPetAdapter.notifyDataSetChanged()
             }
@@ -223,7 +222,8 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
                 var new_list = it.toMutableList()
                 new_list.add(0, UserPets())
                 listPetUser.addAll(new_list)
-                userPetAdapter?.notifyDataSetChanged()
+                userPetAdapter.notifyDataSetChanged()
+                ratingPetAdapter.addUserpets(it)
             }
         }
 
@@ -240,9 +240,20 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
         lifecycleScope.launchWhenStarted {
             ratingViewModel.uiStateTopPets.collect {
                 if(it.isNotEmpty()){
-                    for(i in it.size -1 downTo 0) listPet.add(0, it[i])
+                    if(topRatingPet != null){
+                        if(!listPet.contains(topRatingPet)) listPet.add(0, topRatingPet!!)
+                    }
+                    listPet.addAll(it)
+                    //listPet.sortBy { it.index }
                     loadTop = false
                 }
+            }
+        }
+
+        lifecycleScope.launchWhenStarted {
+            ratingViewModel.uiLocation.collect {
+                userLocation = it
+                binding!!.tabs.isUserLocation = userLocation?.city_id != null
             }
         }
 
@@ -297,13 +308,16 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
         Log.d(TAG, "loadTop(**)")
         if(!loadTop){
             if(listPet.size == 0) return
-            if(listPet.first().index == 1) return
-            if(listPet.first().index - 50 > 0){
-                var off = listPet.first().index - 50
+            var i = listPet.find { it.index == 2 }
+            i?.let {
+                return@loadTop
+            }
+            if(listPet[1].index - 50 > 0){
+                var off = listPet[1].index - 50
                 ratingViewModel.getRatingToTop(off, null)
             }else {
-                var lim = 50 - listPet.first().index
-                ratingViewModel.getRatingToTop(0,lim)
+                var lim = 50 - listPet[1].index
+                ratingViewModel.getRatingToTop(1,lim)
             }
             loadTop = true
         }
@@ -332,7 +346,12 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
     }
 
     private fun updateFilterText(){
-        var txt = "Беларусь, "
+        var txt = when (UserInfo.getTabsFilter(requireContext())){
+            2 -> getString(R.string.world) + " ,"
+            1 -> "${userLocation?.country}, "
+            0 -> "${userLocation?.city} ,"
+            else -> getString(R.string.world) + " ,"
+        }
 
         var itKinds = FilterPetsObject.listKinds.value
         if(itKinds.isEmpty()) txt += "${getString(R.string.all_kinds2).lowercase()}, "
@@ -360,13 +379,21 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
     }
 
     override fun selected(tab: BesieTabSelected) {
+        if(tab == BesieTabSelected.NullUserLocation) {
+            UserLocationDialog().show(childFragmentManager, "")
+            return
+        }
+
         UserInfo.setTabsFilter(requireContext(),
             when(tab){
                 BesieTabSelected.CITY -> 0
                 BesieTabSelected.COUNTRY -> 1
                 else -> 2
             })
-
+        topRatingPet = null
+        listPet.clear()
+        ratingViewModel.getRating(0)
+        updateFilterText()
     }
 
     override fun onClick(pet: UserPets) {
@@ -374,7 +401,67 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
             ratingViewModel.uiStateTopPets.value = listOf<PetRating>()
             ratingViewModel.getRatingMyPet(it)
             clickMyPet = it
+            var index = listPetUser.indexOf(pet)
+            userPetAdapter.selectPetPosition = index
+            binding?.listPetsUser?.post {
+                userPetAdapter.notifyDataSetChanged()
+            }
+
         }
+    }
+
+    fun animBottomBar(shwo: Boolean){
+//        val propertyXLeft: PropertyValuesHolder =
+//            if(shwo) PropertyValuesHolder.ofFloat("PROPERTY_BOTTOM", 0f, 500f)
+//            else PropertyValuesHolder.ofFloat("PROPERTY_BOTTOM", 500f, 0f)
+
+        var lp = 72 * context?.resources?.displayMetrics?.density!!
+        //var lp1 = 24 * context?.resources?.displayMetrics?.density!!
+        val propertyYBottom: PropertyValuesHolder =
+            if(shwo) PropertyValuesHolder.ofFloat("PROPERTY_BOTTOM_LP", lp.toFloat(),
+                2f
+            )
+            else PropertyValuesHolder.ofFloat("PROPERTY_BOTTOM_LP",
+                2f, lp.toFloat())
+
+        animator!!.setValues( propertyYBottom)
+        animator!!.setDuration(500)
+        animator!!.addUpdateListener(ValueAnimator.AnimatorUpdateListener { animation ->
+            //var transitionY = animation.getAnimatedValue("PROPERTY_BOTTOM") as Float
+            var lpY = animation.getAnimatedValue("PROPERTY_BOTTOM_LP") as Float
+            //binding?.bottomBar?.translationY = transitionY
+            var lpVB = binding?.bottomBar?.layoutParams
+            lpVB?.height = lpY.toInt()
+            binding?.bottomBar?.layoutParams = lpVB
+        })
+
+        animator!!.addListener(object : DynamicAnimation.OnAnimationEndListener,
+            Animator.AnimatorListener {
+            override fun onAnimationEnd(
+                animation: DynamicAnimation<*>?,
+                canceled: Boolean,
+                value: Float,
+                velocity: Float
+            ) {
+            }
+
+            override fun onAnimationStart(p0: Animator?) {
+                isAnimationbottomView = true
+            }
+
+            override fun onAnimationEnd(p0: Animator?) {
+                isAnimationbottomView = false
+                isShowbottomView = shwo
+            }
+
+            override fun onAnimationCancel(p0: Animator?) {
+            }
+
+            override fun onAnimationRepeat(p0: Animator?) {
+            }
+
+        })
+        animator.start()
     }
 
     override fun onSearch() {

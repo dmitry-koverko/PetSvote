@@ -102,8 +102,14 @@ class NetworkRepository(private val context: Context): NReposirory {
     }
 
     override suspend fun getRating(offset: Int?, id: Int?, limit: Int?): Rating? {
+        var typFilter = when(UserInfo.getTabsFilter(context)){
+            2 -> "global"
+            1 -> "country"
+            0 -> "city"
+            else -> "global"
+        }
         var result = api.getRating(limit, offset, null, null, null,
-            null, null, null, "global", id, null )
+            null, null, null, typFilter, id, null )
         return when (result) {
             is NetworkResponse.Success -> {
                 Log.d(TAG, result.toString())
