@@ -1,6 +1,7 @@
 package com.petsvote.rating.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import androidx.recyclerview.widget.RecyclerView
@@ -83,29 +84,34 @@ class RatingAdapter(private val list: MutableList<PetRating>,
             onClickItemListener: OnClickItemListener,
             userPetsLis: List<UserPets>
         ) {
-            if(!item.photos.isNullOrEmpty()){
-                binding.image.loadImage(item.photos[0].url)
-            }
-            binding.rate.text = item.index.toString()
-            binding.name.text = item.name
-            binding.location.text = "${item.country_name}, ${item.city_name}"
-
-            binding.card.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
-                override fun onGlobalLayout() {
-                    onClickItemListener?.onSizeCard(binding.root.width, binding.root.height + binding.root.width)
-                    var lp = binding.card.layoutParams
-                    binding.card.viewTreeObserver.removeOnGlobalLayoutListener(this)
-                    lp.height = (binding.root.context?.resources?.displayMetrics?.heightPixels!! * 0.36).toInt()
-                    lp.width = binding.root.width
-                    binding.card.layoutParams = lp
-
+            if(item.pet_id != -1){
+                if(!item.photos.isNullOrEmpty()){
+                    binding.image.loadImage(item.photos[0].url)
                 }
-            })
+                binding.rate.text = item.index.toString()
+                binding.name.text = item.name
+                binding.location.text = "${item.country_name}, ${item.city_name}"
 
-            var index = userPetsLis.find { it.pets_id == item.pet_id }
-            if(index != null){
-                binding.mask.setImageResource(R.drawable.mask_user)
-            }else binding.mask.setImageResource(R.drawable.mask_default)
+                binding.card.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
+                    override fun onGlobalLayout() {
+                        onClickItemListener?.onSizeCard(binding.root.width, binding.root.height + binding.root.width)
+                        var lp = binding.card.layoutParams
+                        binding.card.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                        lp.height = (binding.root.context?.resources?.displayMetrics?.heightPixels!! * 0.36).toInt()
+                        lp.width = binding.root.width
+                        binding.card.layoutParams = lp
+
+                    }
+                })
+
+                var index = userPetsLis.find { it.pets_id == item.pet_id }
+                if(index != null){
+                    binding.mask.setImageResource(R.drawable.mask_user)
+                }else binding.mask.setImageResource(R.drawable.mask_default)
+            }else {
+                binding.containerPet.visibility = View.GONE
+                binding.containerAdd.visibility = View.VISIBLE
+            }
         }
 
         companion object {

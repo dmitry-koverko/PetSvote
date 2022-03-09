@@ -15,6 +15,8 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:visibility="visible"
+            android:id="@+id/containerPet"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -71,6 +73,59 @@
                     android:layout_height="wrap_content"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:visibility="gone"
+            android:id="@+id/containerAdd"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <com.petsvote.ui.SimpleSFTextView
+                android:id="@+id/textNoPet"
+                android:textSize="15sp"
+                android:text="У вас нет питомца"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                app:layout_constraintTop_toBottomOf="@id/textNoPet"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/containerMiddle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.petsvote.ui.SimpleSFTextView
+                    android:layout_marginLeft="8dp"
+                    app:layout_constraintLeft_toRightOf="@id/addImg"
+                    android:id="@+id/textAdd"
+                    android:textSize="19sp"
+                    android:text="Добавить"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+
+                <ImageView
+                    android:id="@+id/addImg"
+                    android:layout_marginRight="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:src="@drawable/ic_add_photo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

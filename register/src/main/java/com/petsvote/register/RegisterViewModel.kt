@@ -5,10 +5,7 @@ import com.petsvote.api.NetworkRepository
 import com.petsvote.api.entity.Register
 import com.petsvote.api.entity.UserPets
 import com.petsvote.data.DocumentsInfo
-import com.petsvote.room.Location
-import com.petsvote.room.Photo
-import com.petsvote.room.RoomRepository
-import com.petsvote.room.UserInfo
+import com.petsvote.room.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,9 +23,9 @@ class RegisterViewModel(
 
     val uiStateTerms = MutableStateFlow<String>("")
     val uiStatePolicy = MutableStateFlow<String>("")
-
     fun getCurrensies(code: String){
         viewModelScope.launch (Dispatchers.IO){
+
             var response: Register? = networkRepository.register(code)
             response?.user?.let { it ->
                 var userInfo = UserInfo()
@@ -41,7 +38,26 @@ class RegisterViewModel(
                 roomRepository.updateUser(userInfo)
                 _uiState.value = true
             }
+
+
         }
+    }
+
+    fun getBreeds(){
+       viewModelScope.launch (Dispatchers.IO){
+           var breedsList= networkRepository.getBreeds(null)
+           breedsList?.let {
+               roomRepository.deleteBreeds()
+               var listBreeds = mutableListOf<Breed>()
+               for(breeds in breedsList){
+                   for(breed in breeds.breeds){
+                       var breedRoom = Breed(0, breeds.lang, breeds.type, breed.id, breed.title)
+                       listBreeds.add(breedRoom)
+                   }
+               }
+               roomRepository.saveBreeds(listBreeds)
+           }
+       }
     }
 
     fun getTerms(lang: String){

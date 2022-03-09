@@ -14,10 +14,11 @@ interface NReposirory {
     suspend fun register(code: String): Register?
     suspend fun getConfig(): GlobalConfig?
     suspend fun getLocalize():List<Localize>?
-    suspend fun getBreeds(): List<Breeds>?
-    suspend fun getRating(offset: Int?, id: Int?, limit: Int?): Rating?
+    suspend fun getBreeds(type: String?): List<Breeds>?
+    suspend fun getRating(offset: Int?, id: Int?, limit: Int?, type: String?,
+                          sex: String?, city_id: Int?, countryId: Int?, ageBetween: String, breed_id: Int?): Rating?
     suspend fun getCurrentUser(): User?
-    suspend fun getPetsList(): List<Pet>?
+    suspend fun getPetsList(offset: Int? = null): List<Pet>?
     suspend fun saveUserData(user: User, params: MultipartBody.Part?)
                 : UserData?
     suspend fun addPet(photos:List<MultipartBody.Part>,

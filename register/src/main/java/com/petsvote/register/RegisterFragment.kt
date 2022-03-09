@@ -18,6 +18,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
 import com.petsvote.data.DocumentsInfo
+import com.petsvote.data.UserInfo
 import com.petsvote.register.databinding.FragmentRegisterBinding
 import com.petsvote.register.di.RegisterComponentViewModel
 import com.petsvote.ui.navigation.RegisterNavigation
@@ -57,6 +58,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         val config: Configuration? = resources?.configuration
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             var lang = config?.locales?.get(0)?.language?.toString()!!
+            UserInfo.setLanguage(requireContext(), lang)
             registerViewModel.getPolicy(lang)
             registerViewModel.getTerms(lang)
         }
@@ -89,6 +91,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                 DocumentsInfo.setTerms(requireContext(), it)
             }
         }
+        registerViewModel.getBreeds()
     }
 
     companion object {
@@ -118,8 +121,8 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             }
         } catch (e:ApiException){
             //firebaseAuthWithGoogle()
-            //registerViewModel.getCurrensies("123")
-            Toast.makeText(context, e.message,Toast.LENGTH_SHORT).show()
+            registerViewModel.getCurrensies("123")
+            //Toast.makeText(context, e.message,Toast.LENGTH_SHORT).show()
         }
     }
 

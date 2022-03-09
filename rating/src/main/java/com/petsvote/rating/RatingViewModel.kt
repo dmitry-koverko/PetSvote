@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import com.petsvote.api.NetworkRepository
 import com.petsvote.api.entity.Pet
 import com.petsvote.api.entity.PetRating
+import com.petsvote.data.FilterPetsObject
 import com.petsvote.data.UserInfo
 import com.petsvote.room.Breed
 import com.petsvote.room.Location
@@ -42,11 +43,12 @@ class RatingViewModel(
 
     var uiLocation = MutableStateFlow(Location())
 
-    fun getRating(offset: Int){
-
+    fun getRating(offset: Int, filterRating: RatingFragment.FilterRating){
         viewModelScope.launch (Dispatchers.IO){
             Log.d(TAG, "getRating() listSize = ${filter.offset}")
-            val res = networkRepository.getRating(offset, null, null)
+            val res = networkRepository.getRating(offset, null, null, filterRating.type,
+                filterRating.sex, filterRating.cityId, filterRating.countryId, filterRating.ageBetween,
+                filterRating.breedId)
             res?.let {
                 res.pets?.let {
                     _uiState.value = it
@@ -55,9 +57,11 @@ class RatingViewModel(
             }
         }
     }
-    fun getRatingToTop(offset: Int, limit: Int?){
+    fun getRatingToTop(offset: Int, limit: Int?, filterRating: RatingFragment.FilterRating){
         viewModelScope.launch (Dispatchers.IO){
-            val res = networkRepository.getRating(offset, null, limit)
+            val res = networkRepository.getRating(offset, null, limit, filterRating.type,
+                filterRating.sex, filterRating.cityId, filterRating.countryId, filterRating.ageBetween,
+                filterRating.breedId)
             res?.let {
                 res.pets?.let {
                     uiStateTopPets.value = it
@@ -66,18 +70,19 @@ class RatingViewModel(
         }
     }
 
-
-
-    fun getRatingMyPet(petId: Int){
+    fun getRatingMyPet(petId: Int, filterRating: RatingFragment.FilterRating){
+        uiStateUserPets.value = listOf()
         viewModelScope.launch (Dispatchers.IO){
-            val res = networkRepository.getRating(0, petId, null)
+            val res = networkRepository.getRating(0, petId, null,
+                filterRating.type,
+                filterRating.sex, filterRating.cityId, filterRating.countryId, filterRating.ageBetween,
+                filterRating.breedId)
             res?.let {
                 res.pets?.let {
                     uiStateUserPets.value = it
                 }
             }
         }
-
     }
 
     fun getUserInfo(){
@@ -108,7 +113,6 @@ class RatingViewModel(
                 roomRepository.get()
             ) as T
         }
-
     }
 
     fun addListSizeFilter(size: Int){

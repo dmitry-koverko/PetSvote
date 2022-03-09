@@ -9,9 +9,9 @@ import com.petsvote.room.converters.*
 
 
 @Database(entities = arrayOf(UserInfo::class, UserPets::class, Location::class,
-          Breed::class, CountryInfo::class), version = 18, exportSchema = false)
+    BreedList::class, CountryInfo::class, Breed::class), version = 22, exportSchema = false)
 @TypeConverters(CityConverter::class, CountryConverter::class, PetConverter::class,
-    LocationConverter::class, PhotoConverter::class)
+    LocationConverter::class, PhotoConverter::class, BreedsConverter::class)
 public abstract class UserDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao

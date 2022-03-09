@@ -75,6 +75,7 @@ class SplashViewModel(
                 Log.d(TAG, "FINISH = $currentDateAndTimeF")
             }
 
+            //TODO sad
 //            var breedsList= networkRepository.getBreeds()
 //            breedsList?.let {
 //                roomRepository.deleteBreeds()

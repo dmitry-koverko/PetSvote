@@ -27,25 +27,22 @@ class SelectBreedsViewModel(
 
     private val _uiState = MutableStateFlow(listOf<Breed>())
     val uiState: StateFlow<List<Breed>> = _uiState
-    fun getBreeds(){
+    fun getBreeds(lang: String, type: String?){
 
         viewModelScope.launch (Dispatchers.IO){
-//            val res = networkRepository.getBreeds()
-//            res?.let {
-//                //TODO вернуть
-////                var breed: Breeds? = it[0]
-////                _uiState.value = breed?.breeds!!
-//
-//
-//
-//
-//            }
-            var breed = Breed(1, "Title1")
-            var breed1 = Breed(2, "Title2")
-            var breed2 = Breed(3, "Title3")
-
-            var lst = mutableListOf<Breed>(breed, breed1, breed2)
-            _uiState.value = lst
+            val  resRoom = roomRepository.getBreeds(lang, type)
+            if(resRoom != null && resRoom.isNotEmpty()){
+                var lisRoom = mutableListOf<Breed>()
+                for(i in resRoom)
+                    lisRoom.add(Breed(i.id_breed, i.title))
+                _uiState.value = lisRoom
+            }else {
+                val res = networkRepository.getBreeds(type)
+                res?.let {
+                    var breed: Breeds? = it[0]
+                    _uiState.value = breed?.breeds!!
+                }
+            }
         }
 
     }

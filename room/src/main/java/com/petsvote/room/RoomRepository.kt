@@ -50,10 +50,14 @@ class RoomRepository(private val application: Application): RRepository {
         userDao.deleteAll()
     }
 
-
-    override suspend fun saveBreed(breed: Breed) {
-        breedDao.insert(breed)
+    override suspend fun saveBreeds(breeds: List<Breed>) {
+        breedDao.insert(breeds)
     }
+
+    override suspend fun getBreeds(lang: String, type: String?): List<Breed> {
+        return breedDao.getBreedsByKinds(lang, type)
+    }
+
 
     override suspend fun deleteBreeds() {
         breedDao.deleteAll()

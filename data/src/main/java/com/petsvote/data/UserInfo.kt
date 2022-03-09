@@ -65,7 +65,7 @@ object UserInfo {
 
     fun getLanguage(context: Context): String {
         return context.getSharedPreferences(USERINFO, Context.MODE_PRIVATE)
-            .getString(LANGUAGE, "") ?: ""
+            .getString(LANGUAGE, "en") ?: "en"
     }
 
     fun setLanguage(context: Context, type: String){

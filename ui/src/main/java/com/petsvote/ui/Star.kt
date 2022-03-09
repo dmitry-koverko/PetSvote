@@ -12,6 +12,7 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.core.content.withStyledAttributes
+import androidx.core.graphics.alpha
 import kotlin.math.roundToInt
 
 class Star @JvmOverloads constructor(
@@ -102,6 +103,8 @@ class Star @JvmOverloads constructor(
     }
 
     private fun drawIconActive() {
+        var p = Paint()
+        p.alpha = starActiveSize
         iconActive = when(typeStar){
             0 -> R.drawable.ic_star1
             1 -> R.drawable.ic_star2
@@ -110,13 +113,13 @@ class Star @JvmOverloads constructor(
             4 -> R.drawable.ic_star5
             else -> R.drawable.ic_star1
         }
-        var bitmap = getVectorBackground(iconActive)
+        var bitmap = getVectorBitmap(iconActive)
         canvas!!.drawBitmap(
             bitmap,
-            (widthView - starActiveSize) / 2.toFloat(),
-            (heightView - starActiveSize) / 2.toFloat(), Paint()
+            0f,
+            0f, Paint()
         )
-        if(starActiveSize >= widthView){
+        if(starActiveSize >= 100){
             isAmim = false
             invalidate()
         }
@@ -149,13 +152,13 @@ class Star @JvmOverloads constructor(
     fun animRipple() {
         isAmim = true
         val propertyXLeft: PropertyValuesHolder =
-            PropertyValuesHolder.ofFloat("PROPERTY_SIZE", 0f, widthView.toFloat())
+            PropertyValuesHolder.ofFloat("PROPERTY_SIZE", 0f,100f)
 
         animator = ValueAnimator()
         animator!!.setValues(propertyXLeft)
-        animator!!.setDuration(300)
+        animator!!.setDuration(500)
         animator!!.addUpdateListener(ValueAnimator.AnimatorUpdateListener { animation ->
-            starActiveSize = (animation.getAnimatedValue("PROPERTY_SIZE") as Float).roundToInt()
+            starActiveSize = (animation.getAnimatedValue("PROPERTY_SIZE") as Float).toInt()
             invalidate()
         })
         animator!!.start()

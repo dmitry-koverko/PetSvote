@@ -28,13 +28,15 @@ class VoteViewModel(
     private val _uiState = MutableStateFlow(listOf<Pet>())
     val uiState: StateFlow<List<Pet>> = _uiState
 
+    private var offset = 0
+
     fun getRating(){
 
         viewModelScope.launch (Dispatchers.IO){
-            val res = networkRepository.getPetsList()
+            val res = networkRepository.getPetsList(offset)
             res?.let {
                 _uiState.value = it
-//                filter.offset =+ 50;
+                offset += 20
             }
         }
 

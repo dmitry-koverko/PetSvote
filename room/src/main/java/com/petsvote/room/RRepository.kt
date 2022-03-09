@@ -20,7 +20,8 @@ interface RRepository {
     fun getCurrentUser(): Flow<UserInfo>
     suspend fun deleteUserInfo()
 
-    suspend fun saveBreed(breed: Breed)
+    suspend fun saveBreeds(breeds: List<Breed>)
+    suspend fun getBreeds(lang: String, type: String?): List<Breed>
     suspend fun deleteBreeds()
 
     suspend fun saveCountries(info: CountryInfo)

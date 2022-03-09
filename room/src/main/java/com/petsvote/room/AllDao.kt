@@ -40,13 +40,16 @@ interface LocationDao {
 
 @Dao
 interface BreedsDao{
-    @Query("SELECT * FROM breed")
+    @Query("SELECT * FROM Breed")
     fun getBreeds(): List<Breed>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(breed: Breed)
+    @Query("SELECT * FROM Breed WHERE lang=:lang AND type=:type")
+    fun getBreedsByKinds(lang: String, type: String?): List<Breed>
 
-    @Query("DELETE FROM breed")
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(breeds: List<Breed>)
+
+    @Query("DELETE FROM BreedList")
     suspend fun deleteAll()
 }
 

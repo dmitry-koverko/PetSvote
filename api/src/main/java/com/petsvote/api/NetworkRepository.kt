@@ -87,8 +87,10 @@ class NetworkRepository(private val context: Context): NReposirory {
         }
     }
 
-    override suspend fun getBreeds(): List<Breeds>? {
-        var result = api.getBreeds(listOf("cat", "dog"), "ru")
+    override suspend fun getBreeds(type: String?): List<Breeds>? {
+        var types = mutableListOf<String>()
+        type?.let { types.add(it)}
+        var result = api.getBreeds(types, UserInfo.getLanguage(context))
         return when (result) {
             is NetworkResponse.Success -> {
                 Log.d(TAG, result.toString())
@@ -101,15 +103,17 @@ class NetworkRepository(private val context: Context): NReposirory {
         }
     }
 
-    override suspend fun getRating(offset: Int?, id: Int?, limit: Int?): Rating? {
+    override suspend fun getRating(offset: Int?, id: Int?, limit: Int?, type: String?,
+                                   sex: String?, city_id: Int?, countryId: Int?, ageBetween: String, breed_id: Int?): Rating? {
         var typFilter = when(UserInfo.getTabsFilter(context)){
             2 -> "global"
             1 -> "country"
             0 -> "city"
             else -> "global"
         }
-        var result = api.getRating(limit, offset, null, null, null,
-            null, null, null, typFilter, id, null )
+        var lang = UserInfo.getLanguage(context)
+        var result = api.getRating(limit, offset, lang, type, sex,
+            city_id, countryId, ageBetween, typFilter, id, breed_id )
         return when (result) {
             is NetworkResponse.Success -> {
                 Log.d(TAG, result.toString())
@@ -136,8 +140,8 @@ class NetworkRepository(private val context: Context): NReposirory {
         }
     }
 
-    override suspend fun getPetsList(): List<Pet>? {
-        var result = api.getPets(null, null, null, null, null, null,
+    override suspend fun getPetsList(offset: Int?): List<Pet>? {
+        var result = api.getPets(null, offset, null, null, null, null,
                                 null, null, null, null)
         return when (result) {
             is NetworkResponse.Success -> {

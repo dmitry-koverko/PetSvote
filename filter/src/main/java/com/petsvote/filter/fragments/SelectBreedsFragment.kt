@@ -22,6 +22,7 @@ import com.petsvote.api.entity.PetRating
 import com.petsvote.data.CreatePetInfo
 import com.petsvote.data.FilterBreed
 import com.petsvote.data.FilterPetsObject
+import com.petsvote.data.UserInfo
 import com.petsvote.filter.adapter.BreedsAdapter
 import com.petsvote.filter.adapter.KindsAdapter
 import com.petsvote.filter.databinding.FragmentSelectBeedsBinding
@@ -65,7 +66,6 @@ class SelectBreedsFragment: Fragment(R.layout.fragment_select_beeds), BreedsAdap
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentSelectBeedsBinding.bind(view)
-        selectBreedsViewModel.getBreeds()
 
         allString = getString(R.string.all_breeds)
         noString = getString(R.string.no_breeds)
@@ -82,6 +82,7 @@ class SelectBreedsFragment: Fragment(R.layout.fragment_select_beeds), BreedsAdap
             binding.linBreedsAll.visibility = View.GONE
         }
 
+        var lang = UserInfo.getLanguage(requireContext())
         breedsAdapter.setOnSelected(this)
 
         lifecycleScope.launchWhenStarted {
@@ -119,6 +120,15 @@ class SelectBreedsFragment: Fragment(R.layout.fragment_select_beeds), BreedsAdap
 
         lifecycleScope.launchWhenResumed {
             getBreed()
+        }
+
+        lifecycleScope.launchWhenStarted {
+            FilterPetsObject.listKinds.collect { list ->
+                if(list.size == 1){
+                    selectBreedsViewModel.getBreeds(lang, list.first().type)
+                }
+            }
+
         }
     }
 

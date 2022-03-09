@@ -17,6 +17,7 @@ import com.petsvote.app.databinding.BlankFragmentBinding
 import com.petsvote.pet.addpet.AddPetFragment
 import com.petsvote.rating.RatingFragment
 import com.petsvote.register.RegisterFragment
+import com.petsvote.vote.VoteFragment
 
 class BlankFragment : Fragment(R.layout.blank_fragment) {
 
@@ -107,7 +108,7 @@ class MyAdapter(private val myContext: Context, fm: FragmentManager, internal va
                 return RatingFragment()
             }
             1 -> {
-                return AddPetFragment()
+                return VoteFragment()
             }
             2 -> {
                 return SimpleUserProfileFragment()

@@ -84,6 +84,7 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
     }
 
     private var topRatingPet: PetRating? = null
+    private var filterRaing  = FilterRating()
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -192,11 +193,25 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
             ratingViewModel.uiState.collect { uiState ->
                 loadMore = false
                 if(uiState.isNullOrEmpty()) return@collect
+                var ratingList = mutableListOf<PetRating>()
+                ratingList.addAll(uiState)
                 var top = uiState.find { it.index == 1 }
                 top?.let{
+                    var petAdd = PetRating(-1, -1, "",
+                        -1, "", -1, "",-1, "", -1,
+                        "", "", "", -1, -1,
+                        -1, "", "", -1, -1,
+                        -1, listOf())
                     topRatingPet = it
+                    if(uiState.size >= 4){
+                        ratingList.add(3, petAdd)
+                    }else if(uiState.size <= 3){
+                        ratingList.add(2, petAdd)
+                    }else if(uiState.size <= 2){
+                        ratingList.add(1, petAdd)
+                    }
                 }
-                listPet.addAll(uiState)
+                listPet.addAll(ratingList)
                 ratingPetAdapter.notifyDataSetChanged()
             }
         }
@@ -243,8 +258,10 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
                     if(topRatingPet != null){
                         if(!listPet.contains(topRatingPet)) listPet.add(0, topRatingPet!!)
                     }
-                    listPet.addAll(it)
-                    //listPet.sortBy { it.index }
+                    for(i in it.size -1 downTo 0){
+                        listPet.add(1, it[i])
+                        ratingPetAdapter.notifyItemInserted(1)
+                    }
                     loadTop = false
                 }
             }
@@ -265,7 +282,6 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
 
         userPetAdapter.setOnClickItemListener(this)
 
-        loadMore()
         ratingViewModel.getUserInfo()
         updateFilterText()
 
@@ -298,8 +314,8 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
 
     private fun loadMore() {
         if(!loadMore){
-            if(listPet.size == 0) ratingViewModel.getRating(0)
-            else ratingViewModel.getRating(listPet.last().index)
+            if(listPet.size == 0) ratingViewModel.getRating(0, filterRaing)
+            else ratingViewModel.getRating(listPet.last().index, filterRaing)
             loadMore = true
         }
     }
@@ -314,10 +330,10 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
             }
             if(listPet[1].index - 50 > 0){
                 var off = listPet[1].index - 50
-                ratingViewModel.getRatingToTop(off, null)
+                ratingViewModel.getRatingToTop(off, null, filterRaing)
             }else {
                 var lim = 50 - listPet[1].index
-                ratingViewModel.getRatingToTop(1,lim)
+                ratingViewModel.getRatingToTop(1,lim, filterRaing)
             }
             loadTop = true
         }
@@ -353,15 +369,40 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
             else -> getString(R.string.world) + " ,"
         }
 
+        when (UserInfo.getTabsFilter(requireContext())){
+            2 -> {
+                filterRaing.cityId = null
+                filterRaing.countryId = null
+            }
+            1 -> {
+                filterRaing.countryId = userLocation?.country_id
+            }
+            0 -> {
+                filterRaing.cityId = userLocation?.city_id
+                filterRaing.countryId = userLocation?.country_id
+            }
+        }
+
         var itKinds = FilterPetsObject.listKinds.value
-        if(itKinds.isEmpty()) txt += "${getString(R.string.all_kinds2).lowercase()}, "
-        else if(itKinds.size == 1) txt += "${itKinds.get(0).name.lowercase()}, "
-        else txt += "${getString(R.string.other_kinds).lowercase()}, "
+        if(itKinds.isEmpty()) {
+            filterRaing.type = null
+            txt += "${getString(R.string.all_kinds2).lowercase()}, "
+        }
+        else if(itKinds.size == 1) {
+            filterRaing.type = itKinds[0].type
+            txt += "${itKinds.get(0).name.lowercase()}, "
+        }
+        else {
+            filterRaing.type = null
+            txt += "${getString(R.string.other_kinds).lowercase()}, "
+        }
 
         var itBreeds = FilterPetsObject.breed.value
         if (itBreeds.title.isNotEmpty()) {
+            filterRaing.breedId = itBreeds.id
             txt += "${itBreeds.title.lowercase()}, "
-        }
+        }else filterRaing.breedId = null
+
         if(itBreeds.id == -1) txt += "${getString(R.string.no_breeds).lowercase()}, "
         else if(itBreeds.id == 0) txt += "${getString(R.string.all_breeds).lowercase()}, "
 
@@ -372,10 +413,23 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
             else -> getString(R.string.sex_all2)
         }
 
+        filterRaing.sex = when(FilterPetsObject.sex.value.type){
+            0 -> null
+            1 -> "MALE"
+            2 -> "FEMALE"
+            else -> null
+        }
+
         txt += "${tSex.lowercase()}, "
         txt +=  "${FilterPetsObject.minValue.value} - ${FilterPetsObject.maxValue.value}"
 
+        filterRaing.ageBetween =
+            "${FilterPetsObject.minValue.value}:${FilterPetsObject.maxValue.value}"
+
         binding!!.filterText.text = txt
+
+        listPet.clear()
+        ratingViewModel.getRating(0, filterRaing)
     }
 
     override fun selected(tab: BesieTabSelected) {
@@ -391,15 +445,13 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
                 else -> 2
             })
         topRatingPet = null
-        listPet.clear()
-        ratingViewModel.getRating(0)
         updateFilterText()
     }
 
     override fun onClick(pet: UserPets) {
         pet.id?.let {
             ratingViewModel.uiStateTopPets.value = listOf<PetRating>()
-            ratingViewModel.getRatingMyPet(it)
+            ratingViewModel.getRatingMyPet(it, filterRaing)
             clickMyPet = it
             var index = listPetUser.indexOf(pet)
             userPetAdapter.selectPetPosition = index
@@ -467,5 +519,14 @@ class RatingFragment : Fragment(R.layout.fragment_rating), RatingPetAdapter.OnCl
     override fun onSearch() {
 
     }
+
+    data class FilterRating(
+        var sex: String? = null, // MALE, FEMALE
+        var cityId: Int? = null,
+        var countryId: Int? = null,
+        var ageBetween: String = "0:200",
+        var breedId: Int? = null,
+        var type: String? = null
+    )
 
 }

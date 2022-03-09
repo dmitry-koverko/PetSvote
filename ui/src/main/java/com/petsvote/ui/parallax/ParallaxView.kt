@@ -29,10 +29,12 @@ class ParallaxView @JvmOverloads constructor(
 
     private lateinit var viewPagerAdapter: ViewPagerAdapter
 
-    var list = listOf<String>()
+    var list = listOf<String>(
+        "https://sobakainfo.ru/wp-content/uploads/2016/11/1-66.jpg",
+        "https://sobakainfo.ru/wp-content/uploads/2016/11/1-66.jpg")
         set(value) {
             field = value
-            viewPagerAdapter.update(value)
+           //viewPagerAdapter.update(value)
         }
 
     init{

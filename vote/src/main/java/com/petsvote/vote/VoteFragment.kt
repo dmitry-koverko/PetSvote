@@ -37,6 +37,7 @@ class VoteFragment : Fragment(R.layout.fragment_vote), View.OnClickListener {
     private lateinit var binding: FragmentVoteBinding
 
     var lisPets = mutableListOf<Pet>()
+    private var isFirst = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,13 +56,14 @@ class VoteFragment : Fragment(R.layout.fragment_vote), View.OnClickListener {
         lifecycleScope.launchWhenStarted { 
             voteViewModel.uiState.collect { list ->
                 if(!list.isNullOrEmpty()){
-                    binding.voteBar.visibility = View.VISIBLE
-                    binding.progress.visibility = View.GONE
-                    //adapter!!.submitList(list as MutableList<Pet>)
-                    lisPets = list as MutableList<Pet>
-                    nextPet()
+                    lisPets.addAll(list)
+                    if(!isFirst) {
+                        binding.voteBar.visibility = View.VISIBLE
+                        binding.progress.visibility = View.GONE
+                        nextPet()
+                        isFirst = true
+                    }
                 }
-
             }
         }
 
@@ -80,6 +82,7 @@ class VoteFragment : Fragment(R.layout.fragment_vote), View.OnClickListener {
             viewPager = binding.viewPager
             viewPager?.adapter = adapter
         }
+        if(lisPets.size < 6) voteViewModel.getRating()
     }
 
     override fun onClick(p0: View) {

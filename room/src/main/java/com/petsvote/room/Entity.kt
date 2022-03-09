@@ -81,13 +81,23 @@ data class Photo(
 )
 
 @Entity
+data class BreedList(
+    @NotNull
+    @PrimaryKey(autoGenerate = true)
+    var idPet: Int? = 1,
+
+    @TypeConverters(BreedsConverter::class)
+    var breeds: List<Breed> = listOf()
+)
+
+@Entity
 data class Breed(
     @PrimaryKey(autoGenerate = true)
-    val id: Int,
-    val lang: String,
-    val type: String,
-    val id_breed: Int,
-    val title: String
+    var id: Int,
+    var lang: String,
+    var type: String,
+    var id_breed: Int,
+    var title: String
 )
 
 @Entity
