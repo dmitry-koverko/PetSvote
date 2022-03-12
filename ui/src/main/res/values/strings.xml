@@ -38,4 +38,7 @@
     <string name="error_location_rating">Чтобы смотреть рейтинг по городам и странам  заполните ваш профиль.</string>
     <string name="next">Далее</string>
 
+    //DATES
+    <string name="month1">мес.</string>
+
 </resources>

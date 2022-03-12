@@ -20,7 +20,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent">
 
-            <com.petsvote.ui.SFTextView
+            <com.petsvote.ui.SimpleSFTextView
                 android:id="@+id/one"
                 android:textSize="25sp"
                 android:textColor="@color/title_color"
@@ -46,7 +46,7 @@
             app:layout_constraintWidth_percent="0.34"
             android:layout_height="match_parent">
 
-            <com.petsvote.ui.SFTextView
+            <com.petsvote.ui.SimpleSFTextView
                 android:id="@+id/two"
                 android:textSize="25sp"
                 android:textColor="@color/title_color"
@@ -71,7 +71,7 @@
             app:layout_constraintWidth_percent="0.33"
             android:layout_height="match_parent">
 
-            <com.petsvote.ui.SFTextView
+            <com.petsvote.ui.SimpleSFTextView
                 android:id="@+id/three"
                 android:textSize="25sp"
                 android:textColor="@color/title_color"
@@ -103,7 +103,7 @@
             app:layout_constraintWidth_percent="0.33"
             android:layout_height="match_parent">
 
-            <com.petsvote.ui.SFTextView
+            <com.petsvote.ui.SimpleSFTextView
                 android:id="@+id/four"
                 android:textSize="25sp"
                 android:textColor="@color/title_color"
@@ -129,7 +129,7 @@
             app:layout_constraintWidth_percent="0.33"
             android:layout_height="match_parent">
 
-            <com.petsvote.ui.SFTextView
+            <com.petsvote.ui.SimpleSFTextView
                 android:id="@+id/five"
                 android:textSize="25sp"
                 android:textColor="@color/title_color"
@@ -154,7 +154,7 @@
             app:layout_constraintWidth_percent="0.33"
             android:layout_height="match_parent">
 
-            <com.petsvote.ui.SFTextView
+            <com.petsvote.ui.SimpleSFTextView
                 android:id="@+id/six"
                 android:textSize="25sp"
                 android:textColor="@color/title_color"
@@ -185,7 +185,7 @@
             app:layout_constraintWidth_percent="0.33"
             android:layout_height="match_parent">
 
-            <com.petsvote.ui.SFTextView
+            <com.petsvote.ui.SimpleSFTextView
                 android:id="@+id/seven"
                 android:textSize="25sp"
                 android:textColor="@color/title_color"
@@ -211,7 +211,7 @@
             app:layout_constraintWidth_percent="0.33"
             android:layout_height="match_parent">
 
-            <com.petsvote.ui.SFTextView
+            <com.petsvote.ui.SimpleSFTextView
                 android:id="@+id/eight"
                 android:textSize="25sp"
                 android:textColor="@color/title_color"
@@ -236,7 +236,7 @@
             app:layout_constraintWidth_percent="0.33"
             android:layout_height="match_parent">
 
-            <com.petsvote.ui.SFTextView
+            <com.petsvote.ui.SimpleSFTextView
                 android:id="@+id/nine"
                 android:textSize="25sp"
                 android:textColor="@color/title_color"
@@ -274,7 +274,7 @@
             app:layout_constraintWidth_percent="0.33"
             android:layout_height="match_parent">
 
-            <com.petsvote.ui.SFTextView
+            <com.petsvote.ui.SimpleSFTextView
                 android:id="@+id/zero"
                 android:textSize="25sp"
                 android:textColor="@color/title_color"

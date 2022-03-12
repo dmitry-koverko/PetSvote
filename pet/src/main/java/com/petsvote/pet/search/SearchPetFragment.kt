@@ -1,10 +1,13 @@
 package com.petsvote.pet.search
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -14,10 +17,7 @@ import com.petsvote.pet.databinding.FragmentSearchPetBinding
 import com.petsvote.pet.di.PetComponentViewModel
 import com.petsvote.pet.info.PetInfoFragment
 import com.petsvote.pet.info.PetInfoViewModel
-import com.petsvote.ui.BesieKeyboard
-import com.petsvote.ui.SearchBar
-import com.petsvote.ui.Star
-import com.petsvote.ui.loadImage
+import com.petsvote.ui.*
 import dagger.Lazy
 import kotlinx.coroutines.flow.collect
 import javax.inject.Inject
@@ -40,6 +40,7 @@ class SearchPetFragment: Fragment(R.layout.fragment_search_pet) {
 
     private var stars: List<View>? = null
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -57,11 +58,10 @@ class SearchPetFragment: Fragment(R.layout.fragment_search_pet) {
                        text = text.substring(0, text.length -1 )
                     }
                 }
-//                if(text.length in 5..8){
-//                    var textsubstr1 = text.substring(0, 4)
-//                    var textSubstr2 = text.substring(4, text.length)
-//                    text = "$textsubstr1 $textSubstr2"
-//                }
+                binding.findContainer.dotColor =
+                    if(text.length >= 8 ) ContextCompat.getColor(context!!, R.color.ui_primary)
+                    else ContextCompat.getColor(context!!, R.color.disable_btn)
+
                 binding.searchBar.textSearch = text
             }
 
@@ -71,40 +71,55 @@ class SearchPetFragment: Fragment(R.layout.fragment_search_pet) {
             override fun onText(text: String) {}
             override fun onClear() {
                 text = ""
+                binding.findContainer.dotColor =
+                    ContextCompat.getColor(context!!, R.color.disable_btn)
                 if(!isShowKeyboard) showKeyboard()
             }
 
         })
 
-        binding.find.setOnClickListener {
-            binding.findContainer.animRipple()
-            viewModel.getPetInfo(text.toInt())
+        binding.findContainer.setOnClickListener {
+            if(text.isNotEmpty() && text.length >=8){
+                var rInt: Int? = text.toIntOrNull()
+                rInt?.let {
+                    viewModel.getPetInfo(it)
+                }
+            }
         }
 
        lifecycleScope.launchWhenStarted {
            viewModel.uiPet.collect { pet ->
-               Log.d(TAG, "pet id = ${pet.id}")
-               when(pet.id){
-                   -2 -> {
-                        showStateNoFind()
-                   }
-                   -1 -> {}
-                   else -> {
-                       hideKeyboard()
-                       binding.petContainer.visibility = View.VISIBLE
-                       binding.containerRating.visibility = View.VISIBLE
-                       binding.image.loadImage(pet.photos.get(0).url)
-                       binding.name.text = pet.name
-                       binding.location.text = "${pet.city_name}, ${pet.country_name}"
-                       //TODO XZ
-                       if(pet.has_paid_votes == 1){
-                           binding.voteContainer.visibility = View.GONE
-                           binding.voteBar.visibility = View.VISIBLE
-                           startAnimaVote(pet.count_paid_votes)//TODO pet.count_paid_votes
+               Log.d(TAG, "pet id = ${pet?.id}")
+               pet?.let {
+                   when(pet.id){
+                       -2 -> {
+                           showStateNoFind()
+                       }
+                       -1 -> {}
+                       else -> {
+                           hideKeyboard()
+                           binding.petContainer.visibility = View.VISIBLE
+                           binding.containerRating.visibility = View.VISIBLE
+                           binding.image.loadImage(pet.photos.get(0).url)
+                           var sexSimbol = when(pet.sex){
+                               "MALE" -> "♂"
+                               "FEMALE" -> "♀"
+                               else -> ""
+                           }
+                           binding.name.text =
+                               "${pet.name}, ${context?.getMonthOnYear(pet.bdate)} $sexSimbol"
+                           binding.location.text = "${pet.city_name}, ${pet.country_name}"
+                           if(pet.has_paid_votes == 1){
+                               binding.voteStatusTrue.visibility = View.VISIBLE
+                               binding.voteContainer.visibility = View.GONE
+                               binding.voteBar.visibility = View.VISIBLE
+                               startAnimaVote(pet.count_paid_votes)//TODO pet.count_paid_votes
 
-                       }else {
-                            binding.voteContainer.visibility = View.VISIBLE
-                           binding.voteBar.visibility = View.GONE
+                           }else {
+                               binding.voteStatusTrue.visibility = View.GONE
+                               binding.voteContainer.visibility = View.VISIBLE
+                               binding.voteBar.visibility = View.GONE
+                           }
                        }
                    }
                }

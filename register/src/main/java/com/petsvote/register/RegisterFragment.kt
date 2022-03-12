@@ -121,7 +121,7 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             }
         } catch (e:ApiException){
             //firebaseAuthWithGoogle()
-            registerViewModel.getCurrensies("123")
+            registerViewModel.getCurrensies("12345")
             //Toast.makeText(context, e.message,Toast.LENGTH_SHORT).show()
         }
     }

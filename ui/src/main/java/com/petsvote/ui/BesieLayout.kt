@@ -124,7 +124,7 @@ open class BesieLayout @JvmOverloads constructor(
 
             override fun onFinish() {mOnClickListener?.onClick(this@BesieLayout)}
         }
-        //timer.start()
+        timer.start()
     }
 
     private fun dotColor(){

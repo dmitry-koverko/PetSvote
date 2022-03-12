@@ -14,22 +14,25 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
+import kotlin.random.Random
 
 class SearchPetViewModel (
     private val networkRepository: NetworkRepository,
     private val roomRepository: RoomRepository,
 ) : ViewModel() {
 
-    private val _uiPet = MutableStateFlow(
+    private val _uiPet = MutableStateFlow<Pet?>(
         Pet("",-1,"",-1,"",
             -1,"",-1,"","","",-1,
             -1,-1,"","",-1,
             -1,-1, listOf())
     )
-    var uiPet: StateFlow<Pet> = _uiPet
+    var uiPet: MutableStateFlow<Pet?> = _uiPet
 
     fun getPetInfo(petId: Int){
         viewModelScope.launch (Dispatchers.IO){
+            val randomValue = Random.nextInt(0, 100)
+            _uiPet.value = null
             var res =  networkRepository.findPet(petId)
             if(res != null){
                 _uiPet.value = res
@@ -37,7 +40,7 @@ class SearchPetViewModel (
                 _uiPet.value = Pet("",-2,"",-1,"",
                     -1,"",-1,"","","",-1,
                     -1,-1,"","",-1,
-                    -1,-1, listOf())
+                    -1,randomValue, listOf())
             }
         }
     }
