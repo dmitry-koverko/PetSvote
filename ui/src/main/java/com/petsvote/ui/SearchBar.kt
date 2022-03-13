@@ -2,9 +2,11 @@ package com.petsvote.ui
 
 import android.content.Context
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.EditText
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -18,7 +20,8 @@ class SearchBar @JvmOverloads constructor(
     var editable = true
         set(value) {
             field = value
-            edit.isEnabled = value
+            edit.isFocusable = value
+            //edit.inputType =InputType.TYPE_NULL
             edit.setTextColor(ContextCompat.getColor(context, android.R.color.black))
         }
 
@@ -27,6 +30,12 @@ class SearchBar @JvmOverloads constructor(
             field = value
             edit.setText(value)
         }
+
+    var textHint = ""
+        set(value) {
+            field = value
+            edit.hint = value
+        }
     init {
         var inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         inflater.inflate(R.layout.search_bar, this, true)
@@ -34,8 +43,10 @@ class SearchBar @JvmOverloads constructor(
         edit =  findViewById<EditText>(R.id.edit);
         edit.addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                var d= ""
             }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                var d =""
             }
             override fun afterTextChanged(p0: Editable?) {
                 var t = p0.toString()

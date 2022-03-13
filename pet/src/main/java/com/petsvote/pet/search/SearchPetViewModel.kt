@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.petsvote.api.NetworkRepository
+import com.petsvote.api.entity.FindPet
 import com.petsvote.api.entity.Pet
 import com.petsvote.api.entity.PetDatails
 import com.petsvote.api.entity.PetRating
@@ -21,13 +22,13 @@ class SearchPetViewModel (
     private val roomRepository: RoomRepository,
 ) : ViewModel() {
 
-    private val _uiPet = MutableStateFlow<Pet?>(
-        Pet("",-1,"",-1,"",
+    private val _uiPet = MutableStateFlow<FindPet?>(
+        FindPet(Pet("",-1,"",-1,"",
             -1,"",-1,"","","",-1,
             -1,-1,"","",-1,
-            -1,-1, listOf())
+            -1,-1, listOf()), null)
     )
-    var uiPet: MutableStateFlow<Pet?> = _uiPet
+    var uiPet: MutableStateFlow<FindPet?> = _uiPet
 
     fun getPetInfo(petId: Int){
         viewModelScope.launch (Dispatchers.IO){
@@ -37,10 +38,10 @@ class SearchPetViewModel (
             if(res != null){
                 _uiPet.value = res
             }else {
-                _uiPet.value = Pet("",-2,"",-1,"",
+                _uiPet.value = FindPet(Pet("",-2,"",-1,"",
                     -1,"",-1,"","","",-1,
                     -1,-1,"","",-1,
-                    -1,randomValue, listOf())
+                    -1,randomValue, listOf()), null)
             }
         }
     }

@@ -211,13 +211,13 @@ class NetworkRepository(private val context: Context): NReposirory {
         }
     }
 
-    override suspend fun findPet(petId: Int): Pet? {
+    override suspend fun findPet(petId: Int): FindPet? {
         var lang = UserInfo.languge
         var result = api.findPet(lang, petId)
         return when (result) {
             is NetworkResponse.Success -> {
                 Log.d(TAG, result.toString())
-                return result.body.pet
+                return result.body
             }
             else ->{
                 checkError(result as NetworkResponse<Any, Error>)

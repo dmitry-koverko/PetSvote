@@ -1,6 +1,8 @@
 package com.petsvote.ui
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -8,8 +10,11 @@ import android.os.Build
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -62,6 +67,18 @@ fun ImageView.loadImage(bitmap: Bitmap){
         .transition(DrawableTransitionOptions.withCrossFade())
         .skipMemoryCache(true)
         .into(this);
+}
+
+fun Fragment.openUrl(url: String){
+    val openURL = Intent(Intent.ACTION_VIEW)
+    openURL.data = Uri.parse(url)
+    startActivity(openURL)
+}
+
+fun Fragment.sendSupport(){
+    val email = Intent(Intent.ACTION_SEND)
+    email.putExtra(Intent.EXTRA_EMAIL, arrayOf<String>("petsvoteapp@gmail.com"))
+    startActivity(Intent.createChooser(email, "Choose an Email client :"))
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -128,6 +145,20 @@ fun monthsBetweenDates(startDate: Date?, endDate: Date?): Int {
 inline fun <reified T : ViewGroup.LayoutParams> View.layoutParams(block: T.() -> Unit) {
     if (layoutParams is T) block(layoutParams as T)
 }
+
+fun Fragment.hideKeyboard() {
+    view?.let { activity?.hideKeyboard(it) }
+}
+
+fun Activity.hideKeyboard() {
+    hideKeyboard(currentFocus ?: View(this))
+}
+
+fun Context.hideKeyboard(view: View) {
+    val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+}
+
 
 fun View.dpToPx(dp: Float): Int = context.dpToPx(dp)
 fun dpToPx(dp: Float, context: Context): Int = context.dpToPx(dp)

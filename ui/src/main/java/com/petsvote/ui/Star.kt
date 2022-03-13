@@ -33,6 +33,7 @@ class Star @JvmOverloads constructor(
     private var starActiveSize = 0
     private var animator: ValueAnimator? = null
     private var isAmim = false
+    private var isFind = false
 
     private var mOnClickListener: OnClickListener? = null
 
@@ -120,8 +121,10 @@ class Star @JvmOverloads constructor(
             0f, Paint()
         )
         if(starActiveSize >= 100){
-            isAmim = false
-            invalidate()
+            if(!isFind){
+                isAmim = false
+                invalidate()
+            }
         }
     }
 
@@ -149,7 +152,8 @@ class Star @JvmOverloads constructor(
         return bitmap
     }
 
-    fun animRipple() {
+    fun animRipple(isFind: Boolean = false) {
+        this.isFind = isFind
         isAmim = true
         val propertyXLeft: PropertyValuesHolder =
             PropertyValuesHolder.ofFloat("PROPERTY_SIZE", 0f,100f)

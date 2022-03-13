@@ -4,5 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class FindPet(
-    val pet: Pet
+    val pet: Pet,
+    val vote: Int?
 )

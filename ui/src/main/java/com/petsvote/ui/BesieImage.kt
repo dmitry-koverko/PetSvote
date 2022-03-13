@@ -163,6 +163,7 @@ open class BesieImage @JvmOverloads constructor(
     private fun drawRipple(){
         canvas!!.drawCircle(xTouch, yTouth, rippleRadius, pRipple!!);
         if(rippleRadius >= widthView){
+            mOnClickListener?.onClick(this)
             isAmim = false
             invalidate()
         }
@@ -203,7 +204,7 @@ open class BesieImage @JvmOverloads constructor(
                 animRipple()
             }
         }
-        mOnClickListener?.onClick(this)
+
         return true
     }
 

@@ -32,8 +32,8 @@ class PetInfoViewModel (
     fun getPetInfo(petId: Int){
         viewModelScope.launch (Dispatchers.IO){
            var res =  networkRepository.findPet(petId)
-            res?.let {
-                getPetDetails(res.city_id, res.country_id, res.id, res.user_id)
+            res?.pet?.let {
+                getPetDetails(res.pet.city_id, res.pet.country_id, res.pet.id, res.pet.user_id)
                 uiPet.value = it
             }
         }

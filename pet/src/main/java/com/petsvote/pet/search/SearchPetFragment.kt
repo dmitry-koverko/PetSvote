@@ -49,6 +49,8 @@ class SearchPetFragment: Fragment(R.layout.fragment_search_pet) {
         binding.searchBar.editable = false
         stars = listOf(binding.star1, binding.star2, binding.star3, binding.star4, binding.star5)
 
+        binding.searchBar.textHint = "0000 0000"
+
         binding.keyboard.setOnKeyboardListener(object : BesieKeyboard.BesieKeyboardListener{
             override fun click(value: Int) {
                 if(value != -1){
@@ -59,7 +61,7 @@ class SearchPetFragment: Fragment(R.layout.fragment_search_pet) {
                     }
                 }
                 binding.findContainer.dotColor =
-                    if(text.length >= 8 ) ContextCompat.getColor(context!!, R.color.ui_primary)
+                    if(text.length == 8 ) ContextCompat.getColor(context!!, R.color.ui_primary)
                     else ContextCompat.getColor(context!!, R.color.disable_btn)
 
                 binding.searchBar.textSearch = text
@@ -68,9 +70,12 @@ class SearchPetFragment: Fragment(R.layout.fragment_search_pet) {
         })
 
         binding.searchBar.setOnTextSearchBar(object : SearchBar.OnTextSearchBar{
-            override fun onText(text: String) {}
+            override fun onText(txt: String) {
+                text = txt
+            }
             override fun onClear() {
                 text = ""
+                binding.searchBar.textHint = "0000 0000"
                 binding.findContainer.dotColor =
                     ContextCompat.getColor(context!!, R.color.disable_btn)
                 if(!isShowKeyboard) showKeyboard()
@@ -88,9 +93,9 @@ class SearchPetFragment: Fragment(R.layout.fragment_search_pet) {
         }
 
        lifecycleScope.launchWhenStarted {
-           viewModel.uiPet.collect { pet ->
-               Log.d(TAG, "pet id = ${pet?.id}")
-               pet?.let {
+           viewModel.uiPet.collect { findPet ->
+               findPet?.let {
+                   var pet = findPet.pet
                    when(pet.id){
                        -2 -> {
                            showStateNoFind()
@@ -109,11 +114,11 @@ class SearchPetFragment: Fragment(R.layout.fragment_search_pet) {
                            binding.name.text =
                                "${pet.name}, ${context?.getMonthOnYear(pet.bdate)} $sexSimbol"
                            binding.location.text = "${pet.city_name}, ${pet.country_name}"
-                           if(pet.has_paid_votes == 1){
+                           if(findPet.vote != null){
                                binding.voteStatusTrue.visibility = View.VISIBLE
                                binding.voteContainer.visibility = View.GONE
                                binding.voteBar.visibility = View.VISIBLE
-                               startAnimaVote(pet.count_paid_votes)//TODO pet.count_paid_votes
+                               startAnimaVote(findPet.vote!! -1)
 
                            }else {
                                binding.voteStatusTrue.visibility = View.GONE
@@ -154,7 +159,7 @@ class SearchPetFragment: Fragment(R.layout.fragment_search_pet) {
     private fun startAnimaVote(rate: Int){
         for(starIndex in 0..rate){
             (stars?.get(starIndex) as Star).visibility = View.VISIBLE
-            (stars?.get(starIndex) as Star).animRipple()
+            (stars?.get(starIndex) as Star).animRipple(true)
         }
     }
 }

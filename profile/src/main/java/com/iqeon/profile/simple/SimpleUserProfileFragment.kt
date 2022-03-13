@@ -47,6 +47,7 @@ class SimpleUserProfileFragment: Fragment(R.layout.fragment_simple_user_profile)
     private var adapter: MyPetAdapter? = null
     private var petsAdapter = MyPetAdapter(listPets)
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -66,8 +67,10 @@ class SimpleUserProfileFragment: Fragment(R.layout.fragment_simple_user_profile)
             }
         }
 
-        binding.profile.setOnClickListener {
-            settingsDialog.show(childFragmentManager, "TAG")
+        binding.profileContainer.setOnClickListener {
+            try {
+                settingsDialog.show(childFragmentManager, "settingsDialog")
+            }catch (e: Exception){}
         }
 
         viewModel.getUserPets()
