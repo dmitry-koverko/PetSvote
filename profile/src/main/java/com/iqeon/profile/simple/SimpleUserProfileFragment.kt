@@ -21,6 +21,7 @@ import com.petsvote.data.UserInfo
 import com.petsvote.ui.dialogs.InformationPhotoDialog
 import com.petsvote.ui.dialogs.SelectPhotoDialog
 import com.petsvote.ui.navigation.PetNavigation
+import com.petsvote.ui.navigation.UserNavigation
 import dagger.Lazy
 import kotlinx.coroutines.flow.collect
 import me.vponomarenko.injectionmanager.x.XInjectionManager
@@ -69,7 +70,9 @@ class SimpleUserProfileFragment: Fragment(R.layout.fragment_simple_user_profile)
 
         binding.profileContainer.setOnClickListener {
             try {
-                settingsDialog.show(childFragmentManager, "settingsDialog")
+               if(!settingsDialog.isAdded){
+                   settingsDialog.show(childFragmentManager, "settingsDialog")
+               }
             }catch (e: Exception){}
         }
 

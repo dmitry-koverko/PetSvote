@@ -12,6 +12,12 @@ class InformationPhotoDialog: DialogFragment(R.layout.dialog_information_photo) 
 
     private var mInformationPhotoDialog: InformationPhotoDialogListener? = null
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NO_TITLE, R.style.MyDialog)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -35,6 +41,11 @@ class InformationPhotoDialog: DialogFragment(R.layout.dialog_information_photo) 
 
     fun setInformationPhotoDialogListener(listener: InformationPhotoDialogListener){
         mInformationPhotoDialog = listener
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        mInformationPhotoDialog?.apply()
     }
 }
 

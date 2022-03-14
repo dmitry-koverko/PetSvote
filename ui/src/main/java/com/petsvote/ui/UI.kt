@@ -76,9 +76,34 @@ fun Fragment.openUrl(url: String){
 }
 
 fun Fragment.sendSupport(){
-    val email = Intent(Intent.ACTION_SEND)
-    email.putExtra(Intent.EXTRA_EMAIL, arrayOf<String>("petsvoteapp@gmail.com"))
-    startActivity(Intent.createChooser(email, "Choose an Email client :"))
+       val intent = Intent(Intent.ACTION_SENDTO).apply {
+        val mailto = "mailto:petsvoteapp@gmail.com"
+        data = Uri.parse(mailto)
+        putExtra(Intent.EXTRA_SUBJECT, "")
+        putExtra(Intent.EXTRA_TEXT, "")
+    }
+    startActivity(intent)
+}
+
+fun Fragment.ratingApp(){
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+        data = Uri.parse(
+            "https://play.google.com/store/apps/details?id=${this@ratingApp.context?.packageName}")
+        setPackage("com.android.vending")
+    }
+    startActivity(intent)
+}
+
+fun Fragment.shareApp(){
+    val sendIntent: Intent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT,
+            "https://play.google.com/store/apps/details?id=${this@shareApp.context?.packageName}")
+        type = "text/plain"
+    }
+
+    val shareIntent = Intent.createChooser(sendIntent, null)
+    startActivity(shareIntent)
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

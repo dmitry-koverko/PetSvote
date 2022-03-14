@@ -1,17 +1,17 @@
 package com.petsvote.ui.dialogs
 
 import android.Manifest
+import android.animation.PropertyValuesHolder
+import android.animation.ValueAnimator
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.Gravity
@@ -23,20 +23,21 @@ import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.petsvote.data.CropperShared
 import com.petsvote.ui.R
 import com.petsvote.ui.databinding.DialogSelectPhotoBinding
 import com.petsvote.ui.dialogs.adapter.AllPhotosAdapter
 import com.petsvote.ui.entity.LocalPhoto
 import com.petsvote.ui.navigation.CropNavigation
 import com.petsvote.ui.uriToBitmap
-import kotlinx.coroutines.flow.collect
 import me.vponomarenko.injectionmanager.x.XInjectionManager
-import java.io.FileDescriptor
+import java.io.File
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
@@ -52,12 +53,12 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
     var CAMERA_PERMISSION = Manifest.permission.CAMERA
     var READ_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
 
-    private var RC_PERMISSION = 101
     private val REQUEST_ID = 123
     private val PICK_PHOTO_CODE = 1046
     private val CROP_REQUEST = 104
 
     private lateinit var binding: DialogSelectPhotoBinding
+    private var animator: ValueAnimator? = null
 
     private var imageCapture: ImageCapture? = null
 
@@ -65,7 +66,17 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
         XInjectionManager.findComponent<CropNavigation>()
     }
 
+    lateinit var currentPhotoPath: String
+    lateinit var photoURIReq: Uri
+
     private var mSelectPhotoDialogListener: SelectPhotoDialogListener? = null
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NO_TITLE, R.style.MyDialog)
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -79,8 +90,9 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
         }
 
         lifecycleScope.launchWhenStarted {
-            if(checkPermissions()) startCamera() else requestPermissions()
-            if (checkPermissionsRead())  getLocalImages() else requestPermissionsRead()
+            if(checkPermissions()) startCamera()
+            if(checkPermissionsRead())  getLocalImages()
+            if(!checkPermissionsRead() && checkPermissions()) dismiss()
         }
 
 
@@ -89,7 +101,21 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
         binding.viewFinder.setOnClickListener { launchCameraRawPhoto() }
 
         photoAdapter?.setOnSelected(this)
+        startAnimtoTop()
+    }
 
+    private fun startAnimtoTop() {
+        val propertyXLeft: PropertyValuesHolder =
+            PropertyValuesHolder.ofFloat("TRANSITIONY", 500f, 0f)
+
+        animator = ValueAnimator()
+        animator!!.setValues(propertyXLeft)
+        animator!!.setDuration(200)
+        animator!!.addUpdateListener(ValueAnimator.AnimatorUpdateListener { animation ->
+            var pointY = animation.getAnimatedValue("TRANSITIONY") as Float
+            binding.card.translationY = pointY
+        })
+        animator!!.start()
     }
 
     fun setSelectedPhotoCrop(listener: SelectPhotoDialogListener){
@@ -108,14 +134,31 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
     }
 
     fun launchCameraRawPhoto() {
-        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(cameraIntent, REQUEST_ID)
+        val photoFile: File? = try {
+            createImageFile()
+        } catch (ex: IOException) {
+            //TODO rtoast permission
+            null
+        }
+
+        photoFile?.let {
+            photoURIReq = FileProvider.getUriForFile(
+                requireContext(),
+                "com.example.android.fileprovider",
+                photoFile);
+            val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURIReq);
+            startActivityForResult(cameraIntent, REQUEST_ID)
+        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode === Activity.RESULT_OK && data != null && requestCode == REQUEST_ID) {
-            var bitmap = data.extras?.get("data") as Bitmap
-            bitmap?.let { startCrop(it, null) }
+        if (resultCode === Activity.RESULT_OK && requestCode == REQUEST_ID) {
+            //var bitmap = BitmapFactory.decodeFile(currentPhotoPath)
+            BitmapFactory.decodeFile(currentPhotoPath)?.also { bitmap ->
+                startCrop(bitmap, null)//TODO send path
+            }
         }else if (resultCode === Activity.RESULT_OK && data != null && requestCode == PICK_PHOTO_CODE) {
             val photoUri: Uri? = data.data
             photoUri?.let { startCrop(null, it) }
@@ -138,6 +181,7 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
         }
     }
     private fun startCamera() {
+        binding.cardPreview.visibility = View.VISIBLE
         val cameraProviderFuture = context?.let { ProcessCameraProvider.getInstance(it) }
 
         cameraProviderFuture?.addListener(Runnable {
@@ -193,13 +237,6 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
         photoAdapter?.submit(list)
     }
 
-    private fun requestPermissions() {
-        activity?.let { ActivityCompat.requestPermissions(it, arrayOf(CAMERA_PERMISSION), RC_PERMISSION) }
-    }
-
-    private fun requestPermissionsRead() {
-        activity?.let { ActivityCompat.requestPermissions(it, arrayOf(READ_PERMISSION), RC_PERMISSION) }
-    }
 
     private fun checkPermissions(): Boolean {
         return ((activity?.let { ActivityCompat.checkSelfPermission(it, CAMERA_PERMISSION) }) == PackageManager.PERMISSION_GRANTED
@@ -209,32 +246,6 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
     private fun checkPermissionsRead(): Boolean {
         return ((activity?.let { ActivityCompat.checkSelfPermission(it, READ_PERMISSION) }) == PackageManager.PERMISSION_GRANTED
                 && (ActivityCompat.checkSelfPermission(requireActivity(), READ_PERMISSION)) == PackageManager.PERMISSION_GRANTED)
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode) {
-            RC_PERMISSION -> {
-                var allPermissionsGranted = false
-                for (result in grantResults) {
-                    if (result != PackageManager.PERMISSION_GRANTED) {
-                        allPermissionsGranted = false
-                        break
-                    } else {
-                        allPermissionsGranted = true
-                    }
-                }
-                if (!allPermissionsGranted) permissionsNotGranted() else getLocalImages()
-            }
-        }
-    }
-
-    private fun permissionsNotGranted() {
-        AlertDialog.Builder(context).setTitle("Permissions required")
-            .setMessage("These permissions are required to use this app. Please allow Camera and Audio permissions first")
-            .setCancelable(false)
-            .setPositiveButton("Grant") { dialog, which -> requestPermissions() }
-            .show()
     }
 
     override fun onResume() {
@@ -256,5 +267,20 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
 
     override fun select(photo: LocalPhoto) {
         startCrop(photo.bitmap, null)
+    }
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File? = context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        ).apply {
+            // Save a file: path for use with ACTION_VIEW intents
+            currentPhotoPath = absolutePath
+        }
     }
 }

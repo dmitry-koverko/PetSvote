@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewTreeObserver
@@ -21,6 +22,7 @@ import java.io.IOException
 
 class CropImageFragment(private val bitmap: Bitmap?, private val uri: Uri?) : Fragment(R.layout.fragment_crop_image) {
 
+    private var TAG = CropImageFragment::class.java.name
     private var binding: FragmentCropImageBinding? = null
 
     private val navigation: CropNavigation by lazy {
@@ -52,6 +54,7 @@ class CropImageFragment(private val bitmap: Bitmap?, private val uri: Uri?) : Fr
             }
 
             override fun onFailure(e: Exception) {
+                Log.d(TAG, e.message.toString())
             }
         })
 

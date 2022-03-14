@@ -15,6 +15,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.petsvote.ui.databinding.LocalPhotoItemBinding
 import com.petsvote.ui.entity.LocalPhoto
+import com.petsvote.ui.loadImage
 
 
 class AllPhotosAdapter(private var list: MutableList<LocalPhoto>) : RecyclerView.Adapter<AllPhotosAdapter.AllPhotosHolder>() {
@@ -43,7 +44,7 @@ class AllPhotosAdapter(private var list: MutableList<LocalPhoto>) : RecyclerView
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: LocalPhoto, position: Int) {
-            binding.preview.setImageBitmap(item.bitmap)
+            item.bitmap?.let { binding.preview.loadImage(it) }
             binding.preview.setOnClickListener {
                 mOnSelectedItem?.select(item)
             }

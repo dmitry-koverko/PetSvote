@@ -6,13 +6,11 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import androidx.navigation.NavController
+import com.iqeon.profile.UserActivity
 import com.petsvote.pet.PetActivity
-import com.petsvote.ui.navigation.CropNavigation
-import com.petsvote.ui.navigation.PetNavigation
-import com.petsvote.ui.navigation.RegisterNavigation
-import com.petsvote.ui.navigation.TabsNavigation
+import com.petsvote.ui.navigation.*
 
-class Navigator: RegisterNavigation, TabsNavigation, CropNavigation, PetNavigation {
+class Navigator: RegisterNavigation, TabsNavigation, CropNavigation, PetNavigation, UserNavigation {
 
     private var navController: NavController? = null
     override fun closeRegister() {
@@ -86,6 +84,10 @@ class Navigator: RegisterNavigation, TabsNavigation, CropNavigation, PetNavigati
 
     override fun toAddPet(currentActivity: Activity) {
         currentActivity.startActivity(Intent(currentActivity, PetActivity::class.java))
+    }
+
+    override fun startUserProfile(currentActivity: Activity) {
+        currentActivity.startActivity(Intent(currentActivity, UserActivity::class.java))
     }
 
 

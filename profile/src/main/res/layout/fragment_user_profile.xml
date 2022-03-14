@@ -30,7 +30,7 @@
                android:layout_marginRight="16dp"
                android:textColor="@color/bold"
                android:textSize="34sp"
-               android:text="Профиль"
+               android:text="Редактировать"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"/>
 
@@ -59,9 +59,9 @@
                android:layout_marginLeft="16dp"
                android:layout_marginTop="30dp"
                android:layout_marginRight="16dp"
-               android:text="Данные используются для корректного \nотображения рейтинга."
+               android:text="ваша фотография (не обязательно)"
                android:textSize="15sp"
-               android:visibility="gone" />
+               android:visibility="visible" />
 
            <androidx.constraintlayout.widget.ConstraintLayout
                android:id="@+id/cropImage"
@@ -72,19 +72,18 @@
                android:layout_height="96dp">
 
                <com.petsvote.ui.BesieLayout
-                   app:bl_ripple="true"
-                   app:bl_ripple_color="@color/ripple_gray"
-                   app:bl_change_layout="false"
+                   app:bl_background="@color/ui_gray"
                    app:layout_constraintBottom_toBottomOf="parent"
                    app:layout_constraintTop_toTopOf="parent"
                    app:layout_constraintRight_toRightOf="parent"
                    app:layout_constraintLeft_toLeftOf="parent"
-                   app:bl_background="@color/ui_gray"
                    android:id="@+id/bl_avatar"
                    android:layout_width="96dp"
                    android:layout_height="96dp">
 
                    <com.petsvote.ui.BesieImage
+                       app:bi_background_color="@color/ui_gray"
+                       app:bi_ripple_color="@color/ripple_gray"
                        android:id="@+id/avatar"
                        android:scaleType="centerCrop"
                        app:layout_constraintTop_toTopOf="parent"
@@ -97,15 +96,14 @@
                    <ImageView
                        android:visibility="visible"
                        android:id="@+id/icon_photo"
-                       android:padding="32dp"
                        android:scaleType="centerCrop"
                        app:layout_constraintTop_toTopOf="parent"
                        app:layout_constraintBottom_toBottomOf="parent"
                        app:layout_constraintRight_toRightOf="parent"
                        app:layout_constraintLeft_toLeftOf="parent"
                        android:src="@drawable/ic_add_a_photo"
-                       android:layout_width="0dp"
-                       android:layout_height="0dp"/>
+                       android:layout_width="24dp"
+                       android:layout_height="24dp"/>
 
                </com.petsvote.ui.BesieLayout>
            </androidx.constraintlayout.widget.ConstraintLayout>

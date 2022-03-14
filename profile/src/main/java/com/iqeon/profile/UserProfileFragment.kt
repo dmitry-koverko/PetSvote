@@ -2,6 +2,7 @@ package com.iqeon.profile
 
 import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -21,6 +22,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker.checkSelfPermission
 import androidx.fragment.app.viewModels
@@ -48,11 +52,18 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import java.io.*
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 class UserProfileFragment : Fragment(R.layout.fragment_user_profile),
-    SelectPhotoDialog.SelectPhotoDialogListener {
+    SelectPhotoDialog.SelectPhotoDialogListener, InformationPhotoDialogListener {
 
+    private var RC_PERMISSION = 101
+    private var CAM_PERMISSION = 102
+    var CAMERA_PERMISSION = Manifest.permission.CAMERA
+    var READ_PERMISSION = Manifest.permission.READ_EXTERNAL_STORAGE
+    var WRITE_PERMISSION = Manifest.permission.WRITE_EXTERNAL_STORAGE
     private val TAG = UserProfileFragment::class.java.name
 
     private var dialogInfoPhoto = InformationPhotoDialog()
@@ -77,6 +88,7 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile),
         null, null, null, null)
     private var userBitmap: Bitmap? = null
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -173,20 +185,8 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile),
         }
 
         binding.avatar.setOnClickListener {
-            try{
-                if(!dialogSelectPhoto.isAdded)
-                    activity?.supportFragmentManager?.let {
-                        it1 -> dialogSelectPhoto.show(it1, "SelectPhotoDialog") }
-            }catch (e: Exception){}
+            startSelectDialog()
         }
-        binding.iconPhoto.setOnClickListener {
-            try{
-                if(!dialogSelectPhoto.isAdded)
-                    activity?.supportFragmentManager?.let {
-                            it1 -> dialogSelectPhoto.show(it1, "SelectPhotoDialog") }
-            }catch (e: Exception){}
-        }
-
         dialogSelectPhoto.setSelectedPhotoCrop(this)
 
         lifecycleScope.launchWhenResumed {
@@ -200,6 +200,25 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile),
                 }
             }
         }
+
+        if(!checkPermissions() || checkPermissionsRead() || checkPermissionsWrite())
+            requestPermissions()
+
+    }
+
+    fun startSelectDialog(){
+        try{
+            if(UserInfo.getApplyPhotos(requireContext()) == 1) {
+                if(!dialogSelectPhoto.isAdded)
+                    dialogSelectPhoto.show(childFragmentManager, "SelectPhotoDialog")
+            }else {
+                if(!dialogInfoPhoto.isAdded) {
+                    dialogInfoPhoto.show(childFragmentManager, "dialogInfoPhoto")
+                    dialogInfoPhoto.setInformationPhotoDialogListener(this)
+                }
+
+            }
+        }catch (e: Exception){}
     }
 
     fun startSelect(state: Int, countryId: Int = 0){
@@ -245,7 +264,7 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile),
 
         //Convert bitmap to byte array
         val bos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 0 /*ignored for PNG*/, bos)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100 /*ignored for PNG*/, bos)
         val bitMapData = bos.toByteArray()
 
         //write the bytes in file
@@ -264,5 +283,30 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile),
         }
         return file
     }
+
+    override fun apply() {
+        startSelectDialog()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun requestPermissions() {
+                activity?.requestPermissions(arrayOf(CAMERA_PERMISSION, READ_PERMISSION, WRITE_PERMISSION ), 102)
+    }
+
+    private fun checkPermissions(): Boolean {
+        return ((activity?.let { ActivityCompat.checkSelfPermission(it, CAMERA_PERMISSION) }) == PackageManager.PERMISSION_GRANTED
+                && (ActivityCompat.checkSelfPermission(requireActivity(), CAMERA_PERMISSION)) == PackageManager.PERMISSION_GRANTED)
+    }
+
+    private fun checkPermissionsRead(): Boolean {
+        return ((activity?.let { ActivityCompat.checkSelfPermission(it, READ_PERMISSION) }) == PackageManager.PERMISSION_GRANTED
+                && (ActivityCompat.checkSelfPermission(requireActivity(), READ_PERMISSION)) == PackageManager.PERMISSION_GRANTED)
+    }
+
+    private fun checkPermissionsWrite(): Boolean {
+        return ((activity?.let { ActivityCompat.checkSelfPermission(it, WRITE_PERMISSION) }) == PackageManager.PERMISSION_GRANTED
+                && (ActivityCompat.checkSelfPermission(requireActivity(), WRITE_PERMISSION)) == PackageManager.PERMISSION_GRANTED)
+    }
+
 
 }
