@@ -22,13 +22,13 @@ class CropImageActivity : AppCompatActivity() {
 
         var fr: Fragment? = null
         var it = intent
-        var bitmap: Bitmap? = it.getParcelableExtra<Bitmap>("bitmap")
         var uri: Uri? = it.getParcelableExtra<Uri>("uri")
-        bitmap?.let {
-            fr = CropImageFragment(it, null)
-        }
+        var path: String? = it.getStringExtra("path")
         uri?.let {
-            fr = CropImageFragment(null, it)
+            fr = CropImageFragment( it)
+        }
+        path?.let {
+            fr = CropImageFragment( it)
         }
 
         if (savedInstanceState == null) {

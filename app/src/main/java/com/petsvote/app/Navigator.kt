@@ -65,13 +65,18 @@ class Navigator: RegisterNavigation, TabsNavigation, CropNavigation, PetNavigati
         currentActivity.startActivity(intent)
     }
 
-    override fun startCropActivity(currentActivity: Activity, bitmap: Bitmap?, path: Uri?) {
+    override fun startCropActivity(currentActivity: Activity, path: Uri?) {
         var intent = Intent(currentActivity, CropImageActivity::class.java)
-        bitmap?.let {
-            intent.putExtra("bitmap", bitmap);
-        }
         path?.let {
             intent.putExtra("uri", path);
+        }
+        currentActivity.startActivityForResult(intent,104)
+    }
+
+    override fun startCropActivity(currentActivity: Activity, path: String?) {
+        var intent = Intent(currentActivity, CropImageActivity::class.java)
+        path?.let {
+            intent.putExtra("path", path);
         }
         currentActivity.startActivityForResult(intent,104)
     }

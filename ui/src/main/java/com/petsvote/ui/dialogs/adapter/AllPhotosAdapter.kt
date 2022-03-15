@@ -2,6 +2,7 @@ package com.petsvote.ui.dialogs.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.Rational
 import android.util.Size
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.petsvote.ui.databinding.LocalPhotoItemBinding
 import com.petsvote.ui.entity.LocalPhoto
 import com.petsvote.ui.loadImage
+import com.petsvote.ui.uriToBitmap
 
 
 class AllPhotosAdapter(private var list: MutableList<LocalPhoto>) : RecyclerView.Adapter<AllPhotosAdapter.AllPhotosHolder>() {
@@ -44,7 +46,10 @@ class AllPhotosAdapter(private var list: MutableList<LocalPhoto>) : RecyclerView
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: LocalPhoto, position: Int) {
-            item.bitmap?.let { binding.preview.loadImage(it) }
+            var bm: Bitmap? = item.bitmap?.let { binding.root.context.uriToBitmap(it) }
+            bm?.let {
+                binding.preview.loadImage(it)
+            }
             binding.preview.setOnClickListener {
                 mOnSelectedItem?.select(item)
             }

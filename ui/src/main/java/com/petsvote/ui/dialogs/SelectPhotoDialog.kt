@@ -89,12 +89,9 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
             this.adapter = photoAdapter
         }
 
-        lifecycleScope.launchWhenStarted {
-            if(checkPermissions()) startCamera()
-            if(checkPermissionsRead())  getLocalImages()
-            if(!checkPermissionsRead() && checkPermissions()) dismiss()
-        }
-
+        if(checkPermissions()) startCamera()
+        if(checkPermissionsRead())  getLocalImages()
+        if(!checkPermissionsRead() && checkPermissions()) dismiss()
 
         binding.cancel.setOnClickListener { dismiss() }
         binding.allPhotos.setOnClickListener { pickPhoto() }
@@ -155,13 +152,11 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode === Activity.RESULT_OK && requestCode == REQUEST_ID) {
-            //var bitmap = BitmapFactory.decodeFile(currentPhotoPath)
-            BitmapFactory.decodeFile(currentPhotoPath)?.also { bitmap ->
-                startCrop(bitmap, null)//TODO send path
-            }
+            var bm = BitmapFactory.decodeFile(currentPhotoPath)
+            startCrop(currentPhotoPath)
         }else if (resultCode === Activity.RESULT_OK && data != null && requestCode == PICK_PHOTO_CODE) {
             val photoUri: Uri? = data.data
-            photoUri?.let { startCrop(null, it) }
+            photoUri?.let { startCrop(photoUri) }
 
         }else if (resultCode === Activity.RESULT_OK && data != null && requestCode == CROP_REQUEST) {
             var bitmap: Bitmap? = data.getParcelableExtra<Bitmap>("bitmap")
@@ -172,12 +167,15 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
         }
     }
 
-    private fun startCrop(bitmap: Bitmap?, uri: Uri?){
-        bitmap?.let {
-            activity?.let { navigationCrop.startCropActivity(requireActivity(), bitmap, null) }
-        }
+    private fun startCrop(uri: Uri?){
         uri?.let {
-            activity?.let { navigationCrop.startCropActivity(requireActivity(), null, uri) }
+            activity?.let { navigationCrop.startCropActivity(requireActivity(),uri) }
+        }
+    }
+
+    private fun startCrop(uri: String?){
+        uri?.let {
+            activity?.let { navigationCrop.startCropActivity(requireActivity(), uri) }
         }
     }
     private fun startCamera() {
@@ -185,7 +183,6 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
         val cameraProviderFuture = context?.let { ProcessCameraProvider.getInstance(it) }
 
         cameraProviderFuture?.addListener(Runnable {
-
             // Used to bind the lifecycle of cameras to the lifecycle owner
             cameraProvider = cameraProviderFuture.get()
 
@@ -231,7 +228,7 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     id
                 )
-                list.add(LocalPhoto(context?.uriToBitmap(contentUri)))
+                list.add(LocalPhoto(contentUri))
             }
         }
         photoAdapter?.submit(list)
@@ -266,7 +263,7 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
     }
 
     override fun select(photo: LocalPhoto) {
-        startCrop(photo.bitmap, null)
+        startCrop(photo.bitmap)
     }
 
     @Throws(IOException::class)

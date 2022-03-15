@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.util.TypedValue
@@ -13,7 +15,6 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
@@ -123,17 +124,41 @@ fun Context.getMonthOnYear(value: String): String{
             else "${diff /12}"
 }
 
+@RequiresApi(Build.VERSION_CODES.N)
 fun Context.uriToBitmap(selectedFileUri: Uri): Bitmap? {
     try {
         val parcelFileDescriptor = applicationContext?.contentResolver?.openFileDescriptor(selectedFileUri, "r")
         val fileDescriptor: FileDescriptor = parcelFileDescriptor!!.fileDescriptor
         val image = BitmapFactory.decodeFileDescriptor(fileDescriptor)
+        val exif = ExifInterface(fileDescriptor)
+        val orientation =
+            exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
+        var matrix = getMatrix(orientation)
+        val scaleWidth: Float = image.width / 10f  / image.width
+        val scaleHeight: Float = image.height / 10f / image.height
+        matrix.preScale(scaleWidth, scaleHeight)
         parcelFileDescriptor.close()
-        return image
+        return Bitmap.createBitmap(image,0, 0, image.width, image.height, matrix, false)
     } catch (e: IOException) {
         e.printStackTrace()
     }
     return null
+}
+
+fun uriToBitmapCamera(selectedFileUri: Uri): Bitmap? {
+    return BitmapFactory.decodeFile(selectedFileUri.toString())
+}
+
+fun getMatrix(orientation: Int): Matrix{
+    val matrix = Matrix()
+    when (orientation) {
+        ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90F)
+        ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180F)
+        ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270F)
+        else -> {
+        }
+    }
+    return matrix
 }
 
 fun View.margin(left: Float? = null, top: Float? = null, right: Float? = null, bottom: Float? = null) {
