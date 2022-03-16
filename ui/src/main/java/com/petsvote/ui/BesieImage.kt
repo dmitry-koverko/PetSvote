@@ -144,15 +144,15 @@ open class BesieImage @JvmOverloads constructor(
         Log.d("DOTINDICATOR", "heightView =$heightView | radius = $radius")
         path.reset()
         path.moveTo(radius, 0f)
-        path.quadTo(radius /16, radius /16, 0f, radius)
+        path.quadTo(radius /128, radius /128, 0f, radius)
         path.lineTo(0f, heightView - radius)
-        path.quadTo((radius /16).toFloat(), heightView -  (radius /16).toFloat(),
+        path.quadTo((radius /128).toFloat(), heightView -  (radius /128).toFloat(),
             radius, heightView.toFloat())
         path.lineTo(widthView - radius, heightView.toFloat());
-        path.quadTo(widthView - radius/16, heightView - radius/16,
+        path.quadTo(widthView - radius/128, heightView - radius/128,
             widthView.toFloat(), heightView - radius)
         path.lineTo(widthView.toFloat(), radius)
-        path.quadTo(widthView - radius/16, radius/16,
+        path.quadTo(widthView - radius/128, radius/128,
             widthView - radius, 0f);
         path.lineTo(radius, 0f)
 
@@ -214,7 +214,7 @@ open class BesieImage @JvmOverloads constructor(
 
         animator = ValueAnimator()
         animator!!.setValues(propertyXLeft)
-        animator!!.setDuration(400)
+        animator!!.setDuration(200)
         animator!!.addUpdateListener(ValueAnimator.AnimatorUpdateListener { animation ->
             rippleRadius = animation.getAnimatedValue("PROPERTY_RADIUS") as Float
             invalidate()

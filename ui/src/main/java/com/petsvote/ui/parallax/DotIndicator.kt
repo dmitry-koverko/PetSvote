@@ -131,7 +131,7 @@ class DotIndicator @JvmOverloads constructor(
 
         animator = ValueAnimator()
         animator!!.setValues(propertyXLeft)
-        animator!!.setDuration(300)
+        animator!!.setDuration(200)
         animator!!.addUpdateListener(ValueAnimator.AnimatorUpdateListener { animation ->
             rippleRadius = animation.getAnimatedValue("PROPERTY_RADIUS") as Float
             invalidate()

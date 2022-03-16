@@ -5,22 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.petsvote.ui.crop.MyCropLayout
-        android:visibility="gone"
-        android:id="@+id/crop_view"
+    <com.petsvote.ui.CustomImageCropView
+        xmlns:imagecrop="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/cropViewImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cropme_max_scale="3.0"
-        app:cropme_overlay_shape="custom"
-        app:cropme_custom_shape_layout="@layout/op">
-
-    </com.petsvote.ui.crop.MyCropLayout>
-
-    <com.aemerse.cropper.CropImageView
-        android:id="@+id/cropImageView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:visibility="visible"
+        imagecrop:gridInnerColor="#66ffffff"
+        imagecrop:gridInnerStroke="1dp"
+        imagecrop:gridOuterColor="#ffffff"
+        imagecrop:gridOuterStroke="1dp"
+        imagecrop:outsideLayerColor="#99000000"
+        imagecrop:setInnerGridMode="on"
+        imagecrop:setOuterGridMode="on" />
 
     <com.petsvote.ui.SFTextView
         android:clickable="false"

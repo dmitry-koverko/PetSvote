@@ -34,7 +34,7 @@ class SelectCountryViewModel(
 
         viewModelScope.launch (Dispatchers.IO){
             var res = roomRepository.getCounties()
-            if(!res.isNullOrEmpty()) _uiState.value = res
+            if(res != null && !res.isNullOrEmpty()) _uiState.value = res
         }
 
         viewModelScope.launch (Dispatchers.IO){

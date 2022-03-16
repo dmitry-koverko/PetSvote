@@ -7,8 +7,6 @@ import android.view.ViewTreeObserver
 import androidx.recyclerview.widget.RecyclerView
 import com.petsvote.api.entity.PetRating
 import com.petsvote.rating.databinding.ItemMyPatSmallBinding
-import com.petsvote.rating.databinding.ItemMyPetBinding
-import com.petsvote.rating.databinding.ItemPetSearchBinding
 import com.petsvote.rating.databinding.ItemRatingBinding
 import com.petsvote.room.UserPets
 import com.petsvote.ui.loadImage

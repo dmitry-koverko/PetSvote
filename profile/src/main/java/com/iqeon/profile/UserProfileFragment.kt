@@ -38,9 +38,7 @@ import com.petsvote.data.UserInfo
 import com.petsvote.room.City
 import com.petsvote.room.Country
 import com.petsvote.room.Location
-import com.petsvote.ui.dialogs.InformationPhotoDialog
-import com.petsvote.ui.dialogs.InformationPhotoDialogListener
-import com.petsvote.ui.dialogs.SelectPhotoDialog
+import com.petsvote.ui.dialogs.*
 import com.petsvote.ui.loadImage
 import com.petsvote.ui.navigation.CropNavigation
 import com.petsvote.ui.navigation.TabsNavigation
@@ -57,7 +55,9 @@ import java.util.*
 import javax.inject.Inject
 
 class UserProfileFragment : Fragment(R.layout.fragment_user_profile),
-    SelectPhotoDialog.SelectPhotoDialogListener, InformationPhotoDialogListener {
+    SelectPhotoDialog.SelectPhotoDialogListener, InformationPhotoDialogListener,
+    ProfileMoreFragment.ProfileMoreFragmentListener, ExitAccountDialog.ExitAccountDialogListener,
+    RemoveAccountDialog.RemoveAccountDialogListener {
 
     private var RC_PERMISSION = 101
     private var CAM_PERMISSION = 102
@@ -100,36 +100,33 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile),
                 user.first_name?.let { binding.username.setText(it) }
                 user.last_name?.let {binding.lastname.setText(it)}
                 user.avatar?.let {
-                    binding.iconPhoto.visibility = View.GONE
-                    binding.avatar.loadImage(it)
+                    if(it.isNotEmpty()){
+                        binding.iconPhoto.setImageResource(R.drawable.ic_add_a_photo_whte)
+                        binding.avatar.loadImage(it)
+                    }
                 }
                 user.location?.let {
-                    binding.country.text = it.country
-                    binding.city.text = it.city
+                    if(it.country.isNotEmpty()) binding.country.text = it.country
+                    if(it.city.isNotEmpty()) binding.city.text = it.city
                 }
                 userUI = user
 
             }
         }
 
-        binding.countryTitle.setOnClickListener{
-            binding.selectCountry.performClick()
-        }
-        binding.country.setOnClickListener{
-            binding.selectCountry.performClick()
-        }
         binding.selectCountry.setOnClickListener {
-           startSelect(2)
+           it.isPressed = true
+            activity?.let { act -> navigationTabs.startSelectActivity(2, act, 0) }
         }
 
-        binding.cityTitle.setOnClickListener{
-            binding.selectCity.performClick()
-        }
-        binding.city.setOnClickListener{
-            binding.selectCity.performClick()
-        }
+
         binding.selectCity.setOnClickListener {
-            userUI.location?.country_id?.let { it1 -> startSelect(1, it1) }
+            it.isPressed = true
+            var countryId = userUI.location?.country_id
+            if(countryId != null && countryId != 0){
+                activity?.let { act -> navigationTabs.startSelectActivity(1, act, countryId) }
+            }else InformationCountrySelectDialog()
+                    .show(childFragmentManager, "InformationCountrySelectDialog")
         }
 
         binding.username.addTextChangedListener(object: TextWatcher{
@@ -168,6 +165,9 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile),
                    userUI.location?.country_id = value.id
                    userUI?.location?.country = value.title
                    binding.country.text = value.title
+                   userUI.location?.city_id = 0
+                   userUI?.location?.city = ""
+                   updateCityText(null)
                    Log.d(TAG, "location changed = ${value.toString()}")
                }
             }
@@ -175,12 +175,7 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile),
 
         lifecycleScope.launchWhenStarted {
             FilterUserInfo.city.collect { value: City ->
-                if(value != null && value.id != 0){
-                    userUI.location?.city_id = value.id
-                    userUI?.location?.city = value.title
-                    binding.city.text = value.title
-                    Log.d(TAG, "location changed = ${value.toString()}")
-                }
+                updateCityText(value)
             }
         }
 
@@ -195,7 +190,7 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile),
                     userBitmap = bitmap
                     if(dialogSelectPhoto.isAdded) dialogSelectPhoto.dismiss()
                     binding.avatar.loadImage(bitmap)
-                    binding.iconPhoto.visibility = View.GONE
+                    binding.iconPhoto.setImageResource(R.drawable.ic_add_a_photo_whte)
                     Log.d(TAG, "crop bitmap is not null")
                 }
             }
@@ -203,6 +198,27 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile),
 
         if(!checkPermissions() || checkPermissionsRead() || checkPermissionsWrite())
             requestPermissions()
+
+        binding.more.setOnClickListener {
+            showMoreDialog()
+        }
+
+    }
+
+    private fun showMoreDialog() {
+        var modeDialog = ProfileMoreFragment()
+        if(!modeDialog.isAdded){
+            modeDialog.show(childFragmentManager, "ProfileMoreFragment")
+            modeDialog.setProfileMoreFragmentListener(this)
+        }
+    }
+
+    private fun updateCityText(value: City?){
+        if(value != null && value.id != 0){
+            userUI.location?.city_id = value.id
+            userUI?.location?.city = value.title
+            binding.city.text = value.title
+        }else binding.city.text = getString(R.string.city)
 
     }
 
@@ -221,18 +237,16 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile),
         }catch (e: Exception){}
     }
 
-    fun startSelect(state: Int, countryId: Int = 0){
-        object : CountDownTimer(300, 300) {
-            override fun onTick(millisUntilFinished: Long) {}
-            override fun onFinish() {
-                activity?.let { it1 -> navigationTabs.startSelectActivity(state, it1, countryId) }
-            }
-        }.start()
-    }
-
     private fun checkData(){
-        if(userUI.first_name.isNullOrEmpty()) return
-        if(userUI.last_name.isNullOrEmpty()) return
+        if(
+            userUI.first_name.isNullOrEmpty()
+            || userUI?.location?.country?.isEmpty() == true
+            || userUI.location?.city?.isEmpty() == true
+        ) {
+            setSaveDisabled()
+            return
+        }
+        setSaveEnabled()
 
         binding.save.setOnClickListener {
             var ava =
@@ -308,5 +322,38 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile),
                 && (ActivityCompat.checkSelfPermission(requireActivity(), WRITE_PERMISSION)) == PackageManager.PERMISSION_GRANTED)
     }
 
+    private fun setSaveEnabled(){
+        binding.save.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.ui_primary))
+        binding.save.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+    }
+
+    private fun setSaveDisabled(){
+        binding.save.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.disable_btn))
+        binding.save.setTextColor(ContextCompat.getColor(requireContext(), R.color.disable_text_color))
+    }
+
+    override fun delete() {
+        var removeDialog = RemoveAccountDialog()
+        if(!removeDialog.isAdded){
+            removeDialog.setRemoveAccountDialogListener(this)
+            removeDialog.show(childFragmentManager, "RemoveAccountDialog")
+        }
+    }
+
+    override fun exit() {
+        var exitDialog = ExitAccountDialog()
+        if(!exitDialog.isAdded){
+            exitDialog.setExitAccountDialogListener(this)
+            exitDialog.show(childFragmentManager, "ExitAccountDialog")
+        }
+    }
+
+    override fun exitFromAccount() {
+        TODO("Not yet implemented")
+    }
+
+    override fun removeAccount() {
+        TODO("Not yet implemented")
+    }
 
 }

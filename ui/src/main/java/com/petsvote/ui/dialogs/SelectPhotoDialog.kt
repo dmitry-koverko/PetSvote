@@ -89,7 +89,7 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
             this.adapter = photoAdapter
         }
 
-        if(checkPermissions()) startCamera()
+        //if(checkPermissions()) startCamera()
         if(checkPermissionsRead())  getLocalImages()
         if(!checkPermissionsRead() && checkPermissions()) dismiss()
 
@@ -280,4 +280,6 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
             currentPhotoPath = absolutePath
         }
     }
+
+
 }

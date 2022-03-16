@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="register_with_google">Sign in with Google</string>
     <string name="change">change</string>
     <string name="reset">reset</string>
     <string name="termsTitle">Пользовательское соглашение</string>
@@ -32,7 +31,6 @@
     <string name="sex_girl_one">Девочка</string>
     <string name="sex_man_one">Мальчик</string>
     <string name="sex_no">Бесполое</string>
-    <string name="error_sign_in">Ошибка входа в аккаунт</string>
     <string name="world">Мир</string>
     <string name="rating">Рейтинг</string>
     <string name="error_location_rating">Чтобы смотреть рейтинг по городам и странам  заполните ваш профиль.</string>
@@ -40,5 +38,13 @@
 
     //DATES
     <string name="month1">мес.</string>
+    <string name="profile">Профиль</string>
+    <string name="dialog_select_contry">Выбирите сначала вашу страну.</string>
+    <string name="remove">Удалить</string>
+    <string name="exit">Выход</string>
+    <string name="exit_question">Вы уверены, что хотите выйти?</string>
+    <string name="exit2">Выйти</string>
+    <string name="remove_account">Удалить профиль</string>
+    <string name="remove_account_info">Ваш профиль будет удален навсегда без возможности восстановления.</string>
 
 </resources>

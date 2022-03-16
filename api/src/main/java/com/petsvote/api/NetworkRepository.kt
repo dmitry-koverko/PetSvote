@@ -247,7 +247,7 @@ class NetworkRepository(private val context: Context): NReposirory {
     }
 
     override suspend fun getCities(countryId: Int): List<City>? {
-        var result = api.getCities("ru", null, countryId,null, 0)
+        var result = api.getCities(UserInfo.getLanguage(context), null, countryId,null, 0)
         return when (result) {
             is NetworkResponse.Success -> {
                 Log.d(TAG, result.toString())

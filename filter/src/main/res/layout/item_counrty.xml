@@ -8,7 +8,7 @@
     android:paddingBottom="12dp"
     android:layout_height="wrap_content">
 
-    <com.petsvote.ui.SFTextView
+    <com.petsvote.ui.SimpleSFTextView
         android:id="@+id/title"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/check"

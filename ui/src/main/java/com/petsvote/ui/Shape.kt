@@ -206,6 +206,11 @@ open class Shape @JvmOverloads constructor(
         invalidate()
     }
 
+    fun setTextColor(color: Int){
+        paintText!!.setColor(color)
+        invalidate()
+    }
+
     override fun setOnClickListener(l: OnClickListener?) {
         mOnClickListener = l
     }

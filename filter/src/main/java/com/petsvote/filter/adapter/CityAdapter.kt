@@ -3,6 +3,8 @@ package com.petsvote.filter.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.petsvote.api.entity.Breed
 import com.petsvote.api.entity.City
@@ -45,14 +47,13 @@ class CityAdapter(private var list: MutableList<City>) : RecyclerView.Adapter<Ci
         fun bind(item: City, position: Int) {
 
             binding.titile.text = item.title
-            binding.subText.text = item.region
             binding.check.visibility = if(selectedItem == item.id)  View.VISIBLE else View.GONE
-
-            binding.titile.setOnClickListener {
-                mOnSelectedItem?.select(item)
+            if(item.region?.isNotEmpty() == true){
+                binding.subText.visibility = View.VISIBLE
+                binding.subText.text = item.region
             }
 
-            binding.subText.setOnClickListener {
+            binding.root.setOnClickListener {
                 mOnSelectedItem?.select(item)
             }
         }
