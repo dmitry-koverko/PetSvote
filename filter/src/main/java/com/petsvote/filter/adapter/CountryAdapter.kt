@@ -46,6 +46,7 @@ class CountryAdapter(private var list: MutableList<Country>) : RecyclerView.Adap
             binding.check.visibility = if(selectedItem == item.id)  View.VISIBLE else View.GONE
 
             binding.root.setOnClickListener {
+                binding.root.isPressed = true
                 mOnSelectedItem?.select(item)
             }
         }

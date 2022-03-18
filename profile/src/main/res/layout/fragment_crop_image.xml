@@ -19,6 +19,7 @@
         imagecrop:setInnerGridMode="on"
         imagecrop:setOuterGridMode="on" />
 
+
     <com.petsvote.ui.SFTextView
         android:clickable="false"
         app:layout_constraintTop_toTopOf="parent"
@@ -32,12 +33,14 @@
         android:layout_height="wrap_content"/>
 
     <com.petsvote.ui.SFTextView
+        app:layout_constraintHorizontal_weight="0.5"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingLeft="16dp"
         android:id="@+id/cancel"
         android:textSize="20sp"
         android:textColor="@color/white"
@@ -46,12 +49,14 @@
         android:layout_height="wrap_content"/>
 
     <com.petsvote.ui.SFTextView
+        android:paddingLeft="16dp"
+        android:gravity="right"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginRight="16dp"
+        android:paddingRight="16dp"
         android:id="@+id/crop"
         android:textSize="20sp"
         android:textColor="@color/white"

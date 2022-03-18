@@ -225,6 +225,7 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile),
     fun startSelectDialog(){
         try{
             if(UserInfo.getApplyPhotos(requireContext()) == 1) {
+                dialogSelectPhoto = SelectPhotoDialog()
                 if(!dialogSelectPhoto.isAdded)
                     dialogSelectPhoto.show(childFragmentManager, "SelectPhotoDialog")
             }else {

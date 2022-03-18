@@ -4,43 +4,45 @@ import android.Manifest
 import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
 import android.app.Activity
-import android.content.ContentUris
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.hardware.Camera.open
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
-import android.view.Gravity
-import android.view.View
-import android.view.WindowManager
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.Preview
+import android.util.Size
+import android.view.*
+import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.petsvote.ui.R
+import com.petsvote.ui.camera.CameraPreview
 import com.petsvote.ui.databinding.DialogSelectPhotoBinding
 import com.petsvote.ui.dialogs.adapter.AllPhotosAdapter
+import com.petsvote.ui.dialogs.vm.SelectPhotoViewModel
 import com.petsvote.ui.entity.LocalPhoto
 import com.petsvote.ui.navigation.CropNavigation
-import com.petsvote.ui.uriToBitmap
+import kotlinx.android.synthetic.main.preview.*
+import kotlinx.coroutines.flow.collect
 import me.vponomarenko.injectionmanager.x.XInjectionManager
 import java.io.File
 import java.io.IOException
+import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 import java.util.*
 
 
-class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
+class SelectPhotoDialog: BaseDialog(R.layout.dialog_select_photo, true),
     AllPhotosAdapter.OnSelectedItem {
 
     private val TAG = SelectPhotoDialog::class.java.name
@@ -70,7 +72,11 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
     lateinit var photoURIReq: Uri
 
     private var mSelectPhotoDialogListener: SelectPhotoDialogListener? = null
+    private lateinit var viewModel: SelectPhotoViewModel
 
+    private var mCamera: Camera? = null
+    private var mPreview: CameraPreview? = null
+    private val mPicture: android.hardware.Camera.PictureCallback? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,6 +88,7 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
         super.onViewCreated(view, savedInstanceState)
 
         binding = DialogSelectPhotoBinding.bind(view)
+        viewModel = ViewModelProvider(this).get(SelectPhotoViewModel::class.java)
 
         var mLayoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.photosList.apply {
@@ -89,16 +96,23 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
             this.adapter = photoAdapter
         }
 
-        //if(checkPermissions()) startCamera()
-        if(checkPermissionsRead())  getLocalImages()
-        if(!checkPermissionsRead() && checkPermissions()) dismiss()
+
 
         binding.cancel.setOnClickListener { dismiss() }
         binding.allPhotos.setOnClickListener { pickPhoto() }
-        binding.viewFinder.setOnClickListener { launchCameraRawPhoto() }
+        binding.cardPreview.setOnClickListener { launchCameraRawPhoto() }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.localPhotos.collect { list ->
+                if(list.isNotEmpty()) photoAdapter.submit(list)
+            }
+        }
 
         photoAdapter?.setOnSelected(this)
-        startAnimtoTop()
+
+        if(checkPermissionsRead())  getLocalImages()
+        if(checkPermissions()) startCamera()
+        if(!checkPermissionsRead() && checkPermissions()) dismiss()
     }
 
     private fun startAnimtoTop() {
@@ -112,6 +126,7 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
             var pointY = animation.getAnimatedValue("TRANSITIONY") as Float
             binding.card.translationY = pointY
         })
+
         animator!!.start()
     }
 
@@ -186,14 +201,6 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
             // Used to bind the lifecycle of cameras to the lifecycle owner
             cameraProvider = cameraProviderFuture.get()
 
-            // Preview
-            val preview = Preview.Builder()
-                .build()
-                .also {
-                    it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
-                }
-
-            imageCapture = ImageCapture.Builder().build()
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
             try {
@@ -201,37 +208,44 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
                 cameraProvider.unbindAll()
 
                 // Bind use cases to camera
-                cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, imageCapture
-                )
+                val preview = Preview.Builder()
+                    .build()
+                    .also {
+                        it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
+                    }
 
-            } catch (exc: Exception) {
-                Log.e("TAG", "Use case binding failed", exc)
-            }
+                val imageAnalysis = ImageAnalysis.Builder()
+                .setTargetResolution(Size(1280, 720))
+                .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+                .build()
+
+                imageAnalysis.setAnalyzer(ContextCompat.getMainExecutor(requireContext()), ImageAnalysis.Analyzer { imageProxy ->
+                    var bm: Bitmap? = viewFinder.bitmap
+                    binding.imgPreview.setImageBitmap(bm)
+                    imageProxy.close()
+                })
+
+                cameraProvider.bindToLifecycle(
+                    this, cameraSelector, imageAnalysis, preview)
+
+                } catch (exc: Exception) {
+                    Log.e("TAG", "Use case binding failed", exc)
+                }
 
         }, context?.let { ContextCompat.getMainExecutor(it) })
     }
-
     fun getLocalImages(){
-        var list = mutableListOf<LocalPhoto>()
-        context?.contentResolver?.query(
+        photoAdapter.clear()
+        val contentResolver =
+            requireContext().contentResolver
+        var cursor = context?.contentResolver?.query(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
             null,
             null,
             null,
             null
-        )?.use { cursor ->
-            while (cursor.moveToNext()) {
-                val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)
-                val id = cursor.getLong(idColumn)
-                val contentUri: Uri = ContentUris.withAppendedId(
-                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    id
-                )
-                list.add(LocalPhoto(contentUri))
-            }
-        }
-        photoAdapter?.submit(list)
+        )
+        lifecycleScope.launchWhenStarted { viewModel.getLocalImages(cursor, contentResolver) }
     }
 
 
@@ -280,6 +294,13 @@ class SelectPhotoDialog: DialogFragment(R.layout.dialog_select_photo),
             currentPhotoPath = absolutePath
         }
     }
-
+    private fun imageProxyToBitmap(image: ImageProxy): Bitmap? {
+        val planeProxy = image.planes[0]
+        val buffer: ByteBuffer = planeProxy.buffer
+        val bytes = ByteArray(buffer.remaining())
+        buffer.get(bytes)
+        if(bytes.isNotEmpty())return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+        else return null
+    }
 
 }

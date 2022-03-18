@@ -13,13 +13,12 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
-import com.aemerse.cropper.CropImageView
+import androidx.core.content.ContextCompat
 import com.iqeon.profile.databinding.FragmentCropImageBinding
 import com.petsvote.data.CropperShared
+import com.petsvote.ui.*
 import com.petsvote.ui.navigation.CropNavigation
 import com.petsvote.ui.navigation.TabsNavigation
-import com.petsvote.ui.uriToBitmap
-import com.petsvote.ui.uriToBitmapCamera
 import me.vponomarenko.injectionmanager.x.XInjectionManager
 import java.io.FileDescriptor
 import java.io.IOException
@@ -48,38 +47,18 @@ class CropImageFragment(): Fragment(R.layout.fragment_crop_image) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentCropImageBinding.bind(view)
+        //binding?.cropViewImage?.setImageResource(R.drawable.cat2)
         uri?.let {
-            context?.uriToBitmap(it)?.let { it1 -> binding?.cropViewImage?.setImageBitmap(it1) }
+            binding?.cropViewImage?.let { it1 -> uriToBitmapGlide(it, it1) }
+            //context?.uriToBitmap(it)?.let { it1 -> binding?.cropViewImage?.setImageBitmap(it1) }
+            //binding?.cropViewImage?.setImageBitmap(bit)
         }
         path?.let {
             var bm = BitmapFactory.decodeFile(it)
             binding?.cropViewImage?.setImageBitmap(bm)
-            binding?.cropViewImage?.zoomTo(2f, 0f)
+            //binding?.cropViewImage?.zoomTo(2f, 0f)
         }
 
-        //binding?.cropViewImage?.zoomTo(2f, 0f)
-//        binding!!.cancel.setOnClickListener {
-//            binding!!.cancelL.animRipple()
-//        }
-//        binding!!.cancelL.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener{
-//            override fun onGlobalLayout() {
-//                var w = binding!!.cancelL.measuredWidth
-//                var h = binding!!.cancelL.measuredHeight
-//                binding!!.cancelL.setLp(w, h)
-//            }
-//
-//        })
-
-//        binding?.cropView?.addOnCropListener(object : OnCropListener {
-//            override fun onSuccess(bitmap: Bitmap) {
-//                CropperShared.cropBitmap.value = bitmap
-//                activity?.finish()
-//            }
-//
-//            override fun onFailure(e: Exception) {
-//                Log.d(TAG, e.message.toString())
-//            }
-//        })
 
         binding?.crop?.setOnClickListener {
             val cropped: Bitmap? = binding?.cropViewImage?.getCroppedImage()
@@ -89,15 +68,13 @@ class CropImageFragment(): Fragment(R.layout.fragment_crop_image) {
             }
 
         }
-
         binding?.cancel?.setOnClickListener {
             CropperShared.cropBitmap.value = null
             activity?.finish()
         }
-    }
 
-    fun setUri(uri: Uri){
-
+        binding?.crop?.animation = true
+        binding?.cancel?.animation = true
     }
 
 

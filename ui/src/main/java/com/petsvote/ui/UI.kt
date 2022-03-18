@@ -1,24 +1,31 @@
 package com.petsvote.ui
 
 import android.app.Activity
+import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.graphics.drawable.Drawable
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
+import android.os.ParcelFileDescriptor
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
+import androidx.annotation.MainThread
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import java.io.FileDescriptor
 import java.io.IOException
 import java.time.LocalDate
@@ -48,6 +55,28 @@ fun ImageView.loadImageSmall(url: String){
     Glide
         .with(context)
         .load(url)
+        .transition(DrawableTransitionOptions.withCrossFade())
+        .skipMemoryCache(true)
+        .into(this);
+}
+@MainThread
+fun Fragment.uriToBitmapGlide(uri: Uri, view: CustomImageCropView) {
+    Glide.with(this.requireContext()).asBitmap().load(uri).into(object : CustomTarget<Bitmap>() {
+        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+            var h: Int = resources.displayMetrics.heightPixels
+            view.setImageBitmap(resource, h)
+        }
+
+        override fun onLoadCleared(placeholder: Drawable?) {
+        }
+
+    })
+}
+
+fun ImageView.loadImage(uri: Uri){
+    Glide
+        .with(context)
+        .load(uri)
         .transition(DrawableTransitionOptions.withCrossFade())
         .skipMemoryCache(true)
         .into(this);
@@ -124,18 +153,28 @@ fun Context.getMonthOnYear(value: String): String{
             else "${diff /12}"
 }
 
-@RequiresApi(Build.VERSION_CODES.N)
-fun Context.uriToBitmap(selectedFileUri: Uri): Bitmap? {
+fun Context.uriToBitmap(selectedFileUri: Uri, scale: Float = 1f): Bitmap?{
+    return uriToBitmap(selectedFileUri, scale, this.contentResolver)
+}
+
+fun uriToBitmap(
+    selectedFileUri: Uri,
+    scale: Float = 1f,
+    contentResolver: ContentResolver): Bitmap? {
     try {
-        val parcelFileDescriptor = applicationContext?.contentResolver?.openFileDescriptor(selectedFileUri, "r")
+        var parcelFileDescriptor = contentResolver.openFileDescriptor(selectedFileUri, "r")
         val fileDescriptor: FileDescriptor = parcelFileDescriptor!!.fileDescriptor
         val image = BitmapFactory.decodeFileDescriptor(fileDescriptor)
-        val exif = ExifInterface(fileDescriptor)
+        val exif = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            ExifInterface(fileDescriptor)
+        } else {
+            TODO("VERSION.SDK_INT < N")
+        }
         val orientation =
             exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
         var matrix = getMatrix(orientation)
-        val scaleWidth: Float = image.width / 10f  / image.width
-        val scaleHeight: Float = image.height / 10f / image.height
+        val scaleWidth: Float = image.width / scale  / image.width
+        val scaleHeight: Float = image.height / scale / image.height
         matrix.preScale(scaleWidth, scaleHeight)
         parcelFileDescriptor.close()
         return Bitmap.createBitmap(image,0, 0, image.width, image.height, matrix, false)

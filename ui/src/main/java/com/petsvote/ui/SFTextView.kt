@@ -59,6 +59,7 @@ class SFTextView @JvmOverloads constructor(
         if(animation){
             canvas!!.drawCircle(xTouch, yTouth, rippleRadius, pRipple!!);
             if(rippleRadius >= height/2){
+                mOnClickListener?.onClick(this)
                 isAmim = false
                 invalidate()
             }
@@ -86,7 +87,6 @@ class SFTextView @JvmOverloads constructor(
             MotionEvent.ACTION_DOWN -> {}
             MotionEvent.ACTION_MOVE -> {}
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                mOnClickListener?.onClick(this)
                 isAmim = true
                 animRipple()
             }

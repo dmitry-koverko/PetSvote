@@ -1,23 +1,15 @@
 package com.petsvote.ui.dialogs.adapter
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.graphics.Bitmap
-import android.util.Rational
-import android.util.Size
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.camera.core.CameraXConfig
-import androidx.camera.core.ImageCapture
-import androidx.camera.core.Preview
-import androidx.camera.core.impl.PreviewConfig
-import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.petsvote.ui.databinding.LocalPhotoItemBinding
 import com.petsvote.ui.entity.LocalPhoto
-import com.petsvote.ui.loadImage
-import com.petsvote.ui.uriToBitmap
 
 
 class AllPhotosAdapter(private var list: MutableList<LocalPhoto>) : RecyclerView.Adapter<AllPhotosAdapter.AllPhotosHolder>() {
@@ -32,7 +24,17 @@ class AllPhotosAdapter(private var list: MutableList<LocalPhoto>) : RecyclerView
 
     @SuppressLint("NotifyDataSetChanged")
     fun submit(list: List<LocalPhoto>){
-        this.list.addAll(list)
+        this.list = list as MutableList<LocalPhoto>
+        notifyDataSetChanged()
+    }
+
+    fun addNotify(localPhoto: LocalPhoto){
+        list.add(list.size, localPhoto)
+        notifyItemInserted(list.size)
+    }
+
+    fun clear(){
+        list.clear()
     }
 
     override fun onBindViewHolder(holder: AllPhotosHolder, position: Int) {
@@ -44,11 +46,12 @@ class AllPhotosAdapter(private var list: MutableList<LocalPhoto>) : RecyclerView
 
     inner class AllPhotosHolder(private val binding: LocalPhotoItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
         fun bind(item: LocalPhoto, position: Int) {
-            var bm: Bitmap? = item.bitmap?.let { binding.root.context.uriToBitmap(it) }
-            bm?.let {
-                binding.preview.loadImage(it)
+//            item.bitmapObject?.let {
+//                binding.preview.loadImage(it)
+//            }
+            item.bitmap?.let {
+                Glide.with(binding.root.context).load(it).centerCrop().into(binding.preview)
             }
             binding.preview.setOnClickListener {
                 mOnSelectedItem?.select(item)

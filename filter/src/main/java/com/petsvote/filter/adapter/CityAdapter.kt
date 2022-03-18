@@ -54,6 +54,7 @@ class CityAdapter(private var list: MutableList<City>) : RecyclerView.Adapter<Ci
             }
 
             binding.root.setOnClickListener {
+                binding.root.isPressed = true
                 mOnSelectedItem?.select(item)
             }
         }

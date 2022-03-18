@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -90,6 +91,7 @@ public class CustomImageCropView extends androidx.appcompat.widget.AppCompatImag
     private final int GRID_COLUMN_COUNT = 3;
     private Paint mGridInnerLinePaint;
     private Paint mGridOuterLinePaint;
+    private Paint mTransparentPaint;
     private int gridInnerMode;
     private int gridOuterMode;
     private float gridLeftRightMargin;
@@ -134,6 +136,9 @@ public class CustomImageCropView extends androidx.appcompat.widget.AppCompatImag
         mOutsideLayerPaint = new Paint();
         int outsideLayerColor = a.getColor(R.styleable.ImageCropView_outsideLayerColor, Color.parseColor(DEFAULT_OUTSIDE_LAYER_COLOR_ID));
         mOutsideLayerPaint.setColor(outsideLayerColor);
+
+        mTransparentPaint = new Paint();
+        mTransparentPaint.setColor(Color.parseColor("#07FFFFFF"));
 
         setScaleType(ImageView.ScaleType.MATRIX);
 
@@ -223,9 +228,11 @@ public class CustomImageCropView extends androidx.appcompat.widget.AppCompatImag
             int width = (int) ((mThisHeight - (gridTopBottomMargin * 2)) / mTargetAspectRatio);
             int halfDiff = (mThisWidth - width) / 2;
             mCropRect.set(left + halfDiff, top + gridTopBottomMargin, right - halfDiff, bottom - gridTopBottomMargin);
+            //mCropRect.set(left, top, right, bottom);
         } else {
             height = (int) ((mThisWidth - (gridLeftRightMargin * 2)) * mTargetAspectRatio);
             int halfDiff = (mThisHeight - height) / 2;
+            //mCropRect.set(left, top, right, height);
             mCropRect.set(left + gridLeftRightMargin, halfDiff - top, right - gridLeftRightMargin, height + halfDiff);
         }
 
@@ -363,36 +370,61 @@ public class CustomImageCropView extends androidx.appcompat.widget.AppCompatImag
         Rect r = new Rect();
         getLocalVisibleRect(r);
 
-        canvas.drawRect(r.left, r.top, r.right, mCropRect.top, mOutsideLayerPaint);                          // top
-        canvas.drawRect(r.left, mCropRect.bottom, r.right, r.bottom, mOutsideLayerPaint);                    // bottom
-        canvas.drawRect(r.left, mCropRect.top, mCropRect.left, mCropRect.bottom, mOutsideLayerPaint);        // left
-        canvas.drawRect(mCropRect.right, mCropRect.top, r.right, mCropRect.bottom, mOutsideLayerPaint);      // right
+        //canvas.drawRect(r.left, r.top, r.right, r.bottom, mOutsideLayerPaint);                          // top
+//        canvas.drawRect(r.left, mCropRect.bottom, r.right, r.bottom, mOutsideLayerPaint);                    // bottom
+//        canvas.drawRect(r.left, mCropRect.top, mCropRect.left, mCropRect.bottom, mOutsideLayerPaint);        // left
+//        canvas.drawRect(mCropRect.right, mCropRect.top, r.right, mCropRect.bottom, mOutsideLayerPaint);      // right
+        //canvas.drawCircle(getWidth() /2, getHeight() /2, 200, mTransparentPaint);
+//        Path path = new Path();
+//        path.addCircle(getWidth() /2, getHeight() /2, 200, Path.Direction.CCW);
+//        canvas.clipPath(path);
+//        canvas.drawPath(path, mTransparentPaint);
     }
 
     private void drawGrid(Canvas canvas) {
-        int index = 0;
-        for (int i = 0; i < GRID_ROW_COUNT - 1; i++) {
-            mPts[index++] = mCropRect.left;                                                                             //start Xi
-            mPts[index++] = (mCropRect.height() * (((float) i + 1.0f) / (float) GRID_ROW_COUNT)) + mCropRect.top;       //start Yi
-            mPts[index++] = mCropRect.right;                                                                            //stop  Xi
-            mPts[index++] = (mCropRect.height() * (((float) i + 1.0f) / (float) GRID_ROW_COUNT)) + mCropRect.top;       //stop  Yi
-        }
 
-        for (int i = 0; i < GRID_COLUMN_COUNT - 1; i++) {
-            mPts[index++] = (mCropRect.width() * (((float) i + 1.0f) / (float) GRID_COLUMN_COUNT)) + mCropRect.left;    //start Xi
-            mPts[index++] = mCropRect.top;                                                                              //start Yi
-            mPts[index++] = (mCropRect.width() * (((float) i + 1.0f) / (float) GRID_COLUMN_COUNT)) + mCropRect.left;    //stop  Xi
-            mPts[index++] = mCropRect.bottom;                                                                           //stop  Yi
-        }
+//        Path path = new Path();
+//        int radius = getHeight() / 2;
+//        path.moveTo(radius, 0f);
+//        path.quadTo(radius /128, radius /128, 0f, radius);
+//        path.lineTo(0f, getHeight() - radius);
+//        path.quadTo((radius /128), getHeight() -  (radius /128),
+//                radius, getHeight());
+//        path.lineTo(getWidth() - radius, getHeight());
+//        path.quadTo(getWidth() - radius/128, getHeight() - radius/128,
+//                getWidth(), getHeight() - radius);
+//        path.lineTo(getWidth(), radius);
+//        path.quadTo(getWidth() - radius/128, radius/128,
+//                getWidth() - radius, 0f);
+//        path.lineTo(radius, 0f);
+//
+//        //canvas.clipPath(path);
+//        canvas.drawPath(path, mOutsideLayerPaint);
 
-        if (gridInnerMode == GRID_ON) {
-            canvas.drawLines(mPts, mGridInnerLinePaint);
-        }
+        //int index = 0;
+//        for (int i = 0; i < GRID_ROW_COUNT - 1; i++) {
+//            mPts[index++] = mCropRect.left;                                                                             //start Xi
+//            mPts[index++] = (mCropRect.height() * (((float) i + 1.0f) / (float) GRID_ROW_COUNT)) + mCropRect.top;       //start Yi
+//            mPts[index++] = mCropRect.right;                                                                            //stop  Xi
+//            mPts[index++] = (mCropRect.height() * (((float) i + 1.0f) / (float) GRID_ROW_COUNT)) + mCropRect.top;       //stop  Yi
+//        }
+//
+//        for (int i = 0; i < GRID_COLUMN_COUNT - 1; i++) {
+//            mPts[index++] = (mCropRect.width() * (((float) i + 1.0f) / (float) GRID_COLUMN_COUNT)) + mCropRect.left;    //start Xi
+//            mPts[index++] = mCropRect.top;                                                                              //start Yi
+//            mPts[index++] = (mCropRect.width() * (((float) i + 1.0f) / (float) GRID_COLUMN_COUNT)) + mCropRect.left;    //stop  Xi
+//            mPts[index++] = mCropRect.bottom;                                                                           //stop  Yi
+//        }
+//
+//        if (gridInnerMode == GRID_ON) {
+//            canvas.drawLines(mPts, mGridInnerLinePaint);
+//        }
+//
+//        if (gridOuterMode == GRID_ON) {
+//            float halfLineWidth = mGridOuterLinePaint.getStrokeWidth() * 0.5f;
+//            canvas.drawRect(mCropRect.left + halfLineWidth, mCropRect.top + halfLineWidth, mCropRect.right - halfLineWidth, mCropRect.bottom - halfLineWidth, mGridOuterLinePaint);
+//        }
 
-        if (gridOuterMode == GRID_ON) {
-            float halfLineWidth = mGridOuterLinePaint.getStrokeWidth() * 0.5f;
-            canvas.drawRect(mCropRect.left + halfLineWidth, mCropRect.top + halfLineWidth, mCropRect.right - halfLineWidth, mCropRect.bottom - halfLineWidth, mGridOuterLinePaint);
-        }
     }
 
     @Override
@@ -425,7 +457,17 @@ public class CustomImageCropView extends androidx.appcompat.widget.AppCompatImag
 
     @Override
     public void setImageBitmap(final Bitmap bitmap) {
-        float minScale = 1.5f;
+        int w = bitmap.getWidth();
+        float minScale = 1f;
+        float maxScale = 8f;
+        setImageBitmap(bitmap, minScale, maxScale);
+    }
+
+    public void setImageBitmap(final Bitmap bitmap, int heightScreen) {
+        float minScale = 1f;
+        int hView = (int) mCropRect.height();
+        int h = bitmap.getHeight();
+        //if(hView < heightScreen) minScale = heightScreen / hView;
         float maxScale = 8f;
         setImageBitmap(bitmap, minScale, maxScale);
     }
