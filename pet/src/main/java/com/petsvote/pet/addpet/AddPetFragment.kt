@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.DatePicker
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -24,6 +25,7 @@ import com.petsvote.pet.adapter.helper.SimpleItemTouchHelperCallback
 import com.petsvote.pet.databinding.FragmentAddPetBinding
 import com.petsvote.pet.di.PetComponentViewModel
 import com.petsvote.pet.entity.PetPhoto
+import com.petsvote.ui.dialogs.InformationKindDialog
 import com.petsvote.ui.dialogs.SelectPhotoDialog
 import dagger.Lazy
 import kotlinx.coroutines.flow.collect
@@ -37,7 +39,7 @@ import javax.inject.Inject
 
 
 class AddPetFragment: Fragment(R.layout.fragment_add_pet), OnStartDragListener,
-    SelectPhotoDialog.SelectPhotoDialogListener {
+    SelectPhotoDialog.SelectPhotoDialogListener, LoginInstaDialog.LoginInstaDialogListener {
 
     private val TAG = AddPetFragment::class.java.name
 
@@ -46,6 +48,8 @@ class AddPetFragment: Fragment(R.layout.fragment_add_pet), OnStartDragListener,
 
     @Inject
     internal lateinit var addViewModelFactory: Lazy<AddPetViewModel.Factory>
+
+    private lateinit var binding: FragmentAddPetBinding
 
     private val addCViewModel: PetComponentViewModel by viewModels()
     private val viewModel: AddPetViewModel by viewModels {
@@ -67,7 +71,7 @@ class AddPetFragment: Fragment(R.layout.fragment_add_pet), OnStartDragListener,
         val sdf = SimpleDateFormat(myFormat, Locale.getDefault())
         val sdfServer = SimpleDateFormat(serverFormat, Locale.getDefault())
 
-        var binding = FragmentAddPetBinding.bind(view)
+        binding = FragmentAddPetBinding.bind(view)
 
         if(listPhotos.isEmpty()){
             for(i in 0..5){
@@ -97,43 +101,20 @@ class AddPetFragment: Fragment(R.layout.fragment_add_pet), OnStartDragListener,
                 }
             }
         }
-        binding.kids.setOnClickListener {
-            binding.containerKids.isPressed = true
-            binding.containerKids.performClick()
-        }
-
-        binding.kidsText.setOnClickListener {
-            binding.containerKids.isPressed = true
-            binding.containerKids.performClick()
-        }
-
-        binding.breeds.setOnClickListener {
-            binding.containerBreeds.isPressed = true
-            binding.containerBreeds.performClick()
-        }
-        binding.breedsText.setOnClickListener {
-            binding.containerBreeds.isPressed = true
-            binding.containerBreeds.performClick()
-        }
-
-        binding.birthday.setOnClickListener {
-            binding.containerBirthday.isPressed = true
-            binding.containerBirthday.performClick()
-        }
-        binding.birthdayText.setOnClickListener {
-            binding.containerBirthday.isPressed = true
-            binding.containerBirthday.performClick()
-        }
-
         binding.containerKids.setOnClickListener {
+            it.isPressed = true
             var bundle = Bundle()
             bundle.putBoolean("create", true)
-            findNavController().navigate(R.id.action_addPetFragment_to_selectKidsFragment2, bundle) }
+            findNavController().navigate(R.id.action_addPetFragment_to_selectKidsFragment2, bundle)
+        }
 
         binding.containerBreeds.setOnClickListener {
-            var bundle = Bundle()
-            bundle.putBoolean("create", true)
-            findNavController().navigate(R.id.action_addPetFragment_to_selectBreedsFragment2, bundle)
+            it.isPressed = true
+            if(CreatePetInfo.kind.value.id != -1){
+                var bundle = Bundle()
+                bundle.putBoolean("create", true)
+                findNavController().navigate(R.id.action_addPetFragment_to_selectBreedsFragment2, bundle)
+            }else InformationKindDialog().show(childFragmentManager, "InformationKindDialog")
         }
 
         lifecycleScope.launchWhenResumed {
@@ -142,6 +123,7 @@ class AddPetFragment: Fragment(R.layout.fragment_add_pet), OnStartDragListener,
                     binding.kids.alpha = 1f
                     binding.kids.text = it.name
                     binding.kids.setTextColor(resources.getColor(R.color.title_color))
+                    checkTabs()
                 }
             }
         }
@@ -170,16 +152,16 @@ class AddPetFragment: Fragment(R.layout.fragment_add_pet), OnStartDragListener,
             }
         }
 
-        binding.containerBirthday.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(view: View) {
-                DatePickerDialog(requireContext(),
-                    dateSetListener,
-                    cal.get(Calendar.YEAR),
-                    cal.get(Calendar.MONTH),
-                    cal.get(Calendar.DAY_OF_MONTH)).show()
-            }
-
-        })
+        binding.containerBirthday.setOnClickListener {
+            it.isPressed = true
+            DatePickerDialog(
+                requireContext(),
+                dateSetListener,
+                cal.get(Calendar.YEAR),
+                cal.get(Calendar.MONTH),
+                cal.get(Calendar.DAY_OF_MONTH)
+            ).show()
+        }
 
         binding.save.setOnClickListener {
             var listMP = mutableListOf<MultipartBody.Part>()
@@ -188,31 +170,41 @@ class AddPetFragment: Fragment(R.layout.fragment_add_pet), OnStartDragListener,
                 if(listPhotos[i].bitmap != null){
                     listMP.add((buildImageBodyPart("photo_data[${i+1}]",listPhotos[i].bitmap!!)))
                 }
-//                if(i.bitmap != null){
-////                    val randomString = (1..15)
-////                        .map { i -> kotlin.random.Random.nextInt(0, charPool.size) }
-////                        .map(charPool::get)
-////                        .joinToString("");
-//                   // builder.addPart(buildImageBodyPart("photo_data", i.bitmap!!))
-//
-//                }
             }
-            //val requestBody = builder.build()
             viewModel.saveUserPet(listMP)
+        }
+
+        binding.containerInsta.setOnClickListener {
+            var dialogLogin =  LoginInstaDialog()
+            dialogLogin.setLoginInstaDialogListener(this)
+            dialogLogin.show(childFragmentManager, "LoginInstaDialog")
+        }
+
+        lifecycleScope.launchWhenStarted {
+            viewModel.isLoading.collect {
+
+            }
         }
 
         Log.d(TAG, "bearer = ${UserInfo.getBearer(requireContext())}")
     }
 
-    private fun addToLiost(bitmap: Bitmap) {
-        for(i in listPhotos){
-            if(i.bitmap == null) {
-                i.bitmap = bitmap
-                adapter.notifyDataSetChanged()
-                return
-            }
+    private fun checkButton(){
 
+    }
+
+    private fun checkTabs(){
+        when(CreatePetInfo.kind.value.id){
+            4, 6, 9 -> {
+                binding.tabs.coutTabs = 3;
+            }
+            else -> binding.tabs.coutTabs = 2
         }
+        binding.tabs.initTabs()
+    }
+
+    private fun addToLiost(bitmap: Bitmap) {
+        adapter?.addItem(bitmap)
     }
 
     override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
@@ -225,6 +217,10 @@ class AddPetFragment: Fragment(R.layout.fragment_add_pet), OnStartDragListener,
                 activity?.supportFragmentManager?.let {
                         it1 -> dialogSelectPhoto.show(it1, "SelectPhotoDialog") }
         }catch (e: Exception){}
+    }
+
+    override fun onClose(position: Int) {
+       adapter.removeItem(position)
     }
 
     override fun crop(bitmap: Bitmap) {
@@ -267,4 +263,19 @@ class AddPetFragment: Fragment(R.layout.fragment_add_pet), OnStartDragListener,
         super.onAttach(context)
         addCViewModel.petComponent.inject(this)
     }
+
+    private fun setSaveEnabled(){
+        binding.save.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.ui_primary))
+        binding.save.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+    }
+
+    private fun setSaveDisabled(){
+        binding.save.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.disable_btn))
+        binding.save.setTextColor(ContextCompat.getColor(requireContext(), R.color.disable_text_color))
+    }
+
+    override fun setUsername(userId: Long?) {
+        if(userId != null) viewModel.getUserName(userId)
+    }
+
 }

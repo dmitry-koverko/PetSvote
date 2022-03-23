@@ -167,7 +167,6 @@ class SelectPhotoDialog: BaseDialog(R.layout.dialog_select_photo, true),
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode === Activity.RESULT_OK && requestCode == REQUEST_ID) {
-            var bm = BitmapFactory.decodeFile(currentPhotoPath)
             startCrop(currentPhotoPath)
         }else if (resultCode === Activity.RESULT_OK && data != null && requestCode == PICK_PHOTO_CODE) {
             val photoUri: Uri? = data.data

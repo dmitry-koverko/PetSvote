@@ -24,6 +24,7 @@ class BesieTabLayout @JvmOverloads constructor(
 ) : ConstraintLayout(context, attrs) {
 
     private val TAG = BesieTabLayout::class.java.name
+    private lateinit var inflater: LayoutInflater
     var tabWith = 0
         set(value){
             field = value
@@ -32,11 +33,11 @@ class BesieTabLayout @JvmOverloads constructor(
     var animTranslationX = 0f
     private var animator: ValueAnimator? = null
 
-     var tab1: SFTextView
-     var tab2: SFTextView
-     var tab3: SFTextView? = null
+    private lateinit var tab1: SFTextView
+    private lateinit var tab2: SFTextView
+    private var tab3: SFTextView? = null
 
-    private var tabIndicator: BesieLayout
+    private lateinit var tabIndicator: BesieLayout
 
     private var currentTab = R.id.text_city
     private var mBesieTabLayoutSelectedListener: BesieTabLayoutSelectedListener? = null
@@ -62,29 +63,34 @@ class BesieTabLayout @JvmOverloads constructor(
             coutTabs = getInt(R.styleable.BesieTabLayout_btl_count_tabs, 3)
         }
 
-        val inflater =
+        initTabs()
+    }
+
+    fun initTabs(){
+        this.removeAllViews()
+        inflater =
             context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         var root = when(coutTabs){
             3 -> inflater.inflate(R.layout.besie_tab_layout, this, true)
             2 -> inflater.inflate(R.layout.besie_tab_latout_two, this, true)
             else -> inflater.inflate(R.layout.besie_tab_layout, this, true)
         }
+        tab1 = root.findViewById(R.id.text_city)
+        tab2 = root.findViewById(R.id.text_country)
+        tab3 = root.findViewById(R.id.text_world)
+        tabIndicator = root.findViewById(R.id.tab_indicator)
 
         sex_allS = context.getString(R.string.sex_all)
         sex_girlS = context.getString(R.string.sex_girl)
         sex_manS = context.getString(R.string.sex_man)
 
-        tab1 = root.findViewById(R.id.text_city)
-        tab2 = root.findViewById(R.id.text_country)
-        if(coutTabs == 3) tab3 = root.findViewById(R.id.text_world)
-
         tab1.animation = true
         tab2.animation = true
         tab3?.animation = true
 
-        tabIndicator = root.findViewById(R.id.tab_indicator)
 
         if(coutTabs == 2) tab3?.visibility = View.GONE
+        else tab3?.visibility = View.VISIBLE
 
         if(type_tabs == 1){
             tab1.text = sex_allS

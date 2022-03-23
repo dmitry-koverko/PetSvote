@@ -4,7 +4,7 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">#FF2D55</item>
         <item name="colorPrimaryVariant">#FF2D55</item>
-        <item name="colorOnPrimary">@color/ripple_primary</item>
+        <item name="colorOnPrimary">#1AFF2D55</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">#FF2D55</item>
         <item name="colorSecondaryVariant">#FF2D55</item>

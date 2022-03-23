@@ -116,6 +116,8 @@ public class CustomImageCropView extends androidx.appcompat.widget.AppCompatImag
 
     private float[] suppMatrixValues = new float[9];
 
+    private float margin = 0f;
+
     public CustomImageCropView(Context context) {
         this(context, null);
     }
@@ -138,7 +140,9 @@ public class CustomImageCropView extends androidx.appcompat.widget.AppCompatImag
         mOutsideLayerPaint.setColor(outsideLayerColor);
 
         mTransparentPaint = new Paint();
-        mTransparentPaint.setColor(Color.parseColor("#07FFFFFF"));
+        mTransparentPaint.setColor(Color.YELLOW);
+
+        margin = context.getResources().getDisplayMetrics().density * 16;
 
         setScaleType(ImageView.ScaleType.MATRIX);
 
@@ -370,6 +374,31 @@ public class CustomImageCropView extends androidx.appcompat.widget.AppCompatImag
         Rect r = new Rect();
         getLocalVisibleRect(r);
 
+        float bottomB = mCenter.y + mCenter.x - margin;
+        float leftBottomBesieX = margin + mCenter.x / 32;
+        float leftBottomBesieY =  mCenter.y + mCenter.x - margin - mCenter.x / 32;
+        float leftTopBesieY =  mCenter.y - mCenter.x + margin + mCenter.x / 32;
+        float rightTopBesieX = mCenter.x * 2 - margin - mCenter.x / 32;
+
+        Path path = new Path();
+        path.moveTo(0, 0);
+        path.lineTo(0, mThisHeight);
+        path.lineTo(mCenter.x, mThisHeight);
+        path.lineTo(mCenter.x, bottomB);
+        path.quadTo(leftBottomBesieX,leftBottomBesieY, margin, mCenter.y);
+        path.quadTo(leftBottomBesieX,leftTopBesieY, mCenter.x, mCenter.y - mCenter.x + margin);
+        path.lineTo(mCenter.x, 0);
+
+        Path pathRight = new Path();
+        path.moveTo(mCenter.x, 0);
+        path.lineTo(mCenter.x, mCenter.y - mCenter.x + margin);
+        path.quadTo(rightTopBesieX, leftTopBesieY, mCenter.x *2 - margin, mCenter.y);
+        path.quadTo(rightTopBesieX, leftBottomBesieY, mCenter.x, bottomB);
+        path.lineTo(mCenter.x, mThisHeight);
+        path.lineTo(mThisWidth, mThisHeight);
+        path.lineTo(mThisWidth, 0);
+        path.lineTo(mCenter.x, 0);
+
         //canvas.drawRect(r.left, r.top, r.right, r.bottom, mOutsideLayerPaint);                          // top
 //        canvas.drawRect(r.left, mCropRect.bottom, r.right, r.bottom, mOutsideLayerPaint);                    // bottom
 //        canvas.drawRect(r.left, mCropRect.top, mCropRect.left, mCropRect.bottom, mOutsideLayerPaint);        // left
@@ -377,8 +406,11 @@ public class CustomImageCropView extends androidx.appcompat.widget.AppCompatImag
         //canvas.drawCircle(getWidth() /2, getHeight() /2, 200, mTransparentPaint);
 //        Path path = new Path();
 //        path.addCircle(getWidth() /2, getHeight() /2, 200, Path.Direction.CCW);
-//        canvas.clipPath(path);
-//        canvas.drawPath(path, mTransparentPaint);
+        canvas.clipPath(path);
+        canvas.drawPath(path, mOutsideLayerPaint);
+
+        canvas.clipPath(pathRight);
+        canvas.drawPath(pathRight, mOutsideLayerPaint);
     }
 
     private void drawGrid(Canvas canvas) {

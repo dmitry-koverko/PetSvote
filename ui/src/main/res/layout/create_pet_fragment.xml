@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/bar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp">
+
+            <com.petsvote.ui.BesieImage
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                app:bi_background_color="@color/white"
+                app:bi_ripple_color="@color/ripple_primary"
+                android:id="@+id/close"
+                android:padding="8dp"
+                android:src="@drawable/ic_close"
+                android:layout_width="36dp"
+                android:layout_height="36dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.petsvote.ui.SFTextView
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:textColor="@color/bold"
+            android:textSize="34sp"
+            android:text="Мой питомец"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.petsvote.ui.SFTextView
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="12dp"
+            android:textColor="@color/bold"
+            android:textSize="20sp"
+            android:text="Добавьте лучшие фотографии вашего питомца"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+       
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.core.widget.NestedScrollView>

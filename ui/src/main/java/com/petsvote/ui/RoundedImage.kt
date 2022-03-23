@@ -9,7 +9,7 @@ import android.util.AttributeSet
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 
-class RoundedImage @JvmOverloads constructor(
+open class RoundedImage @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : androidx.appcompat.widget.AppCompatImageView(context, attrs) {
 

@@ -1,7 +1,9 @@
 package com.petsvote.pet.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +19,8 @@ import com.petsvote.pet.R;
 import com.petsvote.pet.adapter.helper.ItemTouchHelperAdapter;
 import com.petsvote.pet.adapter.helper.ItemTouchHelperViewHolder;
 import com.petsvote.pet.entity.PetPhoto;
+import com.petsvote.ui.AnimatedRoundedImage;
+import com.petsvote.ui.BesieLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,8 +43,21 @@ public class AddPetPhotoAdapter extends RecyclerView.Adapter<AddPetPhotoAdapter.
         notifyDataSetChanged();
     }
 
-    public void addItem(PetPhoto photo){
-        mItems.add(photo);
+    public void addItem(Bitmap photo){
+        for(PetPhoto i: mItems){
+            if(i.getBitmap() == null) {
+                i.setBitmap(photo);
+                notifyDataSetChanged();
+                return;
+            }
+        }
+    }
+
+    public void removeItem(int position){
+        mItems.remove(position);
+        notifyItemRemoved(position);
+        mItems.add(mItems.size(), new PetPhoto(null));
+        notifyItemInserted(mItems.size() -1);
         notifyDataSetChanged();
     }
 
@@ -53,29 +70,50 @@ public class AddPetPhotoAdapter extends RecyclerView.Adapter<AddPetPhotoAdapter.
 
     @Override
     public void onBindViewHolder(final ItemViewHolder holder, int position) {
+        DisplayMetrics dm = holder.root.getContext().getResources().getDisplayMetrics();
+        int with = dm.widthPixels;
+        int height = dm.heightPixels;
+        float cardHeight = height * 0.21f;
+        float cardWidth = (with - dm.density * 16) / 3;
+
+        ViewGroup.LayoutParams lp = holder.root.getLayoutParams();
+        lp.height = (int) cardHeight;
+        lp.width = (int) cardWidth;
+        holder.root.setLayoutParams(lp);
 
         PetPhoto item = mItems.get(position);
         if(item.getBitmap() != null){
             holder.handleView.setImageBitmap(mItems.get(position).getBitmap());
             holder.add_photo.setVisibility(View.GONE);
+            holder.close.setVisibility(View.VISIBLE);
+        }else {
+            holder.add_photo.setVisibility(View.VISIBLE);
+            holder.close.setVisibility(View.GONE);
+            holder.handleView.setImageBitmap(null);
         }
 
-        holder.root.setOnTouchListener(new View.OnTouchListener() {
+        holder.root.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
-                    mDragStartListener.onStartDrag(holder);
-                }
+            public boolean onLongClick(View view) {
+                if(item.getBitmap() != null) mDragStartListener.onStartDrag(holder);
                 return false;
             }
         });
 
-        holder.root.setOnClickListener(new View.OnClickListener() {
+        holder.handleView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDragStartListener.onClick();
+                if(item.getBitmap() == null)  mDragStartListener.onClick();
             }
         });
+
+        holder.close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDragStartListener.onClose(position);
+            }
+        });
+
     }
 
     @Override
@@ -100,23 +138,25 @@ public class AddPetPhotoAdapter extends RecyclerView.Adapter<AddPetPhotoAdapter.
             ItemTouchHelperViewHolder {
 
         public final TextView textView;
-        public final ImageView handleView;
+        public final AnimatedRoundedImage handleView;
         public final ImageView add_photo;
         public final ConstraintLayout root;
+        public final BesieLayout close;
         public final View select;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
             textView = (TextView) itemView.findViewById(R.id.text);
-            handleView = (ImageView) itemView.findViewById(R.id.pet_photo);
+            handleView = (AnimatedRoundedImage) itemView.findViewById(R.id.pet_photo);
             add_photo = (ImageView) itemView.findViewById(R.id.add_photo);
             root = (ConstraintLayout) itemView.findViewById(R.id.root);
             select = (View) itemView.findViewById(R.id.select);
+            close = (BesieLayout) itemView.findViewById(R.id.close);
         }
 
         @Override
         public void onItemSelected() {
-            select.setAlpha(0.3f);
+            select.setAlpha(0.2f);
         }
 
         @Override

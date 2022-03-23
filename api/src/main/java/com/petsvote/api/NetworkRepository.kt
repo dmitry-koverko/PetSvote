@@ -15,6 +15,21 @@ class NetworkRepository(private val context: Context): NReposirory {
 
     private val TAG = NetworkRepository::class.java.name
     private var api = NetworkService().createService(context)
+    private var apiInstagram = NetworkService().createInstagramService(context)
+    override suspend fun getUsernameById(id: Long): String? {
+        var ua = "Mozilla/5.0 (Linux; Android 8.0.0; SM-A520F Build/R16NW; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/66.0.3359.158 Mobile Safari/537.36 Instagram 46.0.0.15.96 Android (26/8.0.0; 480dpi; 1080x1920; samsung; SM-A520F; a5y17lte; samsungexynos7880; pt_BR; 109556226)"
+        var result = apiInstagram.getUsername(ua,id)
+        return when (result) {
+            is NetworkResponse.Success -> {
+                Log.d(TAG, result.toString())
+                return result.body.user.username
+            }
+            else ->{
+                checkError(result as NetworkResponse<Any, Error>)
+                return null
+            }
+        }
+    }
 
     override suspend fun getTerms(loc: String): Document? {
         var result = api.getTerms(loc)

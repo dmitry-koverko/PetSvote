@@ -138,17 +138,9 @@
                    android:layout_height="wrap_content"/>
 
                <com.google.android.material.textfield.TextInputEditText
-                   android:backgroundTint="@color/et_background_tint"
-                   android:textCursorDrawable="@drawable/cursor"
+                   style="@style/UserFieldInput"
                    android:hint="@string/name"
-                   android:layout_marginLeft="14dp"
-                   android:layout_marginRight="16dp"
-                   android:layout_marginBottom="-6dp"
-                   android:layout_marginTop="-12dp"
-                   android:textSize="20sp"
-                   android:textColor="@color/title_color"
                    android:id="@+id/username"
-                   android:fontFamily="@font/myfont"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"/>
 
@@ -169,16 +161,8 @@
 
                <com.google.android.material.textfield.TextInputEditText
                    android:id="@+id/lastname"
-                   android:backgroundTint="@color/et_background_tint"
-                   android:textCursorDrawable="@drawable/cursor"
                    android:hint="@string/family"
-                   android:layout_marginLeft="14dp"
-                   android:layout_marginRight="16dp"
-                   android:layout_marginBottom="-8dp"
-                   android:layout_marginTop="-12dp"
-                   android:textSize="20sp"
-                   android:textColor="@color/title_color"
-                   android:fontFamily="@font/myfont"
+                   style="@style/UserFieldInput"
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"/>
 

@@ -51,7 +51,7 @@ class RegisterViewModel(
                var listBreeds = mutableListOf<Breed>()
                for(breeds in breedsList){
                    for(breed in breeds.breeds){
-                       var breedRoom = Breed(0, breeds.lang, breeds.type, breed.id, breed.title)
+                       var breedRoom = Breed(0, breeds.lang, breeds.type, breed.id,  breed.title)
                        listBreeds.add(breedRoom)
                    }
                }

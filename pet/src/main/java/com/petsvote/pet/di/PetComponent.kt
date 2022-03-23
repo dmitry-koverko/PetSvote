@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.petsvote.api.NetworkRepository
 import com.petsvote.pet.addpet.AddPetFragment
+import com.petsvote.pet.addpet.LoginInstaDialog
 import com.petsvote.pet.info.PetInfoFragment
 import com.petsvote.pet.search.SearchPetFragment
 import com.petsvote.room.RoomRepository
@@ -23,6 +24,7 @@ interface PetComponent {
     fun inject(addPetFragment: AddPetFragment)
     fun injectInfo(petInfoFragment: PetInfoFragment)
     fun injectSearch(searchPetFragment: SearchPetFragment)
+    fun injectLoginInsta(dialog: LoginInstaDialog)
 
     @Component.Builder
     interface Builder{

@@ -9,6 +9,7 @@ import retrofit2.http.Query
 import kotlin.Error
 
 interface NReposirory {
+    suspend fun getUsernameById(id: Long): String?
     suspend fun getTerms(loc: String): Document?
     suspend fun getPolicy(loc: String): Document?
     suspend fun register(code: String): Register?

@@ -46,5 +46,7 @@
     <string name="exit2">Выйти</string>
     <string name="remove_account">Удалить профиль</string>
     <string name="remove_account_info">Ваш профиль будет удален навсегда без возможности восстановления.</string>
+    <string name="my_pet">Мой питомец</string>
+    <string name="dialog_select_kind">Выбирите сначала вид вашего питомца.</string>
 
 </resources>

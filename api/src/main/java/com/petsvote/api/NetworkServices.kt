@@ -20,23 +20,28 @@ class NetworkService() {
 
     fun createService(context: Context): Api{
         mContext = context
-        return create(Api::class.java)
+        return create(Api::class.java, SettingsApi.BASE_URL)
     }
 
-    private fun <T> create(apiClass: Class<T>): T {
+    fun createInstagramService(context: Context): ApiInstagram{
+        mContext = context
+        return create(ApiInstagram::class.java, SettingsApi.BASE_URL_INSTAGRAM)
+    }
+
+    private fun <T> create(apiClass: Class<T>, url: String): T {
         var token = mContext?.let { UserInfo.getBearer(it) } ?: ""
         val httpClient = if (token.isEmpty()) httpClientBuilder()
         else authHttpClient(token)
-        return retrofitClient(httpClient).create(apiClass)
+        return retrofitClient(httpClient, url).create(apiClass)
     }
 
 
-    private fun retrofitClient(httpClient: OkHttpClient): Retrofit {
+    private fun retrofitClient(httpClient: OkHttpClient, url:String): Retrofit {
 
         val contentType = "application/json".toMediaType()
 
         return Retrofit.Builder().run {
-            baseUrl(SettingsApi.BASE_URL)
+            baseUrl(url)
             client(httpClient)
             addCallAdapterFactory(NetworkResponseAdapterFactory())
             addConverterFactory(Json {
@@ -61,6 +66,14 @@ class NetworkService() {
             override fun verify(p0: String?, p1: SSLSession?): Boolean {
                 val hv = HttpsURLConnection.getDefaultHostnameVerifier()
                 return hv.verify("d.pvapi.site", p1)
+            }
+
+        })
+
+        client.addInterceptor(interceptor).hostnameVerifier(object :HostnameVerifier {
+            override fun verify(p0: String?, p1: SSLSession?): Boolean {
+                val hv = HttpsURLConnection.getDefaultHostnameVerifier()
+                return hv.verify("i.instagram.com", p1)
             }
 
         })
@@ -95,6 +108,14 @@ class NetworkService() {
             override fun verify(p0: String?, p1: SSLSession?): Boolean {
                 val hv = HttpsURLConnection.getDefaultHostnameVerifier()
                 return hv.verify("d.pvapi.site", p1)
+            }
+
+        })
+
+        client.addInterceptor(interceptor).hostnameVerifier(object :HostnameVerifier {
+            override fun verify(p0: String?, p1: SSLSession?): Boolean {
+                val hv = HttpsURLConnection.getDefaultHostnameVerifier()
+                return hv.verify("i.instagram.com", p1)
             }
 
         })

@@ -60,6 +60,14 @@ class SelectKidsFragment: Fragment(R.layout.fragment_select_kinds), KindsAdapter
             if(isCreatePet){
                 for(i in listKinds)
                     i.select = false
+                lifecycleScope.launchWhenStarted {
+                    CreatePetInfo.kind.collect { kind ->
+                        if(kind.id != -1){
+                            listKinds.find { it.id == kind.id}?.select = true
+                            kindsAdapter.notifyDataSetChanged()
+                        }
+                    }
+                }
             }
         }
 
@@ -75,7 +83,10 @@ class SelectKidsFragment: Fragment(R.layout.fragment_select_kinds), KindsAdapter
                 FilterPetsObject._breed.value = FilterBreed(0, "")
                 findNavController().popBackStack()
             }else {
-                CreatePetInfo.kind.value = listKinds.filter { it.select }.first()
+                if(listKinds.isNotEmpty()){
+                    var listSelect = listKinds.filter { it.select }
+                    if(listSelect.isNotEmpty()) CreatePetInfo.kind.value = listSelect.first()
+                }
                 findNavController().popBackStack()
             }
         }

@@ -41,7 +41,7 @@ class BreedsAdapter(private var list: MutableList<Breed>) : RecyclerView.Adapter
         fun bind(item: Breed, position: Int) {
 
             binding.title.text = "${item.title}"
-            binding.title.setOnClickListener {
+            binding.root.setOnClickListener {
                 binding.check.visibility = View.VISIBLE
                 mOnSelectedItem?.select(item)
             }

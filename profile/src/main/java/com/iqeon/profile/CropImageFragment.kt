@@ -20,6 +20,7 @@ import com.petsvote.ui.*
 import com.petsvote.ui.navigation.CropNavigation
 import com.petsvote.ui.navigation.TabsNavigation
 import me.vponomarenko.injectionmanager.x.XInjectionManager
+import java.io.File
 import java.io.FileDescriptor
 import java.io.IOException
 
@@ -50,13 +51,13 @@ class CropImageFragment(): Fragment(R.layout.fragment_crop_image) {
         //binding?.cropViewImage?.setImageResource(R.drawable.cat2)
         uri?.let {
             binding?.cropViewImage?.let { it1 -> uriToBitmapGlide(it, it1) }
-            //context?.uriToBitmap(it)?.let { it1 -> binding?.cropViewImage?.setImageBitmap(it1) }
-            //binding?.cropViewImage?.setImageBitmap(bit)
         }
         path?.let {
-            var bm = BitmapFactory.decodeFile(it)
-            binding?.cropViewImage?.setImageBitmap(bm)
-            //binding?.cropViewImage?.zoomTo(2f, 0f)
+            val contentResolver =
+                requireContext().contentResolver
+            var bt= uriToBitmap(Uri.fromFile( File(it)), 1f, contentResolver)
+            //var bm = BitmapFactory.decodeFile(it)
+            binding?.cropViewImage?.setImageBitmap(bt)
         }
 
 

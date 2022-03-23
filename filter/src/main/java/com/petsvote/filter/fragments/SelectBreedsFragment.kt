@@ -79,7 +79,7 @@ class SelectBreedsFragment: Fragment(R.layout.fragment_select_beeds), BreedsAdap
         var bundle = arguments
         bundle?.let {
             isCreatePet = it.getBoolean("create", false)
-            binding.linBreedsAll.visibility = View.GONE
+            binding.breedsContainer.visibility = View.GONE
         }
 
         var lang = UserInfo.getLanguage(requireContext())
@@ -88,7 +88,9 @@ class SelectBreedsFragment: Fragment(R.layout.fragment_select_beeds), BreedsAdap
         lifecycleScope.launchWhenStarted {
             selectBreedsViewModel.uiState.collect { uiState ->
                 if(uiState.isNotEmpty()){
-                    listKinds.addAll(uiState as MutableList<Breed>)
+                    listKinds.clear()
+                    if(!isCreatePet) listKinds.addAll(uiState as MutableList<Breed>)
+                    else listKinds.addAll(uiState.filter { it.id > 0 } as MutableList<Breed>)
                     breedsAdapter.notifyDataSetChanged()
 
                     binding.progress.visibility = View.GONE
@@ -118,18 +120,30 @@ class SelectBreedsFragment: Fragment(R.layout.fragment_select_beeds), BreedsAdap
 
         binding.searchBar.setOnTextSearchBar(this)
 
-        lifecycleScope.launchWhenResumed {
-            getBreed()
-        }
-
-        lifecycleScope.launchWhenStarted {
-            FilterPetsObject.listKinds.collect { list ->
-                if(list.size == 1){
-                    selectBreedsViewModel.getBreeds(lang, list.first().type)
-                }
+        if(!isCreatePet){
+            lifecycleScope.launchWhenResumed {
+                getBreed()
             }
 
+            lifecycleScope.launchWhenStarted {
+                FilterPetsObject.listKinds.collect { list ->
+                    if(list.size == 1){
+                        selectBreedsViewModel.getBreeds(lang, list.first().type)
+                    }
+                }
+            }
+        }else{
+            lifecycleScope.launchWhenStarted {
+                CreatePetInfo.kind.collect {
+                    if(it.id != -1){
+                        if(CreatePetInfo.breed.value.id != -1)
+                            breedsAdapter.setSelectedId(CreatePetInfo.breed.value.id)
+                        selectBreedsViewModel.getBreeds(lang, it.type)
+                    }
+                }
+            }
         }
+
     }
 
     private suspend fun getBreed() {
