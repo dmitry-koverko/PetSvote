@@ -5,7 +5,9 @@ import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import com.petsvote.ui.R
 
-open class BaseDialog(private val resId: Int,private val isMath: Boolean = false): DialogFragment(resId) {
+open class BaseDialog(private val resId: Int, private val isMath: Boolean = false): DialogFragment(resId) {
+
+    //abstract val TAG: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

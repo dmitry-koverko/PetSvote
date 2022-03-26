@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat android:id="@+id/root"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.petsvote.ui.SimpleSFTextView
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="28dp"
+        android:text="не обязательно"
+        android:textColor="@color/sub_text_color"
+        android:textSize="15sp" />
+
+    <ProgressBar
+        android:visibility="gone"
+        android:id="@+id/gpInstaProgress"
+        android:layout_marginTop="2dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <com.petsvote.ui.SimpleSFTextView
+        android:id="@+id/connectInstagram"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:text="Instagram питомца"
+        android:textColor="@color/sub_text_color"
+        android:textSize="20sp" />
+
+    <FrameLayout
+        android:visibility="gone"
+        android:id="@+id/gpInstaUsernameContainer"
+        android:layout_marginTop="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.petsvote.ui.SimpleSFTextView
+            android:id="@+id/gpInstaUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            tools:text="Eshka007"
+            android:textColor="@color/title_color"
+            android:textSize="20sp" />
+
+        <com.petsvote.ui.SimpleSFTextView
+            android:layout_marginRight="16dp"
+            android:id="@+id/gpInstaDisconnect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginLeft="16dp"
+            android:text="Отключить"
+            android:textColor="@color/sub_text_color"
+            android:textSize="15sp" />
+
+    </FrameLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

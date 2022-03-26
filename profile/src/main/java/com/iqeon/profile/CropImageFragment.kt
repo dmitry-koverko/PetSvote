@@ -48,6 +48,7 @@ class CropImageFragment(): Fragment(R.layout.fragment_crop_image) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentCropImageBinding.bind(view)
+        binding?.cropViewImage?.setCropperType(1)
         //binding?.cropViewImage?.setImageResource(R.drawable.cat2)
         uri?.let {
             binding?.cropViewImage?.let { it1 -> uriToBitmapGlide(it, it1) }

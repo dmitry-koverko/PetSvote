@@ -83,11 +83,7 @@ class SelectKidsFragment: Fragment(R.layout.fragment_select_kinds), KindsAdapter
                 FilterPetsObject._breed.value = FilterBreed(0, "")
                 findNavController().popBackStack()
             }else {
-                if(listKinds.isNotEmpty()){
-                    var listSelect = listKinds.filter { it.select }
-                    if(listSelect.isNotEmpty()) CreatePetInfo.kind.value = listSelect.first()
-                }
-                findNavController().popBackStack()
+                createdBack()
             }
         }
 
@@ -112,6 +108,14 @@ class SelectKidsFragment: Fragment(R.layout.fragment_select_kinds), KindsAdapter
             if(!isCreatePet) getListKinds()
         }
 
+    }
+
+    private fun createdBack() {
+        if(listKinds.isNotEmpty()){
+            var listSelect = listKinds.filter { it.select }
+            if(listSelect.isNotEmpty()) CreatePetInfo.kind.value = listSelect.first()
+        }
+        findNavController().popBackStack()
     }
 
     private suspend fun getListKinds() {
@@ -145,6 +149,7 @@ class SelectKidsFragment: Fragment(R.layout.fragment_select_kinds), KindsAdapter
                    else -> false
                }
            isAll = binding.rbtn.isChecked
+
        }else {
             for(i in listKinds){
                 i.select = false

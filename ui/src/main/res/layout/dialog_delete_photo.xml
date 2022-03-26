@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:background="@android:color/transparent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.cardview.widget.CardView
+        android:translationY="400dp"
+        android:id="@+id/card"
+        android:layout_gravity="bottom"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:orientation="vertical"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.petsvote.ui.SimpleSFTextView
+                android:id="@+id/delete_photo"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textColor="@color/ui_primary"
+                android:text="@string/delete_photo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <com.petsvote.ui.SimpleSFTextView
+                android:layout_marginTop="44dp"
+                android:id="@+id/cancel"
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textColor="@color/ui_primary"
+                android:text="@string/cancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>

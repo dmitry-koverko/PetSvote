@@ -37,6 +37,8 @@ class LoginInstaDialog: BaseDialog(R.layout.dialog_login_insta) {
         var wvClient = object : WebViewClient(){
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
+                binding.webView.visibility = View.GONE
+                binding.progress.visibility = View.VISIBLE
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
@@ -58,13 +60,15 @@ class LoginInstaDialog: BaseDialog(R.layout.dialog_login_insta) {
                     dismiss()
                     return
                 }
+                binding.webView.visibility = View.VISIBLE
+                binding.progress.visibility = View.GONE
                 super.onPageFinished(view, url)
             }
         }
 
 
         binding.webView.webViewClient = wvClient
-        binding.webView.loadUrl("https://www.instagram.com/petsvote.app/")
+        binding.webView.loadUrl("https://instagram.com/accounts/login/")
     }
 
     fun setLoginInstaDialogListener(listener: LoginInstaDialogListener){

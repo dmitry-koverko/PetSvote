@@ -19,6 +19,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import androidx.annotation.MainThread
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
@@ -33,8 +35,24 @@ import java.time.Period
 import java.time.format.DateTimeFormatter
 import java.util.*
 
+fun View.hide(){
+    this.visibility = View.GONE
+}
+fun View.show(){
+    this.visibility = View.VISIBLE
+}
 
-fun ImageView.loadImage(url: String){
+fun Shape.stateDisabled() {
+    this.setBackgroundColor(ContextCompat.getColor(context, R.color.disable_btn))
+    this.setTextColor(ContextCompat.getColor(context, R.color.disable_text_color))
+}
+
+fun Shape.stateEnabled() {
+    this.setBackgroundColor(ContextCompat.getColor(context, R.color.ui_primary))
+    this.setTextColor(ContextCompat.getColor(context, R.color.white))
+}
+
+fun ImageView.loadImage(url: String) {
 
     val circularProgressDrawable = CircularProgressDrawable(this.context)
     circularProgressDrawable.strokeWidth = 5f
@@ -51,7 +69,7 @@ fun ImageView.loadImage(url: String){
         .into(this);
 }
 
-fun ImageView.loadImageSmall(url: String){
+fun ImageView.loadImageSmall(url: String) {
     Glide
         .with(context)
         .load(url)
@@ -59,6 +77,7 @@ fun ImageView.loadImageSmall(url: String){
         .skipMemoryCache(true)
         .into(this);
 }
+
 @MainThread
 fun Fragment.uriToBitmapGlide(uri: Uri, view: CustomImageCropView) {
     Glide.with(this.requireContext()).asBitmap().load(uri).into(object : CustomTarget<Bitmap>() {
@@ -73,7 +92,7 @@ fun Fragment.uriToBitmapGlide(uri: Uri, view: CustomImageCropView) {
     })
 }
 
-fun ImageView.loadImage(uri: Uri){
+fun ImageView.loadImage(uri: Uri) {
     Glide
         .with(context)
         .load(uri)
@@ -82,7 +101,7 @@ fun ImageView.loadImage(uri: Uri){
         .into(this);
 }
 
-fun ImageView.loadImage(bitmap: Bitmap){
+fun ImageView.loadImage(bitmap: Bitmap) {
 
     val circularProgressDrawable = CircularProgressDrawable(this.context)
     circularProgressDrawable.strokeWidth = 5f
@@ -99,14 +118,14 @@ fun ImageView.loadImage(bitmap: Bitmap){
         .into(this);
 }
 
-fun Fragment.openUrl(url: String){
+fun Fragment.openUrl(url: String) {
     val openURL = Intent(Intent.ACTION_VIEW)
     openURL.data = Uri.parse(url)
     startActivity(openURL)
 }
 
-fun Fragment.sendSupport(){
-       val intent = Intent(Intent.ACTION_SENDTO).apply {
+fun Fragment.sendSupport() {
+    val intent = Intent(Intent.ACTION_SENDTO).apply {
         val mailto = "mailto:petsvoteapp@gmail.com"
         data = Uri.parse(mailto)
         putExtra(Intent.EXTRA_SUBJECT, "")
@@ -115,20 +134,23 @@ fun Fragment.sendSupport(){
     startActivity(intent)
 }
 
-fun Fragment.ratingApp(){
+fun Fragment.ratingApp() {
     val intent = Intent(Intent.ACTION_VIEW).apply {
         data = Uri.parse(
-            "https://play.google.com/store/apps/details?id=${this@ratingApp.context?.packageName}")
+            "https://play.google.com/store/apps/details?id=${this@ratingApp.context?.packageName}"
+        )
         setPackage("com.android.vending")
     }
     startActivity(intent)
 }
 
-fun Fragment.shareApp(){
+fun Fragment.shareApp() {
     val sendIntent: Intent = Intent().apply {
         action = Intent.ACTION_SEND
-        putExtra(Intent.EXTRA_TEXT,
-            "https://play.google.com/store/apps/details?id=${this@shareApp.context?.packageName}")
+        putExtra(
+            Intent.EXTRA_TEXT,
+            "https://play.google.com/store/apps/details?id=${this@shareApp.context?.packageName}"
+        )
         type = "text/plain"
     }
 
@@ -137,7 +159,7 @@ fun Fragment.shareApp(){
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-fun Context.getMonthOnYear(value: String): String{
+fun Context.getMonthOnYear(value: String): String {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     var convertedDate = LocalDate.parse(value, formatter)
     var dateNow = LocalDate.now()
@@ -149,18 +171,19 @@ fun Context.getMonthOnYear(value: String): String{
 
     val p: Period = Period.between(convertedDate, dateNow)
     var diff = p.years * 12 + p.months
-    return  if(diff < 12) "$diff ${this.getString(R.string.month1)}"
-            else "${diff /12}"
+    return if (diff < 12) "$diff ${this.getString(R.string.month1)}"
+    else "${diff / 12}"
 }
 
-fun Context.uriToBitmap(selectedFileUri: Uri, scale: Float = 1f): Bitmap?{
+fun Context.uriToBitmap(selectedFileUri: Uri, scale: Float = 1f): Bitmap? {
     return uriToBitmap(selectedFileUri, scale, this.contentResolver)
 }
 
 fun uriToBitmap(
     selectedFileUri: Uri,
     scale: Float = 1f,
-    contentResolver: ContentResolver): Bitmap? {
+    contentResolver: ContentResolver
+): Bitmap? {
     try {
         var parcelFileDescriptor = contentResolver.openFileDescriptor(selectedFileUri, "r")
         val fileDescriptor: FileDescriptor = parcelFileDescriptor!!.fileDescriptor
@@ -173,11 +196,11 @@ fun uriToBitmap(
         val orientation =
             exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED)
         var matrix = getMatrix(orientation)
-        val scaleWidth: Float = image.width / scale  / image.width
+        val scaleWidth: Float = image.width / scale / image.width
         val scaleHeight: Float = image.height / scale / image.height
         matrix.preScale(scaleWidth, scaleHeight)
         parcelFileDescriptor.close()
-        return Bitmap.createBitmap(image,0, 0, image.width, image.height, matrix, false)
+        return Bitmap.createBitmap(image, 0, 0, image.width, image.height, matrix, false)
     } catch (e: IOException) {
         e.printStackTrace()
     }
@@ -188,7 +211,7 @@ fun uriToBitmapCamera(selectedFileUri: Uri): Bitmap? {
     return BitmapFactory.decodeFile(selectedFileUri.toString())
 }
 
-fun getMatrix(orientation: Int): Matrix{
+fun getMatrix(orientation: Int): Matrix {
     val matrix = Matrix()
     when (orientation) {
         ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90F)
@@ -200,7 +223,12 @@ fun getMatrix(orientation: Int): Matrix{
     return matrix
 }
 
-fun View.margin(left: Float? = null, top: Float? = null, right: Float? = null, bottom: Float? = null) {
+fun View.margin(
+    left: Float? = null,
+    top: Float? = null,
+    right: Float? = null,
+    bottom: Float? = null
+) {
     layoutParams<ViewGroup.MarginLayoutParams> {
         left?.run { leftMargin = dpToPx(this) }
         top?.run { topMargin = dpToPx(this) }
@@ -251,4 +279,6 @@ fun Context.hideKeyboard(view: View) {
 
 fun View.dpToPx(dp: Float): Int = context.dpToPx(dp)
 fun dpToPx(dp: Float, context: Context): Int = context.dpToPx(dp)
-fun Context.dpToPx(dp: Float): Int = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics).toInt()
+fun Context.dpToPx(dp: Float): Int =
+    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, resources.displayMetrics).toInt()
+

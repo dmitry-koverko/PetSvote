@@ -92,6 +92,7 @@ public class CustomImageCropView extends androidx.appcompat.widget.AppCompatImag
     private Paint mGridInnerLinePaint;
     private Paint mGridOuterLinePaint;
     private Paint mTransparentPaint;
+    private Paint mPaintYellow;
     private int gridInnerMode;
     private int gridOuterMode;
     private float gridLeftRightMargin;
@@ -118,6 +119,9 @@ public class CustomImageCropView extends androidx.appcompat.widget.AppCompatImag
 
     private float margin = 0f;
 
+    private int typeCropper = 0; // 0 - pet, 1 - user
+    private int marginTopBottomPetCropper = 0;
+
     public CustomImageCropView(Context context) {
         this(context, null);
     }
@@ -132,6 +136,8 @@ public class CustomImageCropView extends androidx.appcompat.widget.AppCompatImag
     }
 
     private void init(Context context, AttributeSet attrs) {
+
+        marginTopBottomPetCropper = (int) (context.getResources().getDisplayMetrics().density * 92);
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ImageCropView);
 
@@ -185,6 +191,11 @@ public class CustomImageCropView extends androidx.appcompat.widget.AppCompatImag
 
     }
 
+    public void setCropperType(int type){
+        typeCropper = type;
+        invalidate();
+    }
+
     @Override
     public void setScaleType(ScaleType scaleType) {
         if (scaleType == ScaleType.MATRIX) {
@@ -199,6 +210,7 @@ public class CustomImageCropView extends androidx.appcompat.widget.AppCompatImag
         super.onDraw(canvas);
         drawTransparentLayer(canvas);
         drawGrid(canvas);
+        //setImageDrawable(getContext().getDrawable(R.drawable.cat2));
     }
 
     @Override
@@ -226,18 +238,29 @@ public class CustomImageCropView extends androidx.appcompat.widget.AppCompatImag
             mCenter.x = mThisWidth / 2f;
             mCenter.y = mThisHeight / 2f;
         }
-
+        float mT = 0f; //(getHeight() - getWidth()) /2;
         int height = (int) (mThisWidth * mTargetAspectRatio);
         if (height > mThisHeight) {
-            int width = (int) ((mThisHeight - (gridTopBottomMargin * 2)) / mTargetAspectRatio);
+            int width = (int) ((mThisHeight - (margin * 2)) / mTargetAspectRatio);
             int halfDiff = (mThisWidth - width) / 2;
-            mCropRect.set(left + halfDiff, top + gridTopBottomMargin, right - halfDiff, bottom - gridTopBottomMargin);
-            //mCropRect.set(left, top, right, bottom);
+
+            //DEAFULT
+            //mCropRect.set(left + halfDiff, top + gridTopBottomMargin, right - halfDiff, bottom - gridTopBottomMargin);
+
+            if(typeCropper == 0) mCropRect.set(left + halfDiff, top + marginTopBottomPetCropper, right - halfDiff, bottom - marginTopBottomPetCropper);
+            else if(typeCropper == 1) {
+                mCropRect.set(left + halfDiff, top + mT, right - halfDiff, bottom - mT);
+            }
+
         } else {
             height = (int) ((mThisWidth - (gridLeftRightMargin * 2)) * mTargetAspectRatio);
             int halfDiff = (mThisHeight - height) / 2;
-            //mCropRect.set(left, top, right, height);
-            mCropRect.set(left + gridLeftRightMargin, halfDiff - top, right - gridLeftRightMargin, height + halfDiff);
+
+            //DEFULT
+            //mCropRect.set(left + gridLeftRightMargin, halfDiff - top, right - gridLeftRightMargin, height + halfDiff);
+            if(typeCropper == 0) mCropRect.set(left, halfDiff - top - marginTopBottomPetCropper, right - gridLeftRightMargin, height + halfDiff + marginTopBottomPetCropper);
+            else if(typeCropper == 1) mCropRect.set(left + margin, halfDiff - top - mT, right - margin, height + halfDiff + mT);
+
         }
 
         Runnable r = mLayoutRunnable;
@@ -374,43 +397,45 @@ public class CustomImageCropView extends androidx.appcompat.widget.AppCompatImag
         Rect r = new Rect();
         getLocalVisibleRect(r);
 
-        float bottomB = mCenter.y + mCenter.x - margin;
-        float leftBottomBesieX = margin + mCenter.x / 32;
-        float leftBottomBesieY =  mCenter.y + mCenter.x - margin - mCenter.x / 32;
-        float leftTopBesieY =  mCenter.y - mCenter.x + margin + mCenter.x / 32;
-        float rightTopBesieX = mCenter.x * 2 - margin - mCenter.x / 32;
+        if(typeCropper == 1){
+            float bottomB = mCenter.y + mCenter.x - margin;
+            float leftBottomBesieX = margin + mCenter.x / 32;
+            float leftBottomBesieY =  mCenter.y + mCenter.x - margin - mCenter.x / 32;
+            float leftTopBesieY =  mCenter.y - mCenter.x + margin + mCenter.x / 32;
+            float rightTopBesieX = mCenter.x * 2 - margin - mCenter.x / 32;
 
-        Path path = new Path();
-        path.moveTo(0, 0);
-        path.lineTo(0, mThisHeight);
-        path.lineTo(mCenter.x, mThisHeight);
-        path.lineTo(mCenter.x, bottomB);
-        path.quadTo(leftBottomBesieX,leftBottomBesieY, margin, mCenter.y);
-        path.quadTo(leftBottomBesieX,leftTopBesieY, mCenter.x, mCenter.y - mCenter.x + margin);
-        path.lineTo(mCenter.x, 0);
+            Path path = new Path();
+            path.moveTo(0, 0);
+            path.lineTo(0, mThisHeight);
+            path.lineTo(mCenter.x, mThisHeight);
+            path.lineTo(mCenter.x, bottomB);
+            path.quadTo(leftBottomBesieX,leftBottomBesieY, margin, mCenter.y);
+            path.quadTo(leftBottomBesieX,leftTopBesieY, mCenter.x, mCenter.y - mCenter.x + margin);
+            path.lineTo(mCenter.x, 0);
 
-        Path pathRight = new Path();
-        path.moveTo(mCenter.x, 0);
-        path.lineTo(mCenter.x, mCenter.y - mCenter.x + margin);
-        path.quadTo(rightTopBesieX, leftTopBesieY, mCenter.x *2 - margin, mCenter.y);
-        path.quadTo(rightTopBesieX, leftBottomBesieY, mCenter.x, bottomB);
-        path.lineTo(mCenter.x, mThisHeight);
-        path.lineTo(mThisWidth, mThisHeight);
-        path.lineTo(mThisWidth, 0);
-        path.lineTo(mCenter.x, 0);
+            Path pathRight = new Path();
+            path.moveTo(mCenter.x, 0);
+            path.lineTo(mCenter.x, mCenter.y - mCenter.x + margin);
+            path.quadTo(rightTopBesieX, leftTopBesieY, mCenter.x *2 - margin, mCenter.y);
+            path.quadTo(rightTopBesieX, leftBottomBesieY, mCenter.x, bottomB);
+            path.lineTo(mCenter.x, mThisHeight);
+            path.lineTo(mThisWidth, mThisHeight);
+            path.lineTo(mThisWidth, 0);
+            path.lineTo(mCenter.x, 0);
 
-        //canvas.drawRect(r.left, r.top, r.right, r.bottom, mOutsideLayerPaint);                          // top
-//        canvas.drawRect(r.left, mCropRect.bottom, r.right, r.bottom, mOutsideLayerPaint);                    // bottom
-//        canvas.drawRect(r.left, mCropRect.top, mCropRect.left, mCropRect.bottom, mOutsideLayerPaint);        // left
-//        canvas.drawRect(mCropRect.right, mCropRect.top, r.right, mCropRect.bottom, mOutsideLayerPaint);      // right
-        //canvas.drawCircle(getWidth() /2, getHeight() /2, 200, mTransparentPaint);
-//        Path path = new Path();
-//        path.addCircle(getWidth() /2, getHeight() /2, 200, Path.Direction.CCW);
-        canvas.clipPath(path);
-        canvas.drawPath(path, mOutsideLayerPaint);
+            canvas.clipPath(path);
+            canvas.drawPath(path, mOutsideLayerPaint);
 
-        canvas.clipPath(pathRight);
-        canvas.drawPath(pathRight, mOutsideLayerPaint);
+            canvas.clipPath(pathRight);
+            canvas.drawPath(pathRight, mOutsideLayerPaint);
+        }
+
+        if(typeCropper == 0){
+            canvas.drawRect(r.left, r.top, r.right, mCropRect.top, mOutsideLayerPaint);                          // top
+            canvas.drawRect(r.left, mCropRect.bottom, r.right, r.bottom, mOutsideLayerPaint);
+        }
+
+
     }
 
     private void drawGrid(Canvas canvas) {

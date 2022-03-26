@@ -42,6 +42,8 @@ import com.petsvote.ui.dialogs.*
 import com.petsvote.ui.loadImage
 import com.petsvote.ui.navigation.CropNavigation
 import com.petsvote.ui.navigation.TabsNavigation
+import com.petsvote.ui.stateDisabled
+import com.petsvote.ui.stateEnabled
 import dagger.Lazy
 import kotlinx.coroutines.flow.collect
 import me.vponomarenko.injectionmanager.x.XInjectionManager
@@ -244,10 +246,10 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile),
             || userUI?.location?.country?.isEmpty() == true
             || userUI.location?.city?.isEmpty() == true
         ) {
-            setSaveDisabled()
+            binding.save.stateDisabled()
             return
         }
-        setSaveEnabled()
+        binding.save.stateEnabled()
 
         binding.save.setOnClickListener {
             var ava =
@@ -321,16 +323,6 @@ class UserProfileFragment : Fragment(R.layout.fragment_user_profile),
     private fun checkPermissionsWrite(): Boolean {
         return ((activity?.let { ActivityCompat.checkSelfPermission(it, WRITE_PERMISSION) }) == PackageManager.PERMISSION_GRANTED
                 && (ActivityCompat.checkSelfPermission(requireActivity(), WRITE_PERMISSION)) == PackageManager.PERMISSION_GRANTED)
-    }
-
-    private fun setSaveEnabled(){
-        binding.save.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.ui_primary))
-        binding.save.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-    }
-
-    private fun setSaveDisabled(){
-        binding.save.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.disable_btn))
-        binding.save.setTextColor(ContextCompat.getColor(requireContext(), R.color.disable_text_color))
     }
 
     override fun delete() {

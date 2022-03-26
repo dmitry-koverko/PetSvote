@@ -19,11 +19,13 @@ class AddPetViewModel (
     private val roomRepository: RoomRepository,
 ) : ViewModel() {
 
-
     var isLoading = MutableStateFlow(false)
     var instagramUserName = MutableStateFlow("")
 
-    fun getUserName(id: Long){
+    var isLoadingAddPet = MutableStateFlow(false)
+    var saveResult = MutableStateFlow("")
+
+    fun getUserName(id: Long) {
         isLoading.value = true
         viewModelScope.launch {
             var res = networkRepository.getUsernameById(id)
@@ -34,9 +36,18 @@ class AddPetViewModel (
         }
     }
 
-    fun saveUserPet(photos:List<MultipartBody.Part>){
+    fun saveUserPet(photos:List<MultipartBody.Part>, user: AddPetFragment.CreatePetUi){
         viewModelScope.launch (Dispatchers.IO){
-            networkRepository.addPet(photos, "2022-02-13 23:00:07 +0000", 3336320, "Pet from Android", "1", "FEMALE", "cat")
+            isLoadingAddPet.value = true
+            networkRepository.addPet(
+                photos,
+                user.birthDay,
+                user.name,
+                user.breedId.toString(),
+                user.sex,
+                user.kind
+            )
+            isLoadingAddPet.value = false
         }
     }
 

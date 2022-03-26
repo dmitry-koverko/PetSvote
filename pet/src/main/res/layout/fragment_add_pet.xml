@@ -171,7 +171,7 @@
                 android:id="@+id/breeds"
                 android:textSize="20sp"
                 android:textColor="@color/sub_text_color"
-                android:text="Порода"
+                android:text="@string/breed"
                 app:layout_constraintTop_toBottomOf="@id/breeds_text"
                 android:layout_marginTop="2dp"
                 app:layout_constraintRight_toLeftOf="@id/right_breeds"
@@ -261,59 +261,16 @@
                 android:layout_height="40dp"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.petsvote.ui.SimpleSFTextView
-            android:layout_marginLeft="16dp"
-            android:textSize="15sp"
-            android:textColor="@color/sub_text_color"
-            android:text="не обязательно"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="28dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+        <include
+            android:id="@+id/insta"
+            layout="@layout/gp_insta"/>
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_marginTop="2dp"
-            android:orientation="vertical"
-            android:id="@+id/containerInsta"
+        <ProgressBar
+            android:visibility="gone"
+            android:id="@+id/progressSave"
+            android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-            <com.petsvote.ui.SimpleSFTextView
-                android:id="@+id/connectInstagram"
-                android:layout_marginLeft="16dp"
-                android:textSize="20sp"
-                android:textColor="@color/sub_text_color"
-                android:text="Instagram питомца"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.petsvote.ui.SimpleSFTextView
-                    android:id="@+id/instagramName"
-                    android:layout_marginLeft="16dp"
-                    android:textSize="20sp"
-                    android:textColor="@color/title_color"
-                    android:text="Eshka007"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <com.petsvote.ui.SimpleSFTextView
-                    android:layout_gravity="center"
-                    android:id="@+id/disconnect"
-                    android:layout_marginLeft="16dp"
-                    android:textSize="15sp"
-                    android:textColor="@color/sub_text_color"
-                    android:text="отключить"
-                    android:layout_width="wrap_content"
-                    android:layout_height="24dp"/>
-
-            </FrameLayout>
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
+            android:layout_height="wrap_content"/>
 
         <com.petsvote.ui.Shape
             android:id="@+id/save"

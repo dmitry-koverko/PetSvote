@@ -24,7 +24,6 @@ interface NReposirory {
                 : UserData?
     suspend fun addPet(photos:List<MultipartBody.Part>,
                        bdate: String?,
-                       user_id: Int?,
                        name: String?,
                        breed_id: String?,
                        sex: String?,
